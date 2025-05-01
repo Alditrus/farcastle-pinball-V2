@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://b5dpfe2rmkdxy"]
+
+[ext_resource type="Script" path="res://Scenes/bumper.gd" id="1_44a5c"]
+[ext_resource type="Texture2D" uid="uid://bgkceobxgum3i" path="res://Assets/table/panebumper1.png" id="2_u5nts"]
+[ext_resource type="Texture2D" uid="uid://0h32wklf61ml" path="res://Assets/table/panebumperactive1.png" id="3_sjsrm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gabw3"]
+size = Vector2(14, 50)
+
+[node name="alcoveBumper" type="Node2D"]
+script = ExtResource("1_44a5c")
+bumper_force = 10.0
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+lock_rotation = true
+freeze = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+position = Vector2(0, 2.84217e-14)
+rotation = -1.5708
+scale = Vector2(0.997829, 1.2526)
+texture = ExtResource("2_u5nts")
+
+[node name="Sprite2D2" type="Sprite2D" parent="RigidBody2D"]
+visible = false
+position = Vector2(1.06636e-07, -6.85563e-15)
+rotation = -1.5708
+scale = Vector2(1, 1.25142)
+texture = ExtResource("3_sjsrm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("RectangleShape2D_gabw3")

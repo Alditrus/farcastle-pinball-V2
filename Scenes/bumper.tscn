@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://btu1o7gatrvw6"]
+
+[ext_resource type="Texture2D" uid="uid://c6a0bknfiokwd" path="res://Assets/table/bumper.png" id="1_2iasn"]
+[ext_resource type="Script" uid="uid://b1if7cfhper70" path="res://Scenes/bumper.gd" id="1_2ut00"]
+[ext_resource type="Texture2D" uid="uid://dijxjo1eyhnlj" path="res://Assets/table/bumper_active.png" id="3_ltrun"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lxlpl"]
+radius = 55.9017
+
+[node name="bumper" type="Node2D"]
+script = ExtResource("1_2ut00")
+bumper_force = 20.0
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+can_sleep = false
+lock_rotation = true
+freeze = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+texture = ExtResource("1_2iasn")
+
+[node name="Sprite2D2" type="Sprite2D" parent="RigidBody2D"]
+visible = false
+texture = ExtResource("3_ltrun")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("CircleShape2D_lxlpl")

@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=3 uid="uid://mqwh8awxx35t"]
+
+[ext_resource type="Texture2D" uid="uid://dwpy5y356oy74" path="res://Assets/table/target_dead.png" id="1_7x1ls"]
+[ext_resource type="Script" path="res://Scenes/targets.gd" id="1_puoa3"]
+[ext_resource type="Texture2D" uid="uid://vpdnnxj72bts" path="res://Assets/table/target_live.png" id="2_2qnx0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0dux2"]
+size = Vector2(10, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mfsp2"]
+size = Vector2(10, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pjvfw"]
+size = Vector2(10, 14)
+
+[node name="targets" type="Node2D"]
+script = ExtResource("1_puoa3")
+
+[node name="target1" type="StaticBody2D" parent="."]
+
+[node name="down" type="Sprite2D" parent="target1"]
+position = Vector2(22, -3.5)
+texture = ExtResource("1_7x1ls")
+
+[node name="up" type="Sprite2D" parent="target1"]
+position = Vector2(22, -7)
+texture = ExtResource("2_2qnx0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="target1"]
+position = Vector2(22, -7)
+shape = SubResource("RectangleShape2D_0dux2")
+
+[node name="target2" type="StaticBody2D" parent="."]
+
+[node name="down" type="Sprite2D" parent="target2"]
+position = Vector2(69, -3.5)
+texture = ExtResource("1_7x1ls")
+
+[node name="up" type="Sprite2D" parent="target2"]
+position = Vector2(69, -7)
+texture = ExtResource("2_2qnx0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="target2"]
+position = Vector2(69, -7)
+shape = SubResource("RectangleShape2D_mfsp2")
+
+[node name="target3" type="StaticBody2D" parent="."]
+
+[node name="down" type="Sprite2D" parent="target3"]
+position = Vector2(116, -3.5)
+texture = ExtResource("1_7x1ls")
+
+[node name="up" type="Sprite2D" parent="target3"]
+position = Vector2(116, -7)
+texture = ExtResource("2_2qnx0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="target3"]
+position = Vector2(116, -7)
+shape = SubResource("RectangleShape2D_pjvfw")

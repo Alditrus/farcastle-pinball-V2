@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://m7uiwoi0ovx3"]
+
+[ext_resource type="Texture2D" uid="uid://r3mmr02ycc8m" path="res://Assets/table/guard.png" id="1_nl8mj"]
+
+[node name="Guard" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(2, 4.76837e-07)
+scale = Vector2(0.120424, 0.120424)
+polygon = PackedVector2Array(-149.472, 298.943, -77, 231, 1, 123, 54, 3, 85, -147, 83.0399, -257.423, 74.7359, -332.159, 132.864, -340.463, 149, -247, 147, -107, 128.049, -26.6024, 114, 33, 66, 139, -4, 246, -107.952, 348.767)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(2, 0)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("1_nl8mj")

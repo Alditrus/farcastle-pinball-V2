@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://dk0rtypc2452p"]
+
+[ext_resource type="Texture2D" uid="uid://xxgmejmhx6ny" path="res://Assets/table/slingshot.png" id="1_cmv8b"]
+
+[node name="slingshot" type="Node2D"]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+lock_rotation = true
+freeze = true
+contact_monitor = true
+max_contacts_reported = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RigidBody2D"]
+polygon = PackedVector2Array(-100, 25, -100, -142, -96, -154, -87, -162, -77, -165, -64, -164, -54, -155, -43, -135, 99, 128, 100, 141, 94, 155, 84, 163, 70, 165, 57, 162, -82, 59, -95, 42)
+
+[node name="non_active" type="Sprite2D" parent="RigidBody2D"]
+texture = ExtResource("1_cmv8b")
