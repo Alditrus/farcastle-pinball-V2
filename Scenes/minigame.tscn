@@ -1,0 +1,199 @@
+[gd_scene load_steps=15 format=3 uid="uid://cp0gjau2fwd22"]
+
+[ext_resource type="Texture2D" uid="uid://bdoxd8w36h30n" path="res://Assets/minigame/walltexture.png" id="1_s7wve"]
+[ext_resource type="PackedScene" uid="uid://pkimpgnflfu1" path="res://Scenes/minigameball.tscn" id="2_5bepb"]
+[ext_resource type="Texture2D" uid="uid://2yn6eyk2pbnh" path="res://Assets/minigame/multiplier gargoyle.png" id="2_xcq3l"]
+[ext_resource type="Script" uid="uid://byfxsxvk88h3o" path="res://Scenes/ballcam.gd" id="2_xt64r"]
+[ext_resource type="Script" uid="uid://e8uyxq0molk7" path="res://Scenes/goathead.gd" id="3_iqey4"]
+[ext_resource type="Texture2D" uid="uid://bvp5xbqe6ertg" path="res://Assets/minigame/goathead.png" id="3_xt64r"]
+[ext_resource type="PackedScene" uid="uid://dnlfixqskd0tt" path="res://Scenes/pachinkorow.tscn" id="6_id8w1"]
+[ext_resource type="PackedScene" uid="uid://bfdc3b7u1g0lr" path="res://Scenes/scythes.tscn" id="7_yx24v"]
+[ext_resource type="PackedScene" uid="uid://bobjprwyvdr1i" path="res://Scenes/jackpot.tscn" id="8_255i5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yx24v"]
+size = Vector2(32, 4793)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_iqey4"]
+radius = 196.499
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_id8w1"]
+radius = 42.0476
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5bepb"]
+size = Vector2(899.5, 1730)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_255i5"]
+size = Vector2(938, 45)
+
+[node name="Minigame" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(451, 1198.03)
+scale = Vector2(0.670134, 0.670134)
+texture = ExtResource("1_s7wve")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(451, 3595)
+scale = Vector2(0.670134, 0.670134)
+texture = ExtResource("1_s7wve")
+
+[node name="wall1" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall1"]
+position = Vector2(-6, 2396.5)
+shape = SubResource("RectangleShape2D_yx24v")
+
+[node name="wall2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall2"]
+position = Vector2(907, 2396.5)
+shape = SubResource("RectangleShape2D_yx24v")
+
+[node name="ballcam" type="Camera2D" parent="."]
+position = Vector2(450, 791)
+script = ExtResource("2_xt64r")
+
+[node name="GoatHead" type="Node2D" parent="."]
+script = ExtResource("3_iqey4")
+
+[node name="Sprite2D" type="Sprite2D" parent="GoatHead"]
+position = Vector2(452, 374)
+scale = Vector2(0.31099, 0.31099)
+texture = ExtResource("3_xt64r")
+
+[node name="DragArea" type="Area2D" parent="GoatHead"]
+position = Vector2(453, 374)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoatHead/DragArea"]
+position = Vector2(1, -9)
+shape = SubResource("CircleShape2D_iqey4")
+
+[node name="SpawnArea" type="Area2D" parent="GoatHead"]
+position = Vector2(455, 458)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoatHead/SpawnArea"]
+position = Vector2(-3, 0)
+shape = SubResource("CircleShape2D_id8w1")
+
+[node name="Ball" parent="." instance=ExtResource("2_5bepb")]
+visible = false
+position = Vector2(451, 458)
+can_sleep = false
+freeze = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Ball"]
+position = Vector2(-1, 333)
+remote_path = NodePath("../../ballcam")
+
+[node name="gameboundary" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="gameboundary"]
+position = Vector2(450, 1695)
+shape = SubResource("RectangleShape2D_5bepb")
+
+[node name="pachinkorow" parent="." instance=ExtResource("6_id8w1")]
+position = Vector2(60, 815)
+scale = Vector2(1.4, 1.4)
+
+[node name="pachinkorow2" parent="." instance=ExtResource("6_id8w1")]
+position = Vector2(60, 1091)
+scale = Vector2(1.4, 1.4)
+
+[node name="pachinkorow3" parent="." instance=ExtResource("6_id8w1")]
+position = Vector2(60, 1734)
+scale = Vector2(1.4, 1.4)
+
+[node name="pachinkorow4" parent="." instance=ExtResource("6_id8w1")]
+position = Vector2(60, 1996)
+scale = Vector2(1.4, 1.4)
+
+[node name="pachinkorow5" parent="." instance=ExtResource("6_id8w1")]
+position = Vector2(60, 2599)
+scale = Vector2(1.4, 1.4)
+
+[node name="pachinkorow6" parent="." instance=ExtResource("6_id8w1")]
+position = Vector2(60, 2869)
+scale = Vector2(1.4, 1.4)
+
+[node name="scythes" parent="." instance=ExtResource("7_yx24v")]
+position = Vector2(152, 1487)
+rotation_speed = 1.25
+
+[node name="scythes2" parent="." instance=ExtResource("7_yx24v")]
+position = Vector2(445, 1487)
+scale = Vector2(-1, 1)
+rotation_speed = -1.25
+
+[node name="scythes3" parent="." instance=ExtResource("7_yx24v")]
+position = Vector2(741, 1487)
+rotation_speed = 1.25
+
+[node name="jackpot" parent="." instance=ExtResource("8_255i5")]
+position = Vector2(458, 2356)
+range = 300
+move_speed = 150
+
+[node name="floor" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor"]
+position = Vector2(449, 3332.5)
+shape = SubResource("RectangleShape2D_255i5")
+
+[node name="Sprite2D" type="Sprite2D" parent="floor"]
+position = Vector2(65, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="Sprite2D2" type="Sprite2D" parent="floor"]
+position = Vector2(193, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="Sprite2D3" type="Sprite2D" parent="floor"]
+position = Vector2(321, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="Sprite2D4" type="Sprite2D" parent="floor"]
+position = Vector2(449, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="Sprite2D5" type="Sprite2D" parent="floor"]
+position = Vector2(577, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="Sprite2D6" type="Sprite2D" parent="floor"]
+position = Vector2(705, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="Sprite2D7" type="Sprite2D" parent="floor"]
+position = Vector2(833, 3315)
+scale = Vector2(0.0797413, 0.0797413)
+texture = ExtResource("2_xcq3l")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="floor"]
+position = Vector2(0, 17)
+polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="floor"]
+position = Vector2(128, 17)
+polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="floor"]
+position = Vector2(256, 17)
+polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="floor"]
+position = Vector2(384, 17)
+polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)
+
+[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="floor"]
+position = Vector2(512, 17)
+polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)
+
+[node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="floor"]
+position = Vector2(640, 17)
+polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)

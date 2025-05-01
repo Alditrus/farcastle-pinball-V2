@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpd6rr8gyd8ko"]
+
+[ext_resource type="Script" path="res://Scenes/gutterPiston.gd" id="1_namxb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qbbxp"]
+size = Vector2(59, 20)
+
+[node name="gutterPiston" type="Node2D"]
+script = ExtResource("1_namxb")
+launch_force = 20.0
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_qbbxp")

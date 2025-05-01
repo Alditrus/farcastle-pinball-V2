@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://pkimpgnflfu1"]
+
+[ext_resource type="Script" uid="uid://cp1io1qwcjgbo" path="res://Scenes/Ball.gd" id="1_10x7i"]
+[ext_resource type="Texture2D" uid="uid://cfp3iccsmhhw0" path="res://Assets/table/pinballtexture.svg" id="1_dy148"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_10x7i"]
+radius = 40.0
+
+[node name="ball" type="RigidBody2D"]
+script = ExtResource("1_10x7i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_10x7i")
+
+[node name="BallSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.182232, 0.182232)
+texture = ExtResource("1_dy148")

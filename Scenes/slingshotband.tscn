@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://b7t3xjip1bgrx"]
+
+[ext_resource type="Script" path="res://Scenes/slingshotband.gd" id="1_1mfnl"]
+[ext_resource type="Texture2D" uid="uid://c74tbadyuny1y" path="res://Assets/table/slingshot_active.png" id="2_evxqh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x6jv5"]
+size = Vector2(140, 6)
+
+[node name="slingshotband" type="Node2D"]
+script = ExtResource("1_1mfnl")
+launch_force_vertical = 5.0
+launch_force_horizontal = 15.0
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+can_sleep = false
+lock_rotation = true
+freeze = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("RectangleShape2D_x6jv5")
+
+[node name="active" type="Sprite2D" parent="RigidBody2D"]
+visible = false
+position = Vector2(3, 13)
+rotation = -1.07163
+scale = Vector2(0.496218, 0.496218)
+texture = ExtResource("2_evxqh")

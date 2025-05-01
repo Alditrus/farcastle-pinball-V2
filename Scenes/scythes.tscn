@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfdc3b7u1g0lr"]
+
+[ext_resource type="Script" uid="uid://cjthrlv3mxl2b" path="res://Scenes/scythes.gd" id="1_njlnl"]
+[ext_resource type="Texture2D" uid="uid://c0moyq0a1ca5e" path="res://Assets/minigame/Scythe.png" id="2_viux8"]
+
+[node name="scythes" type="StaticBody2D"]
+script = ExtResource("1_njlnl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2, 0)
+rotation = 1.22173
+scale = Vector2(0.118966, 0.118966)
+texture = ExtResource("2_viux8")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(2.0555, 0.152485)
+rotation = 1.22173
+scale = Vector2(0.852249, 0.852248)
+polygon = PackedVector2Array(1, 0, -11, -74, -9, -83, -6, -94, -2, -102, 7, -109, 19, -99, 27, -109, 34, -115, 47, -121, 60, -124, 71, -125, 81, -124, 92, -121, 103, -116, 110, -111, 113, -108, 111, -113, 108, -117, 99, -124, 85, -132, 65, -138, 46, -141, 27, -140, 9, -137, -5, -132, -19, -120, -30, -107, -26, -81, -21, -70, -13, -41, -6, 0, 6, 74, 2, 93, -3, 102, -11, 109, -24, 99, -30, 108, -38, 115, -51, 121, -64, 124, -77, 125, -91, 123, -104, 118, -111, 114, -118, 108, -114, 115, -108, 121, -98, 128, -87, 133, -71, 138, -53, 141, -36, 141, -17, 138, 2, 130, 14, 121, 25, 107, 21, 80, 16, 69)

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cutassm65em2d"]
+
+[ext_resource type="Script" uid="uid://u7se1hu8pt0t" path="res://Scenes/flipper.gd" id="1_ki6ea"]
+[ext_resource type="Texture2D" uid="uid://b65abfap4ql3g" path="res://Assets/table/flipper.png" id="1_nt6lb"]
+
+[node name="flipper" type="Node2D"]
+script = ExtResource("1_ki6ea")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+can_sleep = false
+freeze = true
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+position = Vector2(48, 2.98023e-08)
+scale = Vector2(0.412, 0.408)
+texture = ExtResource("1_nt6lb")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RigidBody2D"]
+position = Vector2(48, 2.27374e-13)
+scale = Vector2(0.408, 0.4)
+polygon = PackedVector2Array(-150, 0, -148, 16, -141, 28, -129, 38, -113, 42, 128, 25, 137, 22, 145, 17, 150, 8, 150, -2, 147, -10, 142, -16, 135, -21, 128, -22, -107, -42, -119, -42, -130, -37, -140, -29, -147, -17, -149, -9)
