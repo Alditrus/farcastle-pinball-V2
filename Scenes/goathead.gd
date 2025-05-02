@@ -13,8 +13,8 @@ func _ready():
 	initial_position = position
 	
 	# Set min and max X bounds (adjust these values as needed)
-	min_x_position = initial_position.x - 150
-	max_x_position = initial_position.x + 150
+	min_x_position = initial_position.x - 180
+	max_x_position = initial_position.x + 180
 	
 	# Get reference to the Area2D
 	drag_area = $DragArea

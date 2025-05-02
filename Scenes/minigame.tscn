@@ -130,7 +130,6 @@ rotation_speed = 1.25
 
 [node name="jackpot" parent="." instance=ExtResource("8_255i5")]
 position = Vector2(458, 2356)
-range = 300
 move_speed = 150
 
 [node name="floor" type="StaticBody2D" parent="."]
