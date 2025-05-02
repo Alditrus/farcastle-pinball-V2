@@ -3,7 +3,7 @@ extends StaticBody2D
 # Movement parameters
 var start_x = 200  # Left position bound
 var end_x = 400    # Right position bound
-@export var range = 200
+@export var pot_range = 200
 @export var move_speed = 100  # Pixels per second
 var direction = 1   # 1 for right, -1 for left
 var initial_position
@@ -14,8 +14,8 @@ func _ready():
 	initial_position = position
 	
 	# Set start and end positions relative to the initial position
-	start_x = initial_position.x - range
-	end_x = initial_position.x + range
+	start_x = initial_position.x - pot_range
+	end_x = initial_position.x + pot_range
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

@@ -1,17 +1,47 @@
-[gd_scene load_steps=3 format=3 uid="uid://bobjprwyvdr1i"]
+[gd_scene load_steps=6 format=3 uid="uid://bobjprwyvdr1i"]
 
 [ext_resource type="Script" uid="uid://bxojvki570vu2" path="res://Scenes/jackpot.gd" id="1_j3w0t"]
+[ext_resource type="Texture2D" uid="uid://qwoklv8ee08x" path="res://Assets/minigame/jackpotparticle.svg" id="2_37oyf"]
 [ext_resource type="Texture2D" uid="uid://dkrnlwdj22nt4" path="res://Assets/minigame/jackpot bucket.png" id="2_86cfk"]
+
+[sub_resource type="Curve" id="Curve_86cfk"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 100), 0.0, -1.44235, 0, 0, Vector2(0.110497, 53.9326), 0.0, 0.0, 0, 0, Vector2(0.276243, 91.0112), 0.0, 0.0, 0, 0, Vector2(0.497238, 30.3371), 0.0, 0.0, 0, 0, Vector2(0.701658, 71.9101), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.98766, 0.0, 0, 0]
+point_count = 6
+
+[sub_resource type="Curve" id="Curve_mp1x6"]
+_data = [Vector2(0, 1), 0.0, -0.0496024, 0, 0, Vector2(1, 0), -4.06742, 0.0, 0, 0]
+point_count = 2
 
 [node name="Node2D" type="StaticBody2D"]
 script = ExtResource("1_j3w0t")
-start_x = 150
-end_x = 450
+pot_range = 300
 move_speed = 110
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(-1, -49)
+amount = 20
+texture = ExtResource("2_37oyf")
+lifetime = 0.75
+speed_scale = 0.4
+explosiveness = 0.25
+randomness = 0.25
+lifetime_randomness = 0.08
+emission_shape = 3
+emission_rect_extents = Vector2(40, 1)
+direction = Vector2(1, 50)
+gravity = Vector2(0, -980)
+initial_velocity_min = 1.0
+initial_velocity_max = 1.0
+damping_curve = SubResource("Curve_86cfk")
+scale_amount_min = 0.8
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_mp1x6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.196162, 0.196162)
 texture = ExtResource("2_86cfk")
+metadata/_edit_lock_ = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-96, -75, -85, -67, -76, -54, -74, -45, -85, -24, -92, -2, -91, 26, -83, 44, -70, 65, -55, 76, -29, 89, -17, 94, 15, 94, 34, 92, 52, 83, 79, 52, 89, 23, 89, -7, 71, -50, 71, -55, 77, -65, 88, -73, 73, -73, 66, -67, 62, -56, 62, -51, 80, -7, 80, 22, 70, 47, 48, 74, 32, 82, 14, 84, -15, 84, -26, 80, -50, 69, -63, 61, -76, 41, -83, 25, -84, -2, -78, -21, -66, -43, -67, -55, -77, -69, -86, -75)

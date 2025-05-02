@@ -310,42 +310,34 @@ shape = SubResource("RectangleShape2D_ssv1w")
 [node name="alcoveBumper" parent="." instance=ExtResource("25_hh0i4")]
 position = Vector2(601, 585)
 rotation = 0.314159
-bumper_force = 5.0
 
 [node name="alcoveBumper2" parent="." instance=ExtResource("26_xpjqg")]
 position = Vector2(626, 545)
 rotation = 0.820305
-bumper_force = 5.0
 
 [node name="alcoveBumper3" parent="." instance=ExtResource("27_s8sj4")]
 position = Vector2(667, 522)
 rotation = 1.309
-bumper_force = 5.0
 
 [node name="alcoveBumper4" parent="." instance=ExtResource("28_6kmrl")]
 position = Vector2(715, 521)
 rotation = 1.80642
-bumper_force = 5.0
 
 [node name="alcoveBumper5" parent="." instance=ExtResource("29_qrwlr")]
 position = Vector2(756, 544)
 rotation = 2.33874
-bumper_force = 5.0
 
 [node name="alcoveBumper6" parent="." instance=ExtResource("30_ktkv2")]
 position = Vector2(781, 585)
 rotation = 2.85361
-bumper_force = 5.0
 
 [node name="alcoveBumper7" parent="." instance=ExtResource("31_hnw2n")]
 position = Vector2(783, 632)
 rotation = -2.94961
-bumper_force = 5.0
 
 [node name="alcoveBumper8" parent="." instance=ExtResource("32_hotvi")]
 position = Vector2(761, 673)
 rotation = -2.37365
-bumper_force = 5.0
 
 [node name="rail" parent="." instance=ExtResource("20_3leha")]
 position = Vector2(458, 797)
@@ -384,5 +376,5 @@ shape = SubResource("RectangleShape2D_4463s")
 script = ExtResource("33_xpjqg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="minigamearea"]
-position = Vector2(838, 1087)
+position = Vector2(1020, 920)
 shape = SubResource("CircleShape2D_s8sj4")
