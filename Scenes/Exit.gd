@@ -238,7 +238,7 @@ func reset_table():
 	
 	# Reset all target sets in the game
 	var target_nodes = []
-	target_nodes.append(get_node_or_null("../targets1"))
+	target_nodes.append(get_node_or_null("../targets"))  # First instance is named "targets" (without a number)
 	target_nodes.append(get_node_or_null("../targets2"))
 
 	for targets_node in target_nodes:
