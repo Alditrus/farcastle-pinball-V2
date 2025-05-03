@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=51 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="PackedScene" uid="uid://c5u3og1um2vkk" path="res://Scenes/plunger.tscn" id="2_4ppvu"]
@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://btsrktuu746ao" path="res://Scenes/alcove_bumper7.tscn" id="31_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://c4vxi50m2wu62" path="res://Scenes/alcove_bumper8.tscn" id="32_hotvi"]
 [ext_resource type="Script" uid="uid://b5k1c8vjhve34" path="res://Scenes/minigamearea.gd" id="33_xpjqg"]
+[ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://pupil.tscn" id="34_r2pup"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -97,6 +98,7 @@ metadata/_edit_lock_ = true
 polygon = PackedVector2Array(87, 1397, 87, 1511, 29, 1511, 29, 1124, 33, 1081, 40, 1046, 49, 1019, 63, 995, 79, 978, 92, 969, 21, 805, 54, 783, 164, 918, 171, 913, 133, 855, 96, 788, 70, 730, 48, 667, 35, 615, 26, 555, 25, 491, 30, 443, 39, 398, 56, 352, 76, 312, 100, 277, 132, 242, 177, 209, 231, 182, 290, 161, 355, 147, 419, 141, 482, 142, 544, 152, 612, 173, 670, 201, 716, 232, 761, 272, 794, 312, 824, 363, 843, 411, 857, 460, 865, 505, 869, 555, 869, 1517, 810, 1517, 810, 574, 805, 521, 796, 476, 785, 445, 774, 426, 763, 414, 576, 507, 564, 542, 558, 580, 558, 614, 568, 654, 583, 681, 598, 699, 610, 708, 628, 691, 613, 676, 600, 655, 593, 635, 591, 611, 593, 588, 605, 561, 622, 540, 646, 523, 673, 514, 702, 513, 735, 522, 760, 539, 777, 560, 787, 582, 792, 612, 787, 642, 777, 663, 760, 681, 597, 823, 705, 937, 764, 852, 798, 873, 742, 1031, 753, 1037, 767, 1050, 778, 1068, 786, 1091, 790, 1117, 792, 1155, 792, 1516, 730, 1516, 730, 1456, 565, 1584, 909, 1583, 910, -9, -4, -9, -4, 1584, 306, 1585)
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
+position = Vector2(4, -27)
 polygon = PackedVector2Array(321, 627, 358, 565, 449, 564, 490, 629)
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
@@ -139,7 +141,7 @@ shape = SubResource("RectangleShape2D_o4lkm")
 position = Vector2(839, 1470)
 
 [node name="ball" parent="." instance=ExtResource("3_r4jc3")]
-position = Vector2(839, 1006)
+position = Vector2(837, 1235)
 
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
 position = Vector2(298, 1471)
@@ -227,12 +229,12 @@ scale = Vector2(0.5, 0.5)
 [node name="slingshotband" parent="." instance=ExtResource("13_llvxf")]
 position = Vector2(264, 1278)
 rotation = 1.06465
-launch_force_horizontal = 5.0
+launch_force_horizontal = 3.0
 
 [node name="slingshotband2" parent="." instance=ExtResource("13_llvxf")]
 position = Vector2(599, 1281)
 rotation = -1.11701
-launch_force_horizontal = -5.0
+launch_force_horizontal = -3.0
 
 [node name="sinkholeguard" parent="." instance=ExtResource("14_bxtnr")]
 position = Vector2(61, 831)
@@ -257,19 +259,19 @@ position = Vector2(782, 863)
 shape = SubResource("CircleShape2D_3leha")
 
 [node name="bumper" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(403, 549)
+position = Vector2(410, 532)
 scale = Vector2(0.8, 0.8)
 
 [node name="bumper2" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(300, 421)
+position = Vector2(285, 404)
 scale = Vector2(0.8, 0.8)
 
 [node name="bumper3" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(479, 400)
+position = Vector2(460, 361)
 scale = Vector2(0.8, 0.8)
 
 [node name="targets" parent="." instance=ExtResource("18_xhfwg")]
-position = Vector2(474, 629)
+position = Vector2(478, 602)
 rotation = 3.15381
 
 [node name="targets2" parent="." instance=ExtResource("18_xhfwg")]
@@ -371,6 +373,9 @@ script = ExtResource("23_rgeaq")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="railareaexit2"]
 position = Vector2(694, 1291)
 shape = SubResource("RectangleShape2D_4463s")
+
+[node name="pupil" parent="." instance=ExtResource("34_r2pup")]
+position = Vector2(723, 801)
 
 [node name="minigamearea" type="Area2D" parent="."]
 script = ExtResource("33_xpjqg")

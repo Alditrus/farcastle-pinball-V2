@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://mib0yv4sr3h0"]
+
+[ext_resource type="Texture2D" uid="uid://covtdb40kqhhw" path="res://Assets/table/pupil.png" id="1_c32rf"]
+[ext_resource type="Script" uid="uid://b0ckihkiuxseq" path="res://Scenes/pupil.gd" id="1_oafup"]
+
+[node name="pupil" type="Node2D"]
+script = ExtResource("1_oafup")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(10, 0)
+texture = ExtResource("1_c32rf")
