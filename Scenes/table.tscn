@@ -1,6 +1,7 @@
-[gd_scene load_steps=51 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=54 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
+[ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://c5u3og1um2vkk" path="res://Scenes/plunger.tscn" id="2_4ppvu"]
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="3_r4jc3"]
 [ext_resource type="PackedScene" uid="uid://cutassm65em2d" path="res://Scenes/flipper.tscn" id="4_0xndo"]
@@ -34,6 +35,8 @@
 [ext_resource type="PackedScene" uid="uid://c4vxi50m2wu62" path="res://Scenes/alcove_bumper8.tscn" id="32_hotvi"]
 [ext_resource type="Script" uid="uid://b5k1c8vjhve34" path="res://Scenes/minigamearea.gd" id="33_xpjqg"]
 [ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://pupil.tscn" id="34_r2pup"]
+[ext_resource type="Texture2D" uid="uid://c8qoywgb1n0kf" path="res://Assets/table/jaw.png" id="35_6kmrl"]
+[ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -68,9 +71,6 @@ radius = 4.47214
 [sub_resource type="CircleShape2D" id="CircleShape2D_3leha"]
 radius = 5.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ssv1w"]
-size = Vector2(907, 1556)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sln7q"]
 size = Vector2(53.6851, 8.75)
 
@@ -83,7 +83,11 @@ size = Vector2(49, 5.375)
 [sub_resource type="CircleShape2D" id="CircleShape2D_s8sj4"]
 radius = 19.6977
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ssv1w"]
+size = Vector2(907, 1556)
+
 [node name="Table" type="Node2D"]
+script = ExtResource("1_ktkv2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(450, 789)
@@ -153,7 +157,7 @@ position = Vector2(460, 361)
 scale = Vector2(0.8, 0.8)
 
 [node name="ball" parent="." instance=ExtResource("3_r4jc3")]
-position = Vector2(845, 824)
+position = Vector2(839, 1206)
 
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
 position = Vector2(298, 1471)
@@ -302,17 +306,6 @@ rotation = -1.15192
 position = Vector2(619, 333)
 rotation = -0.680678
 
-[node name="Exit" type="Area2D" parent="."]
-collision_layer = 11
-collision_mask = 11
-script = ExtResource("24_sln7q")
-metadata/_edit_lock_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
-position = Vector2(453, 887)
-shape = SubResource("RectangleShape2D_ssv1w")
-metadata/_edit_lock_ = true
-
 [node name="alcoveBumper" parent="." instance=ExtResource("25_hh0i4")]
 position = Vector2(601, 585)
 rotation = 0.314159
@@ -387,3 +380,43 @@ script = ExtResource("33_xpjqg")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="minigamearea"]
 position = Vector2(1050, 1097)
 shape = SubResource("CircleShape2D_s8sj4")
+
+[node name="Exit" type="Area2D" parent="."]
+collision_layer = 11
+collision_mask = 11
+script = ExtResource("24_sln7q")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
+position = Vector2(453, 887)
+shape = SubResource("RectangleShape2D_ssv1w")
+debug_color = Color(0, 0.6, 0.701961, 0)
+metadata/_edit_lock_ = true
+
+[node name="Jaw" type="Sprite2D" parent="."]
+position = Vector2(435, 1270)
+texture = ExtResource("35_6kmrl")
+
+[node name="candle" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(369, 238)
+
+[node name="candle2" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(430, 238)
+
+[node name="candle3" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(492, 238)
+
+[node name="candle4" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(56, 1231)
+
+[node name="candle5" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(117, 1229)
+
+[node name="candle6" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(181, 1230)
+
+[node name="candle7" parent="." instance=ExtResource("36_qrwlr")]
+position = Vector2(761, 1233)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(449.995, 788.35)

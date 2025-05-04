@@ -13,12 +13,19 @@ var plunger_position: Vector2 = Vector2(840, 1440)  # Default plunger position
 # Flag to prevent multiple respawns in a single physics frame
 var is_respawning = false
 
+# Signal for ball respawn events
+signal ball_respawned
+
 func _ready():
 	print("Exit area initialized!")
 	
 	# Make sure monitoring is enabled for the Area2D
 	monitoring = true
 	monitorable = true
+	
+	# Set Area2D to be on all collision layers (32 layers, each bit represents a layer)
+	collision_layer = 0xFFFFFFFF  # All 32 bits set to 1
+	collision_mask = 0xFFFFFFFF   # Detect collisions on all layers
 	
 	# Preload the ball scene for instantiation
 	ball_scene_resource = load(ball_scene_path)
@@ -121,9 +128,24 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 	table.add_child(new_ball)
 	new_ball.name = "ball"
 	
+	# Notify any systems that need to know about ball respawn
+	notify_ball_respawn()
+	
 	# Reset the flag after a short delay to prevent multiple respawns
 	await get_tree().create_timer(0.5).timeout
 	is_respawning = false
+
+# Function to notify all systems about ball respawn
+func notify_ball_respawn():
+	# Emit our own signal
+	emit_signal("ball_respawned")
+	
+	# Directly notify nudge systems
+	var nudge_nodes = get_tree().get_nodes_in_group("nudge_system")
+	for nudge in nudge_nodes:
+		if nudge.has_method("on_ball_respawned"):
+			nudge.on_ball_respawned()
+			print("Notified nudge system of ball respawn")
 
 # Function to deactivate all guards and reset the table
 func reset_table():
@@ -178,3 +200,10 @@ func reset_table():
 			# Check if the targets node has the reset method
 			if targets_node.has_method("reset_all_targets"):
 				targets_node.reset_all_targets()
+				
+	# Reset tilt state if table is tilted
+	var nudge_nodes = get_tree().get_nodes_in_group("nudge_system")
+	for nudge in nudge_nodes:
+		if nudge.has_method("reset_tilt"):
+			nudge.reset_tilt()
+			print("Tilt state has been reset from Exit.gd")

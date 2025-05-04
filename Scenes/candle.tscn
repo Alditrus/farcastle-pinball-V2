@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://bworr8h1prbs1"]
+
+[ext_resource type="Script" uid="uid://dr4frklupvpkf" path="res://Scenes/candle.gd" id="1_45ia7"]
+[ext_resource type="Texture2D" uid="uid://bimpqb81q4ynr" path="res://Assets/table/flameparticle.png" id="1_xsvjb"]
+[ext_resource type="Texture2D" uid="uid://dfuq062nls8l8" path="res://Assets/table/candle.png" id="2_45ia7"]
+
+[sub_resource type="Curve" id="Curve_oi8ik"]
+_data = [Vector2(0.0165746, 1), 0.0, -0.107037, 0, 0, Vector2(1, 0), -3.23307, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_le0gb"]
+size = Vector2(20, 34)
+
+[node name="candle" type="Node2D"]
+script = ExtResource("1_45ia7")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(0, -29)
+amount = 5
+texture = ExtResource("1_xsvjb")
+lifetime = 0.25
+speed_scale = 0.4
+gravity = Vector2(0, -980)
+scale_amount_min = 0.3
+scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_oi8ik")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_45ia7")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_le0gb")
