@@ -21,6 +21,10 @@ window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
 
+[editor]
+
+movie_writer/movie_file="/home/alditrus/Videos/test.avi"
+
 [input]
 
 Left={
