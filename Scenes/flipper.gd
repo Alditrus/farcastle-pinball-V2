@@ -24,6 +24,7 @@ var flipper_body: RigidBody2D
 var is_active = false
 var last_rotation = 0.0
 var current_rotation_speed = 0.0
+var is_tilted = false  # Track whether the table is tilted
 
 func _ready():
 	flipper_body = $RigidBody2D
@@ -44,10 +45,43 @@ func _ready():
 	# Connect body entered signal
 	area.body_entered.connect(_on_area_body_entered)
 	
+	# Try to find the nudge system and connect to its tilt signal
+	await get_tree().process_frame
+	var nudge_system = find_nudge_system()
+	if nudge_system:
+		nudge_system.tilt_state_changed.connect(_on_tilt_state_changed)
+		print("Flipper connected to nudge system tilt signal")
+	
 	print("Flipper initialized with collision area")
 
+# Find the nudge system in the scene
+func find_nudge_system():
+	# Check if we're in a table scene
+	var parent = get_parent()
+	while parent:
+		# Try to find nudge system as a direct child of our parent
+		for child in parent.get_children():
+			if child.has_method("handle_tilt") and child.has_signal("tilt_state_changed"):
+				return child
+		
+		# Move up in the scene tree
+		parent = parent.get_parent()
+	
+	# If we can't find it through the scene tree, try to find it by group
+	var nudge_nodes = get_tree().get_nodes_in_group("nudge_system")
+	if nudge_nodes.size() > 0:
+		return nudge_nodes[0]
+	
+	print("Warning: Couldn't find nudge system for flipper")
+	return null
+
+# Handle tilt state changes
+func _on_tilt_state_changed(tilted):
+	is_tilted = tilted
+	print("Flipper received tilt state: ", is_tilted)
+
 func _physics_process(delta):
-	var is_pressing = Input.is_action_pressed(keycode)
+	var is_pressing = Input.is_action_pressed(keycode) and not is_tilted  # Disable when tilted
 	var prev_rotation = flipper_body.rotation_degrees
 	
 	if is_pressing:
