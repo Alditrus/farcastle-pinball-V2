@@ -5,7 +5,7 @@ var original_position: Vector2
 var is_dragging: bool = false
 var max_pull_distance: float = 100.0 
 var spring_force: float = 10.0
-var launch_force: float = 27.0  # Further reduced to prevent extreme forces
+var launch_force: float = 27.0  # Force multiplier for ball launch
 var min_force_multiplier: float = 0.5  # Minimum force multiplier to prevent excessive force at max pull
 var resetting_position: bool = false  # Flag to track when we're resetting position
 var reset_timer: Timer  # Timer for handling position reset safely
@@ -157,61 +157,59 @@ func reset_plunger():
 func launch_ball(pull_distance: float):
 	print("Attempting to launch ball with pull distance: ", pull_distance)
 	
-	# First try to find the ball the regular way
-	var ball_node = get_node_or_null("../ball/Ball")
+	# Find the ball to launch - look for ball in the plunger lane specifically
+	var ball_to_launch = null
+	var closest_distance = INF
+	var max_horizontal_distance = 20.0  # Narrow horizontal tolerance
+	var max_vertical_distance = 200.0  # Vertical distance above plunger
+	var min_vertical_distance = -30.0   # Small tolerance below plunger
 	
-	# If not found, try checking all balls in the group
-	if ball_node == null:
-		var balls = get_tree().get_nodes_in_group("balls")
-		if balls.size() > 0:
-			ball_node = balls[0]
-			print("Found ball through group: ", ball_node.name)
+	# Get all balls in the game
+	var all_balls = get_tree().get_nodes_in_group("balls")
 	
-	if ball_node != null:
-		# Get ball's position relative to plunger
-		var ball_position = ball_node.global_position
+	# Check each ball to find the one closest to the plunger in the correct lane
+	for ball in all_balls:
+		# Calculate distances
+		var ball_position = ball.global_position
 		var plunger_position = global_position
-		
-		# Calculate horizontal distance between ball and plunger (X axis)
 		var horizontal_distance = abs(ball_position.x - plunger_position.x)
-		
-		# Calculate vertical distance between ball and plunger (Y axis)
 		var vertical_distance = ball_position.y - plunger_position.y
 		
-		# Define a narrow lane/corridor directly above the plunger
-		var max_horizontal_distance = 20.0  # Narrow horizontal tolerance
-		var max_vertical_distance = 200.0  # Vertical distance above plunger
-		var min_vertical_distance = -30.0   # Small tolerance below plunger
-		
-		print("Ball position - X diff: ", horizontal_distance, " Y diff: ", vertical_distance)
-		
-		# Only launch if ball is directly above the plunger in a narrow lane
+		# Only consider balls in the plunger lane
 		if horizontal_distance <= max_horizontal_distance and vertical_distance <= max_vertical_distance and vertical_distance >= min_vertical_distance:
-			print("Ball in plunger lane, launching!")
+			# Calculate total distance (prioritize balls directly above plunger)
+			var total_distance = horizontal_distance + abs(vertical_distance)
 			
-			# Apply a non-linear curve to the force to prevent excessive force at max pull
-			# This creates a more balanced force curve that doesn't spike at the maximum
-			var force_percent = pull_distance / max_pull_distance
-			
-			# Cap the force if it's at maximum pull distance (prevents physics glitches)
-			if force_percent > 0.85:
-				# Apply a diminishing returns curve to prevent extreme forces
-				force_percent = 0.85 + (0.15 * (force_percent - 0.85) / 0.15)
-			
-			# Calculate launch force based on adjusted pull distance
-			var adjusted_force = min(pull_distance * launch_force, max_pull_distance * launch_force * 0.9)
-			var force = Vector2(0, -adjusted_force)
-			
-			# Apply impulse to the ball - use central_impulse for better physics
-			ball_node.apply_central_impulse(force)
-			print("Applied vertical impulse: ", force)
-			
-			# Ensure the ball is not sleeping
-			ball_node.sleeping = false
-		else:
-			print("Ball not in plunger lane, ignoring")
+			# Pick the closest ball
+			if total_distance < closest_distance:
+				closest_distance = total_distance
+				ball_to_launch = ball
+				print("Found ball in plunger lane: ", ball.name, " distance: ", total_distance)
+	
+	# Launch the selected ball if one was found
+	if ball_to_launch != null:
+		print("Launching ball from plunger lane!")
+		
+		# Apply a non-linear curve to the force to prevent excessive force at max pull
+		var force_percent = pull_distance / max_pull_distance
+		
+		# Cap the force if it's at maximum pull distance (prevents physics glitches)
+		if force_percent > 0.85:
+			# Apply a diminishing returns curve to prevent extreme forces
+			force_percent = 0.85 + (0.15 * (force_percent - 0.85) / 0.15)
+		
+		# Calculate launch force based on adjusted pull distance
+		var adjusted_force = min(pull_distance * launch_force, max_pull_distance * launch_force * 0.9)
+		var force = Vector2(0, -adjusted_force)
+		
+		# Apply impulse to the ball - use central_impulse for better physics
+		ball_to_launch.apply_central_impulse(force)
+		print("Applied vertical impulse: ", force)
+		
+		# Ensure the ball is not sleeping
+		ball_to_launch.sleeping = false
 	else:
-		print("Could not find ball to launch")
+		print("No ball found in plunger lane to launch")
 
 # Helper function to get the plunger's rectangle for hit detection
 func get_plunger_rect() -> Rect2:

@@ -13,7 +13,6 @@ var plunger_position: Vector2 = Vector2(840, 1440)  # Default plunger position
 # Flag to prevent multiple respawns in a single physics frame
 var is_respawning = false
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	print("Exit area initialized!")
 	
@@ -21,91 +20,43 @@ func _ready():
 	monitoring = true
 	monitorable = true
 	
-	# Connect both entry and exit signals
-	if not body_entered.is_connected(_on_body_entered):
-		body_entered.connect(_on_body_entered)
-		print("Connected body_entered signal")
-	
 	# Preload the ball scene for instantiation
 	ball_scene_resource = load(ball_scene_path)
-	if ball_scene_resource:
-		print("Successfully loaded ball scene resource")
-	else:
+	if not ball_scene_resource:
 		push_error("Failed to load ball scene resource")
 		return
 	
 	# Preload the plunger scene for reinstantiation if needed
 	plunger_scene_resource = load(plunger_scene_path)
-	if plunger_scene_resource:
-		print("Successfully loaded plunger scene resource")
-	else:
+	if not plunger_scene_resource:
 		push_error("Failed to load plunger scene resource")
 	
 	# Find existing plunger for position reference
 	var plunger_node = get_node_or_null("../plunger")
 	if plunger_node:
 		plunger_position = plunger_node.global_position
-		print("Found existing plunger at position: ", plunger_position)
-	
-	# We'll use a fixed spawn position to ensure consistency
-	print("Using fixed ball spawn position: ", spawn_position)
 
-# Called every frame - use this to ensure we detect balls that fall through
 func _physics_process(_delta):
-	# Skip if already respawning
-	if is_respawning:
-		return
-	
-	# Check for balls that have gone past the bottom of the screen
-	var ball_nodes = get_tree().get_nodes_in_group("balls")
-	for ball_node in ball_nodes:
-		if ball_node is RigidBody2D:
-			# If the ball is beyond the bottom of the screen, respawn it
-			if ball_node.global_position.y > 1600:
-				print("Ball detected below screen - respawning!")
-				
-				# Deactivate the guard when the ball goes off-screen
-				reset_table()
-				
-				is_respawning = true
-				# Since the ball is now the RigidBody2D itself rather than its parent
-				call_deferred("replace_ball_and_plunger", ball_node)
-				return
-
-# Called when a physics body enters this area
-func _on_body_entered(body):
-	print("Body entered exit area: ", body.name, " at position ", body.global_position)
-	
-	# Avoid multiple respawns
-	if is_respawning:
-		return
-	
-	# Check if the entering body is a RigidBody2D (ball)
-	if body is RigidBody2D and (body.is_in_group("balls") or body.name == "Ball"):
-		print("Ball detected entering exit area!")
+	if not is_respawning:
+		var overlapping_balls = 0
 		
-		# Deactivate the guard
-		reset_table()
+		# Count how many balls are in the exit area
+		var overlapping_bodies = get_overlapping_bodies()
+		for body in overlapping_bodies:
+			if body is RigidBody2D and body.is_in_group("balls"):
+				overlapping_balls += 1
 		
-		is_respawning = true
-		# Since the ball is now the RigidBody2D itself rather than its parent
-		call_deferred("replace_ball_and_plunger", body)
+		# Get all balls in the game
+		var ball_nodes = get_tree().get_nodes_in_group("balls")
+		
+		# Only reset if there are no balls in the exit area and balls exist elsewhere
+		if overlapping_balls == 0 and ball_nodes.size() > 0:
+			reset_table()
+			is_respawning = true
+			call_deferred("replace_ball_and_plunger", ball_nodes[0])
 
 # Function to replace both the ball and plunger
 func replace_ball_and_plunger(old_ball: RigidBody2D):
-	print("Attempting to replace ball and plunger")
-	
-	# Double-check we have everything we need
-	if not ball_scene_resource:
-		push_error("No ball scene resource available")
-		is_respawning = false
-		return
-	
-	if not old_ball:
-		push_error("No old ball to replace")
-		is_respawning = false
-		return
-	
 	# Get reference to the table node to add our new objects
 	var table = get_node_or_null("..")
 	if not table:
@@ -114,17 +65,13 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 		return
 	
 	# 1. Remove the old ball
-	print("Removing old ball: ", old_ball.name)
 	old_ball.queue_free()
 	
 	# 2. Remove the old plunger
 	var old_plunger = get_node_or_null("../plunger")
 	if old_plunger:
-		print("Removing old plunger")
 		plunger_position = old_plunger.global_position  # Save position before removing
 		old_plunger.queue_free()
-	else:
-		print("No plunger found to replace")
 	
 	# Wait for a physics frame to ensure clean removal
 	await get_tree().physics_frame
@@ -134,7 +81,6 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 		var new_plunger = plunger_scene_resource.instantiate()
 		if new_plunger:
 			new_plunger.global_position = plunger_position
-			print("Adding new plunger to scene at position: ", plunger_position)
 			table.add_child(new_plunger)
 			new_plunger.name = "plunger"
 	
@@ -145,11 +91,8 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 		is_respawning = false
 		return
 	
-	print("New ball instance created")
-	
 	# Position the ball just below the plunger
 	spawn_position = Vector2(plunger_position.x, plunger_position.y - 200)
-	print("Ball spawn position: ", spawn_position)
 	
 	# Set the position before adding to the scene tree
 	new_ball.global_position = spawn_position
@@ -174,7 +117,6 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 		# Ensure sprite doesn't rotate with the physics body
 		ball_sprite.rotation = 0
 	
-	print("Adding new ball to scene")
 	# Add the new ball to the scene after the plunger is ready
 	table.add_child(new_ball)
 	new_ball.name = "ball"
@@ -182,9 +124,6 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 	# Reset the flag after a short delay to prevent multiple respawns
 	await get_tree().create_timer(0.5).timeout
 	is_respawning = false
-	
-	# Debug output
-	print("Ball and plunger replaced successfully")
 
 # Function to deactivate all guards and reset the table
 func reset_table():
@@ -201,26 +140,21 @@ func reset_table():
 			var sprite = static_body.get_node_or_null("Sprite2D")
 			if sprite:
 				sprite.visible = false
-				
-			print("Main guard deactivated when ball exited")
 	
 	# Reset the Guardarea state if it has the activated flag
 	var guard_area = get_node_or_null("../Guardarea")
 	if guard_area and guard_area.has_method("deactivate_guard"):
 		guard_area.deactivate_guard()
-		print("Notified Guardarea that guard is deactivated")
-		
+	
 	# Reset the gutterarea1 state
 	var gutter_area1 = get_node_or_null("../gutterarea1")
 	if gutter_area1 and gutter_area1.has_method("deactivate_guard"):
 		gutter_area1.deactivate_guard()
-		print("Reset gutterarea1 when ball exited")
 	
 	# Reset the gutterarea2 state
 	var gutter_area2 = get_node_or_null("../gutterarea2")
 	if gutter_area2 and gutter_area2.has_method("deactivate_guard"):
 		gutter_area2.deactivate_guard()
-		print("Reset gutterarea2 when ball exited")
 	
 	# Reset railareaentrance1, railareaentrance2, and railareaexit
 	# Reset rail to its original state (half opacity, rail1 active and rail2 inactive)
@@ -229,12 +163,10 @@ func reset_table():
 		var sprite = rail_node.get_node_or_null("Sprite2D")
 		if sprite:
 			sprite.modulate = Color(sprite.modulate.r, sprite.modulate.g, sprite.modulate.b, 0.49)
-			print("Reset rail sprite to half opacity (125/255)")
 		
 		var rail_exit = get_node_or_null("../railareaexit")
 		if rail_exit and rail_exit.has_method("enable_rail1"):
 			rail_exit.enable_rail1()
-			print("Reset rail to default state (rail1 enabled, rail2 disabled)")
 	
 	# Reset all target sets in the game
 	var target_nodes = []
@@ -246,4 +178,3 @@ func reset_table():
 			# Check if the targets node has the reset method
 			if targets_node.has_method("reset_all_targets"):
 				targets_node.reset_all_targets()
-				print("Reset targets: " + targets_node.name + " when ball exited")

@@ -69,7 +69,7 @@ radius = 4.47214
 radius = 5.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ssv1w"]
-size = Vector2(907, 64)
+size = Vector2(907, 1556)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sln7q"]
 size = Vector2(53.6851, 8.75)
@@ -81,7 +81,7 @@ size = Vector2(69.1075, 8.75)
 size = Vector2(49, 5.375)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_s8sj4"]
-radius = 42.0476
+radius = 19.6977
 
 [node name="Table" type="Node2D"]
 
@@ -140,8 +140,20 @@ shape = SubResource("RectangleShape2D_o4lkm")
 [node name="plunger" parent="." instance=ExtResource("2_4ppvu")]
 position = Vector2(839, 1470)
 
+[node name="bumper" parent="." instance=ExtResource("17_k47uh")]
+position = Vector2(410, 532)
+scale = Vector2(0.8, 0.8)
+
+[node name="bumper2" parent="." instance=ExtResource("17_k47uh")]
+position = Vector2(285, 404)
+scale = Vector2(0.8, 0.8)
+
+[node name="bumper3" parent="." instance=ExtResource("17_k47uh")]
+position = Vector2(460, 361)
+scale = Vector2(0.8, 0.8)
+
 [node name="ball" parent="." instance=ExtResource("3_r4jc3")]
-position = Vector2(837, 1235)
+position = Vector2(845, 824)
 
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
 position = Vector2(298, 1471)
@@ -258,18 +270,6 @@ script = ExtResource("16_xhfwg")
 position = Vector2(782, 863)
 shape = SubResource("CircleShape2D_3leha")
 
-[node name="bumper" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(410, 532)
-scale = Vector2(0.8, 0.8)
-
-[node name="bumper2" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(285, 404)
-scale = Vector2(0.8, 0.8)
-
-[node name="bumper3" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(460, 361)
-scale = Vector2(0.8, 0.8)
-
 [node name="targets" parent="." instance=ExtResource("18_xhfwg")]
 position = Vector2(478, 602)
 rotation = 3.15381
@@ -303,11 +303,15 @@ position = Vector2(619, 333)
 rotation = -0.680678
 
 [node name="Exit" type="Area2D" parent="."]
+collision_layer = 11
+collision_mask = 11
 script = ExtResource("24_sln7q")
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
-position = Vector2(453, 1697)
+position = Vector2(453, 887)
 shape = SubResource("RectangleShape2D_ssv1w")
+metadata/_edit_lock_ = true
 
 [node name="alcoveBumper" parent="." instance=ExtResource("25_hh0i4")]
 position = Vector2(601, 585)
@@ -381,5 +385,5 @@ position = Vector2(723, 801)
 script = ExtResource("33_xpjqg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="minigamearea"]
-position = Vector2(1020, 920)
+position = Vector2(1050, 1097)
 shape = SubResource("CircleShape2D_s8sj4")
