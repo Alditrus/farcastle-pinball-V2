@@ -14,7 +14,7 @@ size = Vector2(20, 34)
 [node name="candle" type="Node2D"]
 script = ExtResource("1_45ia7")
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+[node name="normalflame" type="CPUParticles2D" parent="."]
 position = Vector2(0, -29)
 amount = 5
 texture = ExtResource("1_xsvjb")
@@ -23,6 +23,19 @@ speed_scale = 0.4
 gravity = Vector2(0, -980)
 scale_amount_min = 0.3
 scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_oi8ik")
+
+[node name="completeflame" type="CPUParticles2D" parent="."]
+position = Vector2(0, -29)
+emitting = false
+amount = 10
+texture = ExtResource("1_xsvjb")
+lifetime = 0.4
+one_shot = true
+speed_scale = 0.6
+explosiveness = 0.5
+gravity = Vector2(0, -980)
+scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_oi8ik")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
