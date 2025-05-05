@@ -1,8 +1,9 @@
-[gd_scene load_steps=54 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=55 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://c5u3og1um2vkk" path="res://Scenes/plunger.tscn" id="2_4ppvu"]
+[ext_resource type="Texture2D" uid="uid://bwukrlo2ng1c6" path="res://Assets/table/bumperwall.png" id="3_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="3_r4jc3"]
 [ext_resource type="PackedScene" uid="uid://cutassm65em2d" path="res://Scenes/flipper.tscn" id="4_0xndo"]
 [ext_resource type="PackedScene" uid="uid://m7uiwoi0ovx3" path="res://Scenes/guard.tscn" id="5_5cpa6"]
@@ -72,7 +73,7 @@ radius = 4.47214
 radius = 5.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sln7q"]
-size = Vector2(53.6851, 8.75)
+size = Vector2(33.101, 25.7767)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wn4jv"]
 size = Vector2(69.1075, 8.75)
@@ -102,8 +103,13 @@ metadata/_edit_lock_ = true
 polygon = PackedVector2Array(87, 1397, 87, 1511, 29, 1511, 29, 1124, 33, 1081, 40, 1046, 49, 1019, 63, 995, 79, 978, 92, 969, 21, 805, 54, 783, 164, 918, 171, 913, 133, 855, 96, 788, 70, 730, 48, 667, 35, 615, 26, 555, 25, 491, 30, 443, 39, 398, 56, 352, 76, 312, 100, 277, 132, 242, 177, 209, 231, 182, 290, 161, 355, 147, 419, 141, 482, 142, 544, 152, 612, 173, 670, 201, 716, 232, 761, 272, 794, 312, 824, 363, 843, 411, 857, 460, 865, 505, 869, 555, 869, 1517, 810, 1517, 810, 574, 805, 521, 796, 476, 785, 445, 774, 426, 763, 414, 576, 507, 564, 542, 558, 580, 558, 614, 568, 654, 583, 681, 598, 699, 610, 708, 628, 691, 613, 676, 600, 655, 593, 635, 591, 611, 593, 588, 605, 561, 622, 540, 646, 523, 673, 514, 702, 513, 735, 522, 760, 539, 777, 560, 787, 582, 792, 612, 787, 642, 777, 663, 760, 681, 597, 823, 705, 937, 764, 852, 798, 873, 742, 1031, 753, 1037, 767, 1050, 778, 1068, 786, 1091, 790, 1117, 792, 1155, 792, 1516, 730, 1516, 730, 1456, 565, 1584, 909, 1583, 910, -9, -4, -9, -4, 1584, 306, 1585)
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
-position = Vector2(4, -27)
+position = Vector2(3.70001, 6.5)
 polygon = PackedVector2Array(321, 627, 358, 565, 449, 564, 490, 629)
+
+[node name="Sprite2D" type="Sprite2D" parent="Walls/StaticBody2D/CollisionPolygon2D2"]
+position = Vector2(405, 596)
+texture = ExtResource("3_hnw2n")
+metadata/_edit_lock_ = true
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
 polygon = PackedVector2Array(517, 213, 517, 275, 544, 281, 579, 296, 603, 313, 624, 335, 638, 359, 647, 384, 663, 373, 678, 355, 685, 339, 686, 324, 683, 308, 676, 293, 662, 275, 645, 259, 620, 243, 589, 228, 561, 220, 537, 215)
@@ -145,19 +151,22 @@ shape = SubResource("RectangleShape2D_o4lkm")
 position = Vector2(839, 1470)
 
 [node name="bumper" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(410, 532)
+position = Vector2(408, 546)
 scale = Vector2(0.8, 0.8)
+bumper_force = 15.0
 
 [node name="bumper2" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(285, 404)
+position = Vector2(312, 419)
 scale = Vector2(0.8, 0.8)
+bumper_force = 15.0
 
 [node name="bumper3" parent="." instance=ExtResource("17_k47uh")]
-position = Vector2(460, 361)
+position = Vector2(487, 403)
 scale = Vector2(0.8, 0.8)
+bumper_force = 15.0
 
 [node name="ball" parent="." instance=ExtResource("3_r4jc3")]
-position = Vector2(839, 1206)
+position = Vector2(839, 1247)
 
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
 position = Vector2(298, 1471)
@@ -165,7 +174,7 @@ rotation = 0.523599
 keycode = "Left"
 snap_time = 0.05
 snap_angle = -65
-flipper_proximity = 100.0
+flipper_proximity = 110.0
 
 [node name="flipper2" parent="." instance=ExtResource("4_0xndo")]
 position = Vector2(570, 1471)
@@ -174,7 +183,7 @@ scale = Vector2(-1, -1)
 keycode = "Right"
 snap_time = 0.05
 snap_angle = 65
-flipper_proximity = 100.0
+flipper_proximity = 110.0
 
 [node name="Guard" parent="." instance=ExtResource("5_5cpa6")]
 position = Vector2(785, 374)
@@ -245,12 +254,12 @@ scale = Vector2(0.5, 0.5)
 [node name="slingshotband" parent="." instance=ExtResource("13_llvxf")]
 position = Vector2(264, 1278)
 rotation = 1.06465
-launch_force_horizontal = 3.0
+launch_angle_degrees = 340.0
 
 [node name="slingshotband2" parent="." instance=ExtResource("13_llvxf")]
 position = Vector2(599, 1281)
 rotation = -1.11701
-launch_force_horizontal = -3.0
+launch_angle_degrees = 200.0
 
 [node name="sinkholeguard" parent="." instance=ExtResource("14_bxtnr")]
 position = Vector2(61, 831)
@@ -275,7 +284,7 @@ position = Vector2(782, 863)
 shape = SubResource("CircleShape2D_3leha")
 
 [node name="targets" parent="." instance=ExtResource("18_xhfwg")]
-position = Vector2(478, 602)
+position = Vector2(476.7, 634.5)
 rotation = 3.15381
 
 [node name="targets2" parent="." instance=ExtResource("18_xhfwg")]
@@ -297,6 +306,10 @@ rotation = 0.602139
 [node name="curveBumper4" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(157, 433)
 rotation = 0.253073
+
+[node name="curveBumper7" parent="." instance=ExtResource("19_5kx35")]
+position = Vector2(147, 501)
+rotation = 0.0261799
 
 [node name="curveBumper5" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(567, 293)
@@ -345,7 +358,7 @@ position = Vector2(458, 797)
 script = ExtResource("21_pxje1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="railareaentrance1"]
-position = Vector2(157.182, 661.399)
+position = Vector2(156, 656)
 rotation = -0.453786
 shape = SubResource("RectangleShape2D_sln7q")
 
@@ -378,7 +391,7 @@ position = Vector2(723, 801)
 script = ExtResource("33_xpjqg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="minigamearea"]
-position = Vector2(1050, 1097)
+position = Vector2(1042, 1186)
 shape = SubResource("CircleShape2D_s8sj4")
 
 [node name="Exit" type="Area2D" parent="."]
@@ -394,7 +407,7 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 metadata/_edit_lock_ = true
 
 [node name="Jaw" type="Sprite2D" parent="."]
-position = Vector2(435, 1270)
+position = Vector2(435, 1309)
 texture = ExtResource("35_6kmrl")
 
 [node name="candle" parent="." instance=ExtResource("36_qrwlr")]
