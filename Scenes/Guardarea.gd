@@ -17,15 +17,13 @@ func _ready():
 	if guard_node:
 		# Deactivate the guard by default
 		deactivate_guard()
-		print("Guard deactivated by default")
 	else:
 		push_error("Could not find Guard node")
 	
 	# Connect the body entered signal
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
-		print("Connected body_entered signal to Guardarea")
-	
+		
 	# Monitor ball destruction to deactivate guard
 	get_tree().connect("node_removed", Callable(self, "_on_node_removed"))
 	
@@ -36,7 +34,6 @@ func _ready():
 func _on_body_entered(body):
 	# Check if the entering body is a ball
 	if not guard_activated and body is RigidBody2D and (body.is_in_group("balls") or body.name == "Ball"):
-		print("Ball detected entering guard area, activating guard")
 		activate_guard()
 
 # Called when a node is removed from the scene
@@ -46,7 +43,6 @@ func _on_node_removed(node):
 		# Check if we still have a valid scene tree
 		var tree = get_tree()
 		if tree == null:
-			print("Scene tree no longer valid, skipping node_removed handling")
 			return
 		
 		# Use call_deferred to handle this after physics processing
@@ -63,13 +59,10 @@ func _check_ball_count():
 		
 	var remaining_balls = tree.get_nodes_in_group("balls")
 	if remaining_balls.size() == 0:
-		print("No balls remaining, deactivating guard")
 		deactivate_guard()
 
 # Called when this node is about to exit the scene tree
 func _on_tree_exiting():
-	print("Guard area exiting tree, disconnecting signals")
-	
 	# Disconnect node_removed signal to prevent errors during scene changes
 	var tree = get_tree()
 	if tree != null:
@@ -97,7 +90,6 @@ func activate_guard():
 			sprite.visible = true
 		
 		guard_activated = true
-		print("Guard activated")
 
 # Function to deactivate the guard
 func deactivate_guard():
@@ -114,4 +106,3 @@ func deactivate_guard():
 			sprite.visible = false
 		
 		guard_activated = false
-		print("Guard deactivated")

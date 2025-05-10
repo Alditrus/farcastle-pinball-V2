@@ -6,7 +6,7 @@ var original_position: Vector2
 # Launch configuration with angle and speed
 @export var launch_speed: float = 1000.0  # Speed for the ball when launched
 @export var launch_angle_degrees: float = 45.0  # Angle in degrees (measured clockwise from right/east)
-											 # For example: 45° = up-right, 135° = up-left
+												 # For example: 45° = up-right, 135° = up-left
 
 var reset_timer: Timer  # Timer for handling position reset safely
 var flash_timer: Timer  # Timer for handling active sprite visibility
@@ -59,22 +59,17 @@ func _ready():
 	
 	# Connect the body entered signal
 	area.body_entered.connect(_on_body_entered)
-	
-	print("Slingshot band initialized at position: ", global_position)
-	print("Launch angle: ", launch_angle_degrees, " degrees, speed: ", launch_speed)
 
 # Called when a body enters the detection area
 func _on_body_entered(body):
 	# Check if the colliding body is a ball
 	if body.is_in_group("balls"):
-		print("Ball detected, launching!")
 		launch_ball(body)
 		
 		# Show the active sprite
 		if band_active_sprite:
 			band_active_sprite.visible = true
 			flash_timer.start()
-			print("Activated band sprite")
 
 # Function to launch the ball using angle-based velocity
 func launch_ball(ball_node):
@@ -93,14 +88,11 @@ func launch_ball(ball_node):
 		
 		# Ensure the ball is not sleeping
 		ball_node.sleeping = false
-		
-		print("Ball launched at angle: ", launch_angle_degrees, " degrees with speed: ", launch_speed)
 
 # Timer callback to hide active sprite
 func _on_flash_timer_timeout():
 	if band_active_sprite:
 		band_active_sprite.visible = false
-		print("Deactivated band sprite")
 
 # Timer callback to reset piston position
 func _on_reset_timer_timeout():
@@ -111,5 +103,3 @@ func reset_piston():
 	piston_body.freeze = true
 	piston_body.linear_velocity = Vector2.ZERO
 	piston_body.position = original_position
-	
-	print("Piston reset to original position")

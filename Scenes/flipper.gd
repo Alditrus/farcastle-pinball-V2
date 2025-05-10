@@ -50,9 +50,6 @@ func _ready():
 	var nudge_system = find_nudge_system()
 	if nudge_system:
 		nudge_system.tilt_state_changed.connect(_on_tilt_state_changed)
-		print("Flipper connected to nudge system tilt signal")
-	
-	print("Flipper initialized with collision area")
 
 # Find the nudge system in the scene
 func find_nudge_system():
@@ -72,13 +69,11 @@ func find_nudge_system():
 	if nudge_nodes.size() > 0:
 		return nudge_nodes[0]
 	
-	print("Warning: Couldn't find nudge system for flipper")
 	return null
 
 # Handle tilt state changes
 func _on_tilt_state_changed(tilted):
 	is_tilted = tilted
-	print("Flipper received tilt state: ", is_tilted)
 
 func _physics_process(delta):
 	var is_pressing = Input.is_action_pressed(keycode) and not is_tilted  # Disable when tilted
@@ -134,7 +129,6 @@ func check_for_nearby_balls():
 
 func _on_area_body_entered(body):
 	if body.is_in_group("balls") and is_active and abs(current_rotation_speed) > 30:
-		print("Ball detected in flipper area!")
 		launch_ball(body)
 
 func launch_ball(ball):
@@ -160,5 +154,3 @@ func launch_ball(ball):
 	
 	# Apply impulse to the ball
 	ball.apply_central_impulse(launch_force)
-	
-	print("Applied flipper force: ", launch_force, " | Direction: ", launch_direction, " | Distance factor: ", force_factor)

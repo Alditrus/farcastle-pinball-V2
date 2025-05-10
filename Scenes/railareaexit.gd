@@ -18,7 +18,6 @@ func _ready():
 		if rail1 and rail2:
 			# Enable rail1, disable rail2 by default
 			enable_rail1()
-			print("Initial setup: rail1 enabled, rail2 disabled")
 		else:
 			push_error("Could not find rail1 or rail2 nodes in rail")
 	else:
@@ -43,7 +42,6 @@ func _on_body_entered(body):
 		# Switch from rail1 to rail2
 		if rail1 and rail2:
 			enable_rail2()
-			print("Switched to rail2")
 		
 		# Also make rail half opaque by setting alpha to 125 (half opacity)
 		if rail_node:
@@ -52,11 +50,6 @@ func _on_body_entered(body):
 				# Keep the same RGB values but change alpha to 0.49 (125/255)
 				var current_color = sprite.modulate
 				sprite.modulate = Color(current_color.r, current_color.g, current_color.b, 0.49)
-				print("Set rail sprite to half opacity (125/255)")
-			else:
-				print("Could not find Sprite2D in rail node")
-		else:
-			print("Rail node not found")
 
 
 # Enable rail1 and disable rail2

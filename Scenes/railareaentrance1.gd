@@ -39,11 +39,6 @@ func _on_body_entered(body):
 				# Keep the same RGB values but change alpha to 1.0 (255)
 				var current_color = sprite.modulate
 				sprite.modulate = Color(current_color.r, current_color.g, current_color.b, 1.0)
-				print("Set rail sprite to full opacity")
-			else:
-				print("Could not find Sprite2D in rail node")
-		else:
-			print("Rail node not found")
 
 # Set the ball's velocity based on angle
 func set_ball_rail_velocity(ball: RigidBody2D):
@@ -58,5 +53,3 @@ func set_ball_rail_velocity(ball: RigidBody2D):
 	
 	# Ensure the ball is not sleeping
 	ball.sleeping = false
-	
-	print("Ball launched into rail at angle ", rail_angle_degrees, " degrees with speed ", rail_speed)

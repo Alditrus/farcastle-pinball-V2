@@ -8,7 +8,6 @@ var is_active = true
 func _ready():
 	# Add the ball to a group for easier tracking
 	add_to_group("balls")
-	print("Ball added to 'balls' group")
 	
 	# Set up better physics properties for pinball behavior
 	mass = 1.0  # Normal mass for a pinball

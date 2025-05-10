@@ -39,12 +39,6 @@ func _on_area_body_entered(body):
 		
 		# Emit signal to notify candleset
 		emit_signal("candle_state_changed", self, is_active)
-		
-		# Debug message
-		if is_active:
-			print("Candle activated")
-		else:
-			print("Candle deactivated")
 
 # Updates the particle effect based on the is_active state
 func update_particle_effect():

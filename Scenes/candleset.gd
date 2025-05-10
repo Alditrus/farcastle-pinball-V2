@@ -22,7 +22,7 @@ func _ready():
 	add_child(timer)
 
 # Called when any candle's state changes
-func _on_candle_state_changed(candle_node, is_active):
+func _on_candle_state_changed(_candle_node, _is_active):
 	check_all_active()
 
 # Check if all candles are active
@@ -37,7 +37,6 @@ func check_all_active():
 	
 	# If all candles are active, trigger the complete state
 	if all_active:
-		print("All candles activated!")
 		emit_signal("all_candles_activated")
 		trigger_complete_flame()
 
@@ -56,8 +55,6 @@ func _on_complete_flame_timeout():
 	for candle in candles:
 		candle.set_active(false)
 		candle.set_complete(false)
-	
-	print("Candle set reset")
 
 # Public method to reset all candles
 func reset():

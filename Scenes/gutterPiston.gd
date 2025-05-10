@@ -40,14 +40,11 @@ func _ready():
 	
 	# Connect the body entered signal
 	area.body_entered.connect(_on_body_entered)
-	
-	print("Gutter piston initialized at position: ", global_position)
 
 # Called when a body enters the detection area
 func _on_body_entered(body):
 	# Check if the colliding body is a ball
 	if body.is_in_group("balls"):
-		print("Ball detected, launching!")
 		launch_ball(body)
 
 # Function to launch the ball upwards
@@ -80,7 +77,6 @@ func launch_ball(ball_node):
 		
 		# Add a helper method to apply the force in the next physics frame
 		call_deferred("_apply_ball_impulse", ball_node, force)
-		print("Scheduled vertical impulse: ", force, " using consistent mode: ", consistent_mode)
 		
 		# Ensure the ball is not sleeping - use call_deferred
 		ball_node.call_deferred("set_sleeping", false)
@@ -89,7 +85,6 @@ func launch_ball(ball_node):
 func _apply_ball_impulse(ball_node, force):
 	if is_instance_valid(ball_node):
 		ball_node.apply_central_impulse(force)
-		print("Applied deferred impulse: ", force)
 			
 # Timer callback to reset piston position
 func _on_reset_timer_timeout():
@@ -100,5 +95,3 @@ func reset_piston():
 	piston_body.freeze = true
 	piston_body.linear_velocity = Vector2.ZERO
 	piston_body.position = original_position
-	
-	print("Piston reset to original position")

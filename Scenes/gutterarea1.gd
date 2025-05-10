@@ -14,14 +14,12 @@ func _ready():
 	if guard_node:
 		# Deactivate the guard by default
 		deactivate_guard()
-		print("Gutter guard deactivated by default")
 	else:
 		push_error("Could not find gutter guard node")
 	
 	# Connect the body entered signal
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
-		print("Connected body_entered signal to gutterarea1")
 	
 	# Monitor ball destruction to deactivate guard
 	get_tree().connect("node_removed", _on_node_removed)
@@ -33,10 +31,7 @@ func _on_body_entered(body):
 		# Only activate if the ball is moving upward (negative y velocity)
 		var ball_velocity = body.linear_velocity
 		if ball_velocity.y < 0:
-			print("Ball detected moving upward into guard area, activating guard")
 			activate_guard()
-		else:
-			print("Ball detected but moving downward, not activating guard")
 
 # Called when a node is removed from the scene
 func _on_node_removed(node):
@@ -49,7 +44,6 @@ func _on_node_removed(node):
 		# Check if there are any remaining balls
 		var remaining_balls = get_tree().get_nodes_in_group("balls")
 		if remaining_balls.size() == 0:
-			print("Ball destroyed, deactivating guard")
 			deactivate_guard()
 
 # Function to activate the guard
@@ -67,7 +61,6 @@ func activate_guard():
 			sprite.visible = true
 		
 		guard_activated = true
-		print("Guard activated")
 
 # Function to deactivate the guard
 func deactivate_guard():
@@ -84,4 +77,3 @@ func deactivate_guard():
 			sprite.visible = false
 		
 		guard_activated = false
-		print("Gutter guard deactivated")
