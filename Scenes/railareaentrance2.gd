@@ -34,8 +34,3 @@ func _on_body_entered(body):
 				# Keep the same RGB values but change alpha to 0.49 (125/255)
 				var current_color = sprite.modulate
 				sprite.modulate = Color(current_color.r, current_color.g, current_color.b, 0.49)
-				print("Set rail sprite to half opacity (125/255)")
-			else:
-				print("Could not find Sprite2D in rail node")
-		else:
-			print("Rail node not found")

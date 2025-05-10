@@ -36,13 +36,9 @@ func _ready():
 	var sprite = $RigidBody2D/Sprite2D
 	if sprite:
 		sprite.visible = true
-		print("Ensuring plunger sprite is visible")
 	
 	# Make plunger interactable
 	set_process_input(true)
-	
-	# Debug plunger position
-	print("Plunger initialized at position: ", global_position)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -149,14 +145,9 @@ func reset_plunger():
 	# Ensure collision is working by explicitly setting collision layers
 	plunger_body.collision_layer = 1
 	plunger_body.collision_mask = 1
-	
-	# Print debug info
-	print("Plunger reset to original position: ", original_position)
 
 # Function to launch the ball with force relative to plunger pull distance
 func launch_ball(pull_distance: float):
-	print("Attempting to launch ball with pull distance: ", pull_distance)
-	
 	# Find the ball to launch - look for ball in the plunger lane specifically
 	var ball_to_launch = null
 	var closest_distance = INF
@@ -184,12 +175,9 @@ func launch_ball(pull_distance: float):
 			if total_distance < closest_distance:
 				closest_distance = total_distance
 				ball_to_launch = ball
-				print("Found ball in plunger lane: ", ball.name, " distance: ", total_distance)
 	
 	# Launch the selected ball if one was found
 	if ball_to_launch != null:
-		print("Launching ball from plunger lane!")
-		
 		# Apply a non-linear curve to the force to prevent excessive force at max pull
 		var force_percent = pull_distance / max_pull_distance
 		
@@ -204,12 +192,9 @@ func launch_ball(pull_distance: float):
 		
 		# Apply impulse to the ball - use central_impulse for better physics
 		ball_to_launch.apply_central_impulse(force)
-		print("Applied vertical impulse: ", force)
 		
 		# Ensure the ball is not sleeping
 		ball_to_launch.sleeping = false
-	else:
-		print("No ball found in plunger lane to launch")
 
 # Helper function to get the plunger's rectangle for hit detection
 func get_plunger_rect() -> Rect2:

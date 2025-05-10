@@ -42,7 +42,6 @@ enum NudgeDirection {
 func _ready():
 	# Add to group so flippers can find it
 	add_to_group("nudge_system")
-	print("Nudge system initialized - use LEFT/RIGHT/UP ARROW keys for nudging")
 
 func _process(delta):
 	# Update cooldown timer
@@ -55,7 +54,6 @@ func _process(delta):
 		if tilt_decay_timer >= tilt_decay_time:
 			tilt_decay_timer = 0
 			tilt_count -= 1
-			print("Tilt count reduced to: ", tilt_count)
 	
 	# Handle input if not currently nudging, not tilted, and cooldown has expired
 	if !is_nudging and !is_tilted and nudge_cooldown <= 0:
@@ -85,8 +83,6 @@ func apply_nudge(direction):
 	if tilt_count >= tilt_limit:
 		handle_tilt()
 		return
-	elif tilt_count >= tilt_threshold:
-		print("TILT WARNING! Count: ", tilt_count, "/", tilt_limit)
 	
 	# Get all balls in the game
 	var balls = get_tree().get_nodes_in_group("balls")
@@ -109,15 +105,6 @@ func apply_nudge(direction):
 	# Visual feedback - shift the camera to give illusion of table movement
 	shift_camera(direction)
 	
-	# Print debug info
-	match direction:
-		NudgeDirection.LEFT:
-			print("Table nudged left - applied force to balls")
-		NudgeDirection.RIGHT:
-			print("Table nudged right - applied force to balls")
-		NudgeDirection.UP:
-			print("Table nudged up - applied upward force to balls")
-	
 	# Reset nudging flag after a short delay
 	await get_tree().create_timer(0.2).timeout
 	is_nudging = false
@@ -128,7 +115,6 @@ func shift_camera(direction):
 	if camera == null:
 		camera = get_viewport().get_camera_2d()
 		if camera == null:
-			print("Cannot find camera for nudge effect")
 			return
 	
 	# Create a tween for smooth camera movement
@@ -171,7 +157,6 @@ func eject_balls_from_launch_lane():
 				var eject_impulse = Vector2(0, -tilt_eject_force)
 				ball.apply_impulse(eject_impulse)
 				ejected_count += 1
-				print("Ball ejected from launch lane due to tilt!")
 	
 	if ejected_count > 0:
 		# Create a visual shake effect for the ejection
@@ -204,7 +189,6 @@ func shake_camera(direction, intensity = 1.0):
 # Handle tilt - now just disables controls until reset
 func handle_tilt():
 	is_tilted = true
-	print("TILT! Controls disabled until ball respawns")
 	
 	# Eject any balls from the launch lane
 	eject_balls_from_launch_lane()
@@ -221,7 +205,6 @@ func reset_tilt():
 		is_tilted = false
 		tilt_count = 0
 		tilt_decay_timer = 0
-		print("Tilt reset - controls re-enabled")
 		
 		# Emit signal to notify other components of tilt state change
 		emit_signal("tilt_state_changed", false)

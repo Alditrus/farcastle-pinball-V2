@@ -17,8 +17,6 @@ var is_respawning = false
 signal ball_respawned
 
 func _ready():
-	print("Exit area initialized!")
-	
 	# Make sure monitoring is enabled for the Area2D
 	monitoring = true
 	monitorable = true
@@ -145,7 +143,6 @@ func notify_ball_respawn():
 	for nudge in nudge_nodes:
 		if nudge.has_method("on_ball_respawned"):
 			nudge.on_ball_respawned()
-			print("Notified nudge system of ball respawn")
 
 # Function to deactivate all guards and reset the table
 func reset_table():
@@ -206,4 +203,3 @@ func reset_table():
 	for nudge in nudge_nodes:
 		if nudge.has_method("reset_tilt"):
 			nudge.reset_tilt()
-			print("Tilt state has been reset from Exit.gd")

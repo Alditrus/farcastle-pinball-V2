@@ -408,7 +408,7 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 metadata/_edit_lock_ = true
 
 [node name="Jaw" type="Sprite2D" parent="."]
-position = Vector2(435, 1309)
+position = Vector2(435, 1269)
 texture = ExtResource("35_6kmrl")
 
 [node name="candle4" parent="." instance=ExtResource("36_qrwlr")]

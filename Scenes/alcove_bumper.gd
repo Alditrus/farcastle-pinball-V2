@@ -32,14 +32,11 @@ func _ready():
 	
 	# Connect the body entered signal
 	area.body_entered.connect(_on_body_entered)
-	
-	print("Bumper initialized at position: ", global_position)
 
 # Called when a body enters the detection area
 func _on_body_entered(body):
 	# Check if the colliding body is a ball
 	if body.is_in_group("balls"):
-		print("Ball detected, launching!")
 		bump_ball(body)
 
 # Function to launch the ball
@@ -53,9 +50,6 @@ func bump_ball(ball_node):
 		
 		# Apply impulse to the ball
 		ball_node.apply_central_impulse(force)
-		
-		# Debug output
-		print("Applied bumper force: ", force, " | Direction: ", direction)
 		
 		# Ensure the ball is not sleeping
 		ball_node.sleeping = false
