@@ -89,6 +89,11 @@ func _on_specific_area_entered(body, target):
 	if (body.is_in_group("balls") or body.name == "Ball") and not hit_targets.has(target.get_path()):
 		call_deferred("target_down", target)
 
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("target")
+
 # Function to turn up sprite invisible
 func target_down(target_node):
 	if target_node != null:
@@ -121,6 +126,10 @@ func check_all_targets_down():
 		var timer = Timer.new()
 		timer.one_shot = true
 		timer.wait_time = 1.0
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("target_set_complete")
 		add_child(timer)
 		timer.timeout.connect(func(): 
 			call_deferred("reset_all_targets")

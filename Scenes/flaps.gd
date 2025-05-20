@@ -88,7 +88,16 @@ func calculate_speed_scale(velocity):
 func _on_area_2d_body_entered(body):
 	# Check if the body is a ball
 	if body.is_in_group("balls"):
+		# Calculate velocity speed scale for both animation and scoring
+		var velocity_magnitude = body.linear_velocity.length()
+		var speed_scale = calculate_speed_scale(velocity_magnitude)
+		
 		# Store initial position and start checking direction
+		# Increase score with speed scale
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.start_spinner_points(speed_scale)
+		
 		last_ball_position = body.global_position
 		checking_ball_direction = true
 		animation_active = true
@@ -104,6 +113,11 @@ func _on_area_2d_body_exited(body):
 		ball_exited = true
 		# Store the time when the ball exited
 		timer_at_exit = timer
+		
+		# Tell score label that spinner ball has exited to start points decay
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.spinner_ball_exit()
 
 # Plays the animation forwards with specified speed scale (bottom to top entry)
 func _play_animation_forwards(speed_scale):

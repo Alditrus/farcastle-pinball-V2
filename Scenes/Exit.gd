@@ -187,16 +187,7 @@ func reset_table():
 		if rail_exit and rail_exit.has_method("enable_rail1"):
 			rail_exit.enable_rail1()
 	
-	# Reset all target sets in the game
-	var target_nodes = []
-	target_nodes.append(get_node_or_null("../targets"))  # First instance is named "targets" (without a number)
-	target_nodes.append(get_node_or_null("../targets2"))
-
-	for targets_node in target_nodes:
-		if targets_node:
-			# Check if the targets node has the reset method
-			if targets_node.has_method("reset_all_targets"):
-				targets_node.reset_all_targets()
+	# No longer reset targets when ball exits
 				
 	# Reset tilt state if table is tilted
 	var nudge_nodes = get_tree().get_nodes_in_group("nudge_system")

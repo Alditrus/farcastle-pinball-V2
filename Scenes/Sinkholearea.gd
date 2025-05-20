@@ -44,6 +44,11 @@ func _on_body_entered(body):
 	if not guard_activated and body is RigidBody2D and (body.is_in_group("balls") or body.name == "Ball"):
 		activate_guard()
 
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("sinkhole")
+
 # Called when a node is removed from the scene
 func _on_node_removed(node):
 	# Check if the removed node is a ball
