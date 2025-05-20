@@ -1,8 +1,9 @@
-[gd_scene load_steps=56 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=59 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://c5u3og1um2vkk" path="res://Scenes/plunger.tscn" id="2_4ppvu"]
+[ext_resource type="Script" uid="uid://ch5bafhig7eao" path="res://Scenes/missions.gd" id="2_j0mfe"]
 [ext_resource type="Texture2D" uid="uid://bwukrlo2ng1c6" path="res://Assets/table/bumperwall.png" id="3_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="3_r4jc3"]
 [ext_resource type="PackedScene" uid="uid://cutassm65em2d" path="res://Scenes/flipper.tscn" id="4_0xndo"]
@@ -34,11 +35,13 @@
 [ext_resource type="PackedScene" uid="uid://tok40skelu0o" path="res://Scenes/alcove_bumper6.tscn" id="30_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://btsrktuu746ao" path="res://Scenes/alcove_bumper7.tscn" id="31_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://c4vxi50m2wu62" path="res://Scenes/alcove_bumper8.tscn" id="32_hotvi"]
-[ext_resource type="Script" uid="uid://b5k1c8vjhve34" path="res://Scenes/minigamearea.gd" id="33_xpjqg"]
 [ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://pupil.tscn" id="34_r2pup"]
-[ext_resource type="Texture2D" uid="uid://c8qoywgb1n0kf" path="res://Assets/table/jaw.png" id="35_6kmrl"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
+[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
+[ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
+[ext_resource type="Script" uid="uid://1hv3n66ti5yp" path="res://Scenes/score_label.gd" id="41_ecrf2"]
+[ext_resource type="PackedScene" uid="uid://yl3u78w12345" path="res://Scenes/mission_tracker.tscn" id="41_j0mfe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -82,14 +85,17 @@ size = Vector2(69.1075, 8.75)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4463s"]
 size = Vector2(49, 5.375)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_s8sj4"]
-radius = 19.6977
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ssv1w"]
 size = Vector2(907, 1556)
 
+[sub_resource type="Theme" id="Theme_ecrf2"]
+default_font_size = 75
+
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
+
+[node name="Missions" type="Node2D" parent="."]
+script = ExtResource("2_j0mfe")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(450, 789)
@@ -167,20 +173,21 @@ scale = Vector2(0.8, 0.8)
 bumper_force = 15.0
 
 [node name="ball" parent="." instance=ExtResource("3_r4jc3")]
-position = Vector2(839, 1247)
+position = Vector2(840, 1259)
 
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
-position = Vector2(298, 1471)
+position = Vector2(305, 1473)
 rotation = 0.523599
+scale = Vector2(1.1, 1.1)
 keycode = "Left"
 snap_time = 0.05
 snap_angle = -65
 flipper_proximity = 110.0
 
 [node name="flipper2" parent="." instance=ExtResource("4_0xndo")]
-position = Vector2(570, 1471)
+position = Vector2(567, 1477)
 rotation = -0.523599
-scale = Vector2(-1, -1)
+scale = Vector2(-1.1, -1.1)
 keycode = "Right"
 snap_time = 0.05
 snap_angle = 65
@@ -388,13 +395,6 @@ shape = SubResource("RectangleShape2D_4463s")
 [node name="pupil" parent="." instance=ExtResource("34_r2pup")]
 position = Vector2(723, 801)
 
-[node name="minigamearea" type="Area2D" parent="."]
-script = ExtResource("33_xpjqg")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="minigamearea"]
-position = Vector2(1042, 1186)
-shape = SubResource("CircleShape2D_s8sj4")
-
 [node name="Exit" type="Area2D" parent="."]
 collision_layer = 11
 collision_mask = 11
@@ -406,10 +406,6 @@ position = Vector2(453, 887)
 shape = SubResource("RectangleShape2D_ssv1w")
 debug_color = Color(0, 0.6, 0.701961, 0)
 metadata/_edit_lock_ = true
-
-[node name="Jaw" type="Sprite2D" parent="."]
-position = Vector2(435, 1269)
-texture = ExtResource("35_6kmrl")
 
 [node name="candle4" parent="." instance=ExtResource("36_qrwlr")]
 position = Vector2(56, 1231)
@@ -428,3 +424,40 @@ position = Vector2(449.995, 788.35)
 
 [node name="candleset" parent="." instance=ExtResource("39_hotvi")]
 position = Vector2(428, 238)
+
+[node name="minigameentrance" parent="." instance=ExtResource("41_2rdwm")]
+position = Vector2(435, 1289)
+
+[node name="ScoreboardUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 154.0
+offset_bottom = 78.0
+theme = SubResource("Theme_ecrf2")
+
+[node name="ColorRect" type="ColorRect" parent="ScoreboardUI"]
+layout_mode = 0
+offset_left = -4.0
+offset_top = -9.0
+offset_right = 910.0
+offset_bottom = 114.0
+color = Color(0.0627451, 0, 0.0705882, 1)
+
+[node name="ScoreLabel" type="Label" parent="ScoreboardUI"]
+layout_mode = 0
+offset_left = 139.0
+offset_top = 1.0
+offset_right = 429.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("40_dwwbe")
+theme_override_font_sizes/font_size = 0
+text = "0"
+script = ExtResource("41_ecrf2")
+
+[node name="MissionTracker" parent="ScoreboardUI" instance=ExtResource("41_j0mfe")]
+layout_mode = 1
+offset_left = 3588.0
+offset_top = 589.0
+offset_right = 3888.0
+offset_bottom = 694.0

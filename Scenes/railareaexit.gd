@@ -38,6 +38,11 @@ func _on_body_entered(body):
 		# Reset the ball's collision back to default
 		body.collision_layer = 1
 		body.collision_mask = 1
+
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("rail_exit")
 		
 		# Switch from rail1 to rail2
 		if rail1 and rail2:

@@ -33,6 +33,11 @@ func _on_area_body_entered(body):
 	if body is RigidBody2D and body.is_in_group("balls"):
 		# Toggle the candle state
 		is_active = !is_active
+
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("candle")
 		
 		# Update particle effect based on new state
 		update_particle_effect()

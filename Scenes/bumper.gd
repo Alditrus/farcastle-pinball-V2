@@ -59,6 +59,11 @@ func _on_body_entered(body):
 	if body.is_in_group("balls"):
 		bump_ball(body)
 		activate_bumper()
+		
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("bumper")
 
 # Function to launch the ball
 func bump_ball(ball_node):

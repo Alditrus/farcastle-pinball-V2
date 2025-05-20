@@ -65,6 +65,11 @@ func _on_body_entered(body):
 	# Check if the colliding body is a ball
 	if body.is_in_group("balls"):
 		launch_ball(body)
+
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("slingshot")
 		
 		# Show the active sprite
 		if band_active_sprite:

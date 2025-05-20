@@ -9,5 +9,14 @@ func _ready():
 func _on_body_entered(body):
 	# Check if the body that entered is a ball
 	if body.is_in_group("balls"):
-		# Defer the scene change to avoid physics callback issues
-		get_tree().call_deferred("change_scene_to_file", "res://Scenes/minigame.tscn")
+		# Create a delay timer
+		var timer = get_tree().create_timer(0.01)
+		# Connect the timeout signal to scene change
+		timer.timeout.connect(func():
+			# Defer the scene change to avoid physics callback issues
+			get_tree().call_deferred("change_scene_to_file", "res://Scenes/minigame.tscn")
+		)
+		
+		# Optional: freeze the ball position during the delay
+		if body.has_method("set_physics_process"):
+			body.set_physics_process(false)

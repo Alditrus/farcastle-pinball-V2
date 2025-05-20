@@ -39,6 +39,10 @@ func check_all_active():
 	if all_active:
 		emit_signal("all_candles_activated")
 		trigger_complete_flame()
+		# Increase score
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			score_label.increase_score("candle_set_complete")
 
 # Trigger the complete flame effect on all candles
 func trigger_complete_flame():
