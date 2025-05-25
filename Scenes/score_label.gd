@@ -95,7 +95,7 @@ func increase_score(element_type: String):
 		"sinkhole":
 			points = 70000
 		"jackpot":
-			points = 1000
+			points = 10000000
 		"minigame_win":
 			points = 500
 			update_score_text()
@@ -139,7 +139,24 @@ func spinner_ball_exit():
 
 # Update the displayed score text
 func update_score_text():
-	text = str(score)
+	text = format_score_with_commas(score)
+
+# Format score with commas for every thousandth digit
+func format_score_with_commas(number: int) -> String:
+	var score_string = str(number)
+	var formatted_string = ""
+	var digit_count = 0
+	
+	# Loop through digits from right to left
+	for i in range(score_string.length() - 1, -1, -1):
+		digit_count += 1
+		formatted_string = score_string[i] + formatted_string
+		
+		# Add a comma after every third digit, except for the last group
+		if digit_count % 3 == 0 and i > 0:
+			formatted_string = "," + formatted_string
+	
+	return formatted_string
 
 # Function to reset score
 func reset_score():

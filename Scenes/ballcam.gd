@@ -9,7 +9,7 @@ var last_valid_y_position = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Get the ball reference
-	ball_node = get_parent().get_node("Ball")
+	ball_node = get_parent().get_node("minigameball")
 	
 	# Store the initial X position and Y position
 	initial_x_position = position.x

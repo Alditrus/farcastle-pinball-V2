@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=64 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -7,8 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bwukrlo2ng1c6" path="res://Assets/table/bumperwall.png" id="3_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="3_r4jc3"]
 [ext_resource type="PackedScene" uid="uid://cutassm65em2d" path="res://Scenes/flipper.tscn" id="4_0xndo"]
-[ext_resource type="PackedScene" uid="uid://m7uiwoi0ovx3" path="res://Scenes/guard.tscn" id="5_5cpa6"]
-[ext_resource type="Script" uid="uid://d1xmnoc7dbgim" path="res://Scenes/Guardarea.gd" id="6_usajj"]
+[ext_resource type="PackedScene" uid="uid://nhrmo18awsfd" path="res://Scenes/guard.tscn" id="5_5cpa6"]
 [ext_resource type="PackedScene" uid="uid://cpd6rr8gyd8ko" path="res://Scenes/gutter_piston.tscn" id="7_usajj"]
 [ext_resource type="PackedScene" uid="uid://sf5i5tcjcsn" path="res://Scenes/gutter_guard.tscn" id="8_xexre"]
 [ext_resource type="Script" uid="uid://bejislpei0i2g" path="res://Scenes/gutterarea1.gd" id="9_4ntqo"]
@@ -42,6 +41,10 @@
 [ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
 [ext_resource type="Script" uid="uid://1hv3n66ti5yp" path="res://Scenes/score_label.gd" id="41_ecrf2"]
 [ext_resource type="PackedScene" uid="uid://yl3u78w12345" path="res://Scenes/mission_tracker.tscn" id="41_j0mfe"]
+[ext_resource type="Script" uid="uid://bwy0ovk7wo7hs" path="res://Scenes/minigamewindow.gd" id="43_2rdwm"]
+[ext_resource type="Script" uid="uid://hjecv2g386am" path="res://Scenes/guardarea_1.gd" id="43_fick8"]
+[ext_resource type="Script" uid="uid://006sb4ild22j" path="res://Scenes/guardarea_2.gd" id="44_fick8"]
+[ext_resource type="Script" uid="uid://b5k1c8vjhve34" path="res://Scenes/minigamearea.gd" id="45_y7ygw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -60,9 +63,6 @@ size = Vector2(6, 136.438)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o4lkm"]
 size = Vector2(194.832, 5.0437)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xexre"]
-size = Vector2(200.466, 21)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x0duj"]
 size = Vector2(55.25, 13.5)
@@ -90,6 +90,15 @@ size = Vector2(907, 1556)
 
 [sub_resource type="Theme" id="Theme_ecrf2"]
 default_font_size = 75
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y7ygw"]
+size = Vector2(85.5, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wn66p"]
+size = Vector2(191.593, 21)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wn66p"]
+radius = 24.1868
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
@@ -176,7 +185,7 @@ bumper_force = 15.0
 position = Vector2(840, 1259)
 
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
-position = Vector2(305, 1473)
+position = Vector2(305, 1476)
 rotation = 0.523599
 scale = Vector2(1.1, 1.1)
 keycode = "Left"
@@ -192,17 +201,6 @@ keycode = "Right"
 snap_time = 0.05
 snap_angle = 65
 flipper_proximity = 110.0
-
-[node name="Guard" parent="." instance=ExtResource("5_5cpa6")]
-position = Vector2(785, 374)
-
-[node name="Area2D" type="Area2D" parent="."]
-script = ExtResource("6_usajj")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(728.111, 355.685)
-rotation = -1.23046
-shape = SubResource("RectangleShape2D_xexre")
 
 [node name="gutterPiston" parent="." instance=ExtResource("7_usajj")]
 position = Vector2(57, 1502)
@@ -461,3 +459,47 @@ offset_left = 3588.0
 offset_top = 589.0
 offset_right = 3888.0
 offset_bottom = 694.0
+
+[node name="minigamewindow" type="SubViewportContainer" parent="."]
+visible = false
+top_level = true
+light_mask = 24
+visibility_layer = 24
+offset_left = 99.0
+offset_top = 212.0
+offset_right = 799.0
+offset_bottom = 1472.0
+stretch = true
+script = ExtResource("43_2rdwm")
+
+[node name="SubViewport" type="SubViewport" parent="minigamewindow"]
+handle_input_locally = false
+size = Vector2i(700, 1260)
+render_target_update_mode = 0
+
+[node name="Guard" parent="." instance=ExtResource("5_5cpa6")]
+position = Vector2(796, 377)
+
+[node name="Guardarea1" type="Area2D" parent="."]
+script = ExtResource("43_fick8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Guardarea1"]
+position = Vector2(814, 431)
+rotation = -0.244346
+shape = SubResource("RectangleShape2D_y7ygw")
+
+[node name="Guardarea2" type="Area2D" parent="."]
+script = ExtResource("44_fick8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Guardarea2"]
+position = Vector2(733.419, 348.991)
+rotation = -1.37881
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_wn66p")
+
+[node name="testminigamearea" type="Area2D" parent="."]
+script = ExtResource("45_y7ygw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="testminigamearea"]
+position = Vector2(840, 1196)
+shape = SubResource("CircleShape2D_wn66p")
