@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cp0gjau2fwd22"]
+[gd_scene load_steps=17 format=3 uid="uid://cp0gjau2fwd22"]
 
 [ext_resource type="Texture2D" uid="uid://bdoxd8w36h30n" path="res://Assets/minigame/walltexture.png" id="1_s7wve"]
 [ext_resource type="PackedScene" uid="uid://pkimpgnflfu1" path="res://Scenes/minigameball.tscn" id="2_5bepb"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://e8uyxq0molk7" path="res://Scenes/goathead.gd" id="3_iqey4"]
 [ext_resource type="Texture2D" uid="uid://bvp5xbqe6ertg" path="res://Assets/minigame/goathead.png" id="3_xt64r"]
 [ext_resource type="PackedScene" uid="uid://dnlfixqskd0tt" path="res://Scenes/pachinkorow.tscn" id="6_id8w1"]
+[ext_resource type="Script" uid="uid://c1jqrkiliri6x" path="res://Scenes/minigameball.gd" id="6_vnlq7"]
 [ext_resource type="PackedScene" uid="uid://bfdc3b7u1g0lr" path="res://Scenes/scythes.tscn" id="7_yx24v"]
 [ext_resource type="PackedScene" uid="uid://bobjprwyvdr1i" path="res://Scenes/jackpot.tscn" id="8_255i5"]
 
@@ -24,6 +25,9 @@ size = Vector2(899.5, 1730)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_255i5"]
 size = Vector2(938, 45)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vnlq7"]
+size = Vector2(106.5, 8)
 
 [node name="Minigame" type="Node2D"]
 
@@ -51,6 +55,7 @@ shape = SubResource("RectangleShape2D_yx24v")
 
 [node name="ballcam" type="Camera2D" parent="."]
 position = Vector2(450, 791)
+zoom = Vector2(0.8, 0.8)
 script = ExtResource("2_xt64r")
 
 [node name="GoatHead" type="Node2D" parent="."]
@@ -75,13 +80,14 @@ position = Vector2(455, 458)
 position = Vector2(-3, 0)
 shape = SubResource("CircleShape2D_id8w1")
 
-[node name="Ball" parent="." instance=ExtResource("2_5bepb")]
+[node name="minigameball" parent="." instance=ExtResource("2_5bepb")]
 visible = false
 position = Vector2(451, 458)
 can_sleep = false
 freeze = true
+script = ExtResource("6_vnlq7")
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Ball"]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="minigameball"]
 position = Vector2(-1, 333)
 remote_path = NodePath("../../ballcam")
 
@@ -139,36 +145,43 @@ position = Vector2(449, 3332.5)
 shape = SubResource("RectangleShape2D_255i5")
 
 [node name="Sprite2D" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(65, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
 
 [node name="Sprite2D2" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(193, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
 
 [node name="Sprite2D3" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(321, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
 
 [node name="Sprite2D4" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(449, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
 
 [node name="Sprite2D5" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(577, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
 
 [node name="Sprite2D6" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(705, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
 
 [node name="Sprite2D7" type="Sprite2D" parent="floor"]
+visible = false
 position = Vector2(833, 3315)
 scale = Vector2(0.0797413, 0.0797413)
 texture = ExtResource("2_xcq3l")
@@ -196,3 +209,52 @@ polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 32
 [node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="floor"]
 position = Vector2(640, 17)
 polygon = PackedVector2Array(117, 3394, 142, 3394, 142, 3246, 129, 3220, 117, 3246)
+
+[node name="Area2D" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D"]
+position = Vector2(63.25, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="Area2D7" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D7"]
+position = Vector2(837, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="Area2D2" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D2"]
+position = Vector2(193, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="Area2D6" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D6"]
+position = Vector2(705, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="Area2D3" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D3"]
+position = Vector2(322, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="Area2D5" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D5"]
+position = Vector2(577, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="Area2D4" type="Area2D" parent="floor"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor/Area2D4"]
+position = Vector2(449, 3306)
+shape = SubResource("RectangleShape2D_vnlq7")
+debug_color = Color(0, 0.6, 0, 0.419608)

@@ -11,12 +11,25 @@ func _on_body_entered(body):
 	if body.is_in_group("balls"):
 		# Create a delay timer
 		var timer = get_tree().create_timer(0.01)
-		# Connect the timeout signal to scene change
-		timer.timeout.connect(func():
-			# Defer the scene change to avoid physics callback issues
-			get_tree().call_deferred("change_scene_to_file", "res://Scenes/minigame.tscn")
-		)
 		
-		# Optional: freeze the ball position during the delay
-		if body.has_method("set_physics_process"):
-			body.set_physics_process(false)
+		# Using the function reference pattern instead of a lambda
+		timer.timeout.connect(_activate_minigame)
+
+# Function to activate the minigame
+func _activate_minigame():
+	# Instead of pausing the entire tree, we'll just disable the main table
+	# get_tree().paused = true
+	
+	# Get the Table node
+	var table = get_node("/root/Table")
+	if table:
+		# Disable processing in the main table, except for the minigamewindow
+		for child in table.get_children():
+			if child.name != "minigamewindow":
+				child.process_mode = Node.PROCESS_MODE_DISABLED
+	
+	# Get the minigamewindow from the table scene
+	var minigame_window = get_node("/root/Table/minigamewindow")
+	if minigame_window:
+		# Use the activate method to properly set up the minigame
+		minigame_window.activate()

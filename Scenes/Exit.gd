@@ -144,27 +144,8 @@ func notify_ball_respawn():
 		if nudge.has_method("on_ball_respawned"):
 			nudge.on_ball_respawned()
 
-# Function to deactivate all guards and reset the table
+# Function to reset the table
 func reset_table():
-	# Find and deactivate the main guard
-	var guard_node = get_node_or_null("../Guard")
-	if guard_node:
-		# Disable the guard's collision and hide it
-		var static_body = guard_node.get_node_or_null("StaticBody2D")
-		if static_body:
-			static_body.collision_layer = 0
-			static_body.collision_mask = 0
-			
-			# Make the guard invisible
-			var sprite = static_body.get_node_or_null("Sprite2D")
-			if sprite:
-				sprite.visible = false
-	
-	# Reset the Guardarea state if it has the activated flag
-	var guard_area = get_node_or_null("../Guardarea")
-	if guard_area and guard_area.has_method("deactivate_guard"):
-		guard_area.deactivate_guard()
-	
 	# Reset the gutterarea1 state
 	var gutter_area1 = get_node_or_null("../gutterarea1")
 	if gutter_area1 and gutter_area1.has_method("deactivate_guard"):

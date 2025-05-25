@@ -6,6 +6,7 @@ var initial_position = Vector2.ZERO
 var min_x_position = 0
 var max_x_position = 0
 var drag_area: Area2D
+var has_been_dragged = false  # Track if the goathead has been dragged at least once
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,6 +39,12 @@ func _ready():
 		# Connect input events
 		drag_area.input_event.connect(_on_drag_area_input_event)
 	
+	# Try to find and freeze the ball when the scene starts
+	var ball = _find_ball()
+	if ball:
+		ball.freeze = true
+		ball.visible = false
+	
 # Handle input events for the drag area
 func _on_drag_area_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
@@ -46,18 +53,59 @@ func _on_drag_area_input_event(_viewport, event, _shape_idx):
 				# Start dragging
 				is_dragging = true
 				drag_start_position = get_global_mouse_position()
+				has_been_dragged = true  # User has started dragging
 			else:
 				# Stop dragging
 				is_dragging = false
 				
-				# Move the ball to the SpawnArea position
-				var ball = get_parent().get_node("Ball")
-				var spawn_area = $SpawnArea
-				if ball and spawn_area:
-					# Re-enable visibility and unfreeze the ball
-					ball.visible = true
-					ball.freeze = false
-					ball.global_position = spawn_area.global_position
+				# Only release the ball if the goathead has been dragged at least once
+				if has_been_dragged:
+					# Find the ball
+					var ball = _find_ball()
+					var spawn_area = $SpawnArea
+					
+					if ball and spawn_area:
+						# Make ball visible and position it at spawn point
+						ball.visible = true
+						ball.global_position = spawn_area.global_position
+						
+						# Ensure the physics are fully active for the ball
+						ball.freeze = false
+						ball.sleeping = false
+						ball.can_sleep = false
+						
+						# Force an initial velocity to help with physics activation
+						ball.linear_velocity = Vector2(0, 10)
+
+# Helper function to find the ball in either context
+func _find_ball():
+	var ball
+	
+	# First try direct access (when running minigame directly)
+	ball = get_parent().get_node_or_null("minigameball")
+	if not ball:
+		# Try the original node name from the packed scene
+		ball = get_parent().get_node_or_null("ball")
+	
+	# If not found, try to find the ball in the scene tree
+	if not ball:
+		# Try to find the ball in the Minigame scene within a SubViewport
+		var root = get_tree().get_root()
+		
+		var table = root.get_node_or_null("Table")
+		if table:
+			var minigame_window = table.get_node_or_null("minigamewindow")
+			if minigame_window:
+				var sub_viewport = minigame_window.get_node_or_null("SubViewport")
+				if sub_viewport:
+					var minigame = sub_viewport.get_node_or_null("Minigame")
+					if minigame:
+						ball = minigame.get_node_or_null("minigameball")
+						if not ball:
+							# Try the original node name from the packed scene
+							ball = minigame.get_node_or_null("ball")
+	
+	return ball
 
 # Called every frame to handle dragging
 func _process(_delta):

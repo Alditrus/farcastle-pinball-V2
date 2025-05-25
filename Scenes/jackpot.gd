@@ -8,6 +8,9 @@ var end_x = 400    # Right position bound
 var direction = 1   # 1 for right, -1 for left
 var initial_position
 
+# Ball detection
+var jackpot_area: Area2D
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Store initial position
@@ -16,6 +19,13 @@ func _ready():
 	# Set start and end positions relative to the initial position
 	start_x = initial_position.x - pot_range
 	end_x = initial_position.x + pot_range
+	
+	# Get reference to the jackpot area
+	jackpot_area = $jackpot_area
+	
+	# Connect signal for ball collision
+	if jackpot_area:
+		jackpot_area.body_entered.connect(_on_jackpot_area_body_entered)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -31,3 +41,17 @@ func _process(delta):
 	elif position.x <= start_x:
 		position.x = start_x  # Prevent overshooting
 		direction = 1         # Change direction to right
+
+# Function called when a body enters the jackpot area
+func _on_jackpot_area_body_entered(body):
+	# Check if the body is the minigameball
+	if body.name == "minigameball" or body.name == "ball":
+		# Ball has entered the jackpot area
+		on_jackpot_hit(body)
+
+# Function to handle jackpot hit - customize this for your game logic
+func on_jackpot_hit(ball):
+	# Increase score
+	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+	if score_label:
+		score_label.increase_score("jackpot")
