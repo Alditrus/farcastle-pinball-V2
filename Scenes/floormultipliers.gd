@@ -37,8 +37,11 @@ func _on_plier_body_entered(body, area_name):
 			if minigame_window and minigame_window.has_method("deactivate"):
 				minigame_window.deactivate()
 				
-				# Unfreeze all main table balls
-				unfreeze_main_table_balls()
+				# Unfreeze all main table balls and wait for process to complete
+				await unfreeze_main_table_balls()
+				
+				# Add a short delay to let the ball be ejected before starting jaw closing animation
+				await get_tree().create_timer(0.5).timeout
 				
 				# Reset the minigame entrance
 				var minigame_entrance = get_node_or_null("/root/Table/minigameentrance")
@@ -46,16 +49,38 @@ func _on_plier_body_entered(body, area_name):
 					minigame_entrance.reset_entrance()
 
 # Unfreeze all balls in the main table to resume their movement
+# Returns when the process is complete (allows awaiting)
 func unfreeze_main_table_balls():
 	# Find all balls in the "balls" group
 	var balls = get_tree().get_nodes_in_group("balls")
+	var captured_ball_found = false
+	
 	for ball in balls:
 		# Skip any minigameball - only unfreeze main table balls
 		if ball.name != "minigameball":
-			# Unfreeze the ball
+			# Check if this was the captured ball
+			var was_captured = ball.has_meta("original_position")
+			if was_captured:
+				captured_ball_found = true
+			
+			# Restore the ball's appearance and get the callback
+			var MinigameArea = load("res://Scenes/minigamearea.gd")
+			var animation_complete = MinigameArea.restore_ball_appearance(ball)
+			
+			# For the captured ball, the callback will handle unfreezing
+			if was_captured:
+				if animation_complete is Callable:
+					await animation_complete.call()
+				continue
+			
+			# For non-captured balls, handle unfreezing here
+			if animation_complete is Callable:
+				await animation_complete.call()
+			
+			# Unfreeze non-captured balls
 			ball.freeze = false
 			
-			# Restore velocities if they were stored
+			# Restore stored velocities for non-captured balls
 			if ball.has_meta("stored_linear_velocity"):
 				ball.linear_velocity = ball.get_meta("stored_linear_velocity")
 				ball.angular_velocity = ball.get_meta("stored_angular_velocity")
@@ -63,3 +88,8 @@ func unfreeze_main_table_balls():
 				# Clear the stored values
 				ball.remove_meta("stored_linear_velocity")
 				ball.remove_meta("stored_angular_velocity")
+	
+	# If we found a captured ball, add a little extra delay to make sure
+	# the ball has time to launch properly
+	if captured_ball_found:
+		await get_tree().create_timer(0.2).timeout

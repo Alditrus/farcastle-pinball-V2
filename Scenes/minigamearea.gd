@@ -8,6 +8,16 @@ var suction_strength = 5000.0  # Much stronger suction force
 var counter_gravity = 1000.0   # Force to counter gravity
 var max_velocity = 500.0       # Maximum velocity cap
 
+# Animation parameters
+var fade_duration = 1.0        # Duration of fade/shrink animation
+var is_fading = false          # Whether we're currently fading
+var original_scale = Vector2.ONE # Original scale of the ball sprite
+var original_modulate = Color.WHITE # Original modulate of the ball sprite
+var fade_progress = 0.0        # Current animation progress
+
+# Fade timer
+var fade_timer = null
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Connect the body_entered signal to our handler function
@@ -16,6 +26,13 @@ func _ready():
 	# Store the center position of this area for suction effect
 	capture_center = global_position
 	
+	# Create a timer for the fade animation
+	fade_timer = Timer.new()
+	fade_timer.one_shot = false
+	fade_timer.wait_time = 0.03  # Update approximately 30 times per second
+	fade_timer.timeout.connect(_on_fade_timer_timeout)
+	add_child(fade_timer)
+	
 	# Disable physics process until needed
 	set_physics_process(false)
 
@@ -23,9 +40,30 @@ func _ready():
 func _on_body_entered(body):
 	# Check if the body that entered is a ball
 	if body.is_in_group("balls") and not captured_ball and not suction_complete:
-		print("Ball detected, capturing...")
 		# Capture the ball reference
 		captured_ball = body
+		
+		# Find the ball sprite and verify we can access it
+		var ball_sprite = captured_ball.get_node_or_null("BallSprite")
+		if ball_sprite:
+			# Store original appearance
+			original_scale = ball_sprite.scale
+			original_modulate = ball_sprite.modulate
+			
+			# Force full opacity to start
+			ball_sprite.modulate = Color(1, 1, 1, 1)
+			
+			# Store these for restoration later
+			captured_ball.set_meta("original_scale", original_scale)
+			captured_ball.set_meta("original_modulate", original_modulate)
+		
+		# Hide the trail particles
+		var particles = captured_ball.get_node_or_null("CPUParticles2D")
+		if particles:
+			# Store the original visibility state
+			captured_ball.set_meta("original_particles_visible", particles.visible)
+			# Hide the particles
+			particles.visible = false
 		
 		# Immediately counter current movement
 		captured_ball.linear_velocity *= 0.3
@@ -40,9 +78,7 @@ func _physics_process(delta):
 		var direction = capture_center - captured_ball.global_position
 		var distance = direction.length()
 		
-		print("Ball distance: ", distance, " Position: ", captured_ball.global_position)
-		
-		if distance < 5:  # Tighter tolerance
+		if distance < 5 and not is_fading:  # Ball reached center, start fade animation
 			# Ball has reached the center - stop moving and prepare for minigame
 			captured_ball.linear_velocity = Vector2.ZERO
 			captured_ball.angular_velocity = 0
@@ -57,15 +93,24 @@ func _physics_process(delta):
 			if not captured_ball.has_meta("original_position"):
 				captured_ball.set_meta("original_position", captured_ball.global_position)
 			
-			print("Ball captured! Activating minigame...")
+			# Reset fade progress
+			fade_progress = 0.0
 			
-			# Proceed to minigame activation with a short delay
-			var timer = get_tree().create_timer(0.5)
-			timer.timeout.connect(_activate_minigame)
+			# Make sure ball is visible before fading
+			var ball_sprite = captured_ball.get_node_or_null("BallSprite")
+			if ball_sprite:
+				ball_sprite.visible = true
+				ball_sprite.modulate = Color(1, 1, 1, 1)  # Full opacity
 			
-			# Stop physics processing until next capture
+			# Start the fade animation with timer instead of physics process
+			is_fading = true
+			fade_timer.start()
+			
+			# Stop physics processing
 			set_physics_process(false)
+		
 		else:
+			# Still moving toward center
 			# Set gravity scale to zero to prevent it from falling
 			captured_ball.gravity_scale = 0
 			
@@ -96,10 +141,47 @@ func _physics_process(delta):
 				captured_ball.global_position = new_pos
 				captured_ball.linear_velocity = Vector2.ZERO
 
+# Called when the fade timer fires
+func _on_fade_timer_timeout():
+	if not is_fading or not captured_ball:
+		fade_timer.stop()
+		return
+		
+	# Update fade progress
+	fade_progress += fade_timer.wait_time / fade_duration
+	fade_progress = min(fade_progress, 1.0)
+	
+	# Get the sprite
+	var ball_sprite = captured_ball.get_node_or_null("BallSprite")
+	if ball_sprite:
+		# Fade out (reduce opacity)
+		var new_alpha = 1.0 - fade_progress
+		ball_sprite.modulate = Color(1, 1, 1, new_alpha)  # Set full color with fading alpha
+		
+		# Shrink slightly (to 80% of original size)
+		var target_scale = original_scale * (1.0 - (0.2 * fade_progress))
+		ball_sprite.scale = target_scale
+		
+		# If the fade is complete, activate the minigame
+		if fade_progress >= 1.0:
+			# Stop the fade timer
+			fade_timer.stop()
+			
+			# Reset fade state for next time
+			is_fading = false
+			
+			# Proceed to minigame activation with a short delay
+			var minigame_timer = get_tree().create_timer(0.2)
+			minigame_timer.timeout.connect(_activate_minigame)
+
 # Function to activate the minigame
 func _activate_minigame():
 	# Reset the capture state for next time
 	suction_complete = false
+	
+	# Hide the ball completely
+	if captured_ball and captured_ball.get_node("BallSprite"):
+		captured_ball.get_node("BallSprite").visible = false
 	
 	# Get the minigamewindow from the table scene
 	var minigame_window = get_node("/root/Table/minigamewindow")
@@ -133,3 +215,86 @@ func freeze_main_table_balls():
 			
 	# Clear the captured ball reference now that it's frozen
 	captured_ball = null
+
+# Animation parameters for appearance restoration
+var restore_duration = 0.5  # Duration for fade-in animation
+
+# Function to restore a ball's appearance - called from jackpot.gd and floormultipliers.gd
+static func restore_ball_appearance(ball):
+	if ball:
+		# IMPORTANT: First check if this is the captured ball
+		var was_captured = ball.has_meta("original_position")
+		
+		# Restore visual appearance
+		var ball_sprite = ball.get_node_or_null("BallSprite")
+		if ball_sprite:
+			# Make the sprite visible again
+			ball_sprite.visible = true
+			
+			# Restore original scale if stored
+			if ball.has_meta("original_scale"):
+				ball_sprite.scale = ball.get_meta("original_scale")
+				ball.remove_meta("original_scale")
+
+			# Restore original modulate if stored
+			if ball.has_meta("original_modulate"):
+				ball_sprite.modulate = ball.get_meta("original_modulate")
+				ball.remove_meta("original_modulate")
+			else:
+				# Default to fully opaque white if no original stored
+				ball_sprite.modulate = Color(1, 1, 1, 1)
+
+		# Restore trail particles visibility if they exist
+		var particles = ball.get_node_or_null("CPUParticles2D")
+		if particles:
+			if ball.has_meta("original_particles_visible"):
+				particles.visible = ball.get_meta("original_particles_visible")
+				ball.remove_meta("original_particles_visible")
+			else:
+				# Default to visible if no original state stored
+				particles.visible = true
+				
+		# Return a special callback for the captured ball
+		if was_captured:
+			return func():
+				print("Preparing to eject captured ball")
+				
+				# The callback needs to immediately unfreeze the ball to allow physics to work
+				ball.freeze = false
+				
+				# Position the ball at its original position
+				if ball.has_meta("original_position"):
+					print("Repositioning ball to:", ball.get_meta("original_position"))
+					ball.global_position = ball.get_meta("original_position")
+					ball.remove_meta("original_position")
+				
+				# Reset the ball's properties to ensure clean state
+				ball.gravity_scale = 1.0
+				
+				# Calculate random angle in the upward hemisphere (between -60 and -120 degrees)
+				var angle = randf_range(-PI/3, -2*PI/3)
+				var launch_direction = Vector2(cos(angle), sin(angle))
+				
+				# Apply strong launch force
+				var launch_force = 500.0  # Increased for more dramatic effect
+				print("Applying velocity:", launch_direction * launch_force)
+				
+				# We need to use this approach because linear_velocity might be ignored if the ball is frozen
+				ball.linear_velocity = Vector2.ZERO  # Reset first
+				ball.apply_central_impulse(launch_direction * launch_force)
+				
+				# Apply spin (higher value for more noticeable spin)
+				var spin = randf_range(8.0, 15.0) * (1 if randf() > 0.5 else -1)
+				print("Applying spin:", spin)
+				ball.angular_velocity = spin
+				
+				# Use apply_torque_impulse for more reliable spin
+				ball.apply_torque_impulse(spin * 1000)
+				
+				# Pause briefly to let physics system process this
+				await ball.get_tree().create_timer(0.05).timeout
+				return true
+		
+		# For balls that were not captured, return a simple callback
+		return func():
+			return true

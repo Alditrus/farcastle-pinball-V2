@@ -130,3 +130,48 @@ func activate():
 func deactivate():
 	visible = false
 	process_mode = Node.PROCESS_MODE_DISABLED
+	
+# Function to completely reset the minigame scene
+func reset_minigame_scene():
+	# First ensure the minigame is deactivated
+	deactivate()
+	
+	# Free the existing minigame scene
+	if $SubViewport and $SubViewport.has_node("Minigame"):
+		$SubViewport.get_node("Minigame").queue_free()
+		
+	# Wait a frame to ensure everything is cleaned up
+	await get_tree().process_frame
+	
+	# Load a fresh instance of the minigame scene
+	var minigame_scene = load("res://Scenes/minigame.tscn")
+	var minigame_instance = minigame_scene.instantiate()
+	
+	# Set the proper name to match the original scene
+	minigame_instance.name = "Minigame"
+	minigame_instance.process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	# Add the fresh minigame to the viewport
+	$SubViewport.add_child(minigame_instance)
+	
+	# Check for the ball in the instanced scene
+	var ball = minigame_instance.get_node_or_null("minigameball")
+	if not ball:
+		ball = minigame_instance.get_node_or_null("ball")
+		if ball:
+			# Rename the node to match what goathead.gd is looking for
+			ball.name = "minigameball"
+	
+	# Reset any existing goathead state
+	var goat_head = minigame_instance.get_node_or_null("GoatHead")
+	if goat_head:
+		# Make sure has_been_dragged is reset
+		goat_head.has_been_dragged = false
+		
+		# Reset position if needed
+		if goat_head.has_method("reset"):
+			goat_head.reset()
+		elif goat_head.get("initial_position") != null:
+			goat_head.position = goat_head.initial_position
+	
+	print("Minigame scene completely reset and ready for next activation")
