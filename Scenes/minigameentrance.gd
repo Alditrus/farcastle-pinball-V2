@@ -97,12 +97,60 @@ func reset_entrance():
 		entrance_area.monitorable = false
 		is_entrance_active = false
 	
-	# Turn off flame particles
-	if flame1:
-		flame1.emitting = false
-	if flame2:
-		flame2.emitting = false
-		
+	# Start a gradual jaw closing animation
 	if jaw_sprite:
-		jaw_sprite.position.y = jaw_initial_y
+		# Create a tween to animate the jaw closing
+		var tween = create_tween()
+		tween.tween_property(jaw_sprite, "position:y", jaw_initial_y, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		
+		# Reset the jaw color
 		jaw_sprite.modulate = Color(1, 1, 1)
+		
+		# When the jaw animation completes, turn off the flame particles and complete the reset
+		tween.tween_callback(func():
+			# Turn off flame particles after jaw closes
+			if flame1:
+				# Create a fade-out effect for flames
+				var flame1_tween = create_tween()
+				flame1_tween.tween_property(flame1, "modulate", Color(1, 1, 1, 0), 0.5)
+				flame1_tween.tween_callback(func(): flame1.emitting = false)
+				flame1_tween.tween_property(flame1, "modulate", Color(1, 1, 1, 1), 0.1)
+				
+			if flame2:
+				# Create a fade-out effect for flames
+				var flame2_tween = create_tween()
+				flame2_tween.tween_property(flame2, "modulate", Color(1, 1, 1, 0), 0.5)
+				flame2_tween.tween_callback(func(): flame2.emitting = false)
+				flame2_tween.tween_property(flame2, "modulate", Color(1, 1, 1, 1), 0.1)
+				
+			# After the flames fade out, reset the missions system
+			_complete_entrance_reset()
+		)
+		
+# Complete the reset by telling the missions system to reset the jaw requirements
+func _complete_entrance_reset():
+	# Fully reset the entrance state
+	is_entrance_active = false
+	
+	# Use the class-level missions_node reference or find it if not already set
+	if not missions_node:
+		missions_node = get_node_or_null("/root/Table/Missions")
+		
+	if missions_node:
+		# Reset the jaw progress
+		missions_node.jaw_current_hits = 0
+		missions_node.emit_signal("jaw_progress", 0.0)
+		
+		# Select a new random target type for the jaw
+		missions_node.select_random_jaw_target()
+		
+		# Update the UI hint
+		update_target_hint()
+		
+		print("Minigame entrance reset complete - new target: " + missions_node.get_jaw_target_name())
+	
+	# Find and reset the minigame window
+	var minigame_window = get_node_or_null("/root/Table/minigamewindow")
+	if minigame_window:
+		# Reset the minigame scene entirely
+		minigame_window.reset_minigame_scene()
