@@ -6,6 +6,8 @@ extends RigidBody2D
 var is_active = true
 
 func _ready():
+	# Make sure this node always processes even when the tree is paused
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	
 	# Set up better physics properties for pinball behavior
 	mass = 1.0  # Normal mass for a pinball

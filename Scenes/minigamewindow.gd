@@ -101,16 +101,11 @@ func activate():
 		if minigame:
 			minigame.process_mode = Node.PROCESS_MODE_ALWAYS
 			
-			# Set all children of minigame to process always as well
-			for child in minigame.get_children():
-				child.process_mode = Node.PROCESS_MODE_ALWAYS
-			
 			# Reset the goathead and ball state
 			var ball = minigame.get_node_or_null("minigameball")
 			var goat_head = minigame.get_node_or_null("GoatHead")
 			
 			if ball:
-				ball.process_mode = Node.PROCESS_MODE_ALWAYS
 				# Initialize ball as hidden and frozen until dragged
 				ball.visible = false
 				ball.freeze = true
@@ -135,9 +130,3 @@ func activate():
 func deactivate():
 	visible = false
 	process_mode = Node.PROCESS_MODE_DISABLED
-	
-	# Re-enable all other nodes in the Table
-	var table = get_node("/root/Table")
-	if table:
-		for child in table.get_children():
-			child.process_mode = Node.PROCESS_MODE_INHERIT

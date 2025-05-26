@@ -1,0 +1,65 @@
+extends StaticBody2D
+
+# Dictionary to store multiplier values for each area
+var multipliers = {
+	"plier1": 2,
+	"plier2": 3,
+	"plier3": 4,
+	"plier4": 5,
+	"plier5": 4,
+	"plier6": 3,
+	"plier7": 2
+}
+
+func _ready():
+	# Connect all multiplier areas to the score multiplier function
+	for i in range(1, 8):
+		var area_name = "plier" + str(i)
+		if has_node(area_name):
+			var area = get_node(area_name)
+			area.connect("body_entered", _on_plier_body_entered.bind(area_name))
+
+# Called when a ball enters any of the multiplier areas
+func _on_plier_body_entered(body, area_name):
+	# Check specifically for the minigameball
+	if body.name == "minigameball":
+		print("Minigame Complete!")
+		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+		if score_label:
+			var multiplier = multipliers[area_name]
+			score_label.apply_multiplier(multiplier)
+			
+			# Deactivate minigame and return to main game after a short delay
+			await get_tree().create_timer(0.5).timeout
+			
+			# Find the minigame window and deactivate it
+			var minigame_window = get_node_or_null("/root/Table/minigamewindow")
+			if minigame_window and minigame_window.has_method("deactivate"):
+				minigame_window.deactivate()
+				
+				# Unfreeze all main table balls
+				unfreeze_main_table_balls()
+				
+				# Reset the minigame entrance
+				var minigame_entrance = get_node_or_null("/root/Table/minigameentrance")
+				if minigame_entrance and minigame_entrance.has_method("reset_entrance"):
+					minigame_entrance.reset_entrance()
+
+# Unfreeze all balls in the main table to resume their movement
+func unfreeze_main_table_balls():
+	# Find all balls in the "balls" group
+	var balls = get_tree().get_nodes_in_group("balls")
+	for ball in balls:
+		# Skip any minigameball - only unfreeze main table balls
+		if ball.name != "minigameball":
+			# Unfreeze the ball
+			ball.freeze = false
+			
+			# Restore velocities if they were stored
+			if ball.has_meta("stored_linear_velocity"):
+				ball.linear_velocity = ball.get_meta("stored_linear_velocity")
+				ball.angular_velocity = ball.get_meta("stored_angular_velocity")
+				
+				# Clear the stored values
+				ball.remove_meta("stored_linear_velocity")
+				ball.remove_meta("stored_angular_velocity")

@@ -158,6 +158,22 @@ func format_score_with_commas(number: int) -> String:
 	
 	return formatted_string
 
+# Function to apply a multiplier to the current score
+func apply_multiplier(multiplier: int):
+	var previous_score = score
+	score *= multiplier
+	
+	# Update the displayed score
+	update_score_text()
+	
+	# Optional: You could add visual feedback here
+	print("Score multiplied by " + str(multiplier) + "x: " + str(previous_score) + " → " + str(score))
+	
+	# Register with missions system if needed
+	var missions_ref = get_node_or_null("/root/Table/Missions")
+	if missions_ref and missions_ref.has_method("register_collision"):
+		missions_ref.register_collision("multiplier_" + str(multiplier))
+
 # Function to reset score
 func reset_score():
 	score = 0

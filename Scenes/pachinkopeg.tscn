@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dqomm53bbesv"]
 
-[ext_resource type="Script" path="res://Scenes/pachinkopeg.gd" id="1_kk20v"]
+[ext_resource type="Script" uid="uid://b67vkx7alx3a5" path="res://Scenes/pachinkopeg.gd" id="1_kk20v"]
 [ext_resource type="Texture2D" uid="uid://ci4l5rnntngi7" path="res://Assets/minigame/eye.png" id="2_3fik5"]
 [ext_resource type="Texture2D" uid="uid://chmeceswroo7f" path="res://Assets/minigame/pupil.png" id="3_5lp8s"]
 

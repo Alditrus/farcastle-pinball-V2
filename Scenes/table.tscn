@@ -97,8 +97,8 @@ size = Vector2(85.5, 13)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wn66p"]
 size = Vector2(191.593, 21)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_wn66p"]
-radius = 24.1868
+[sub_resource type="CircleShape2D" id="CircleShape2D_y7ygw"]
+radius = 26.0
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
@@ -498,8 +498,9 @@ scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_wn66p")
 
 [node name="testminigamearea" type="Area2D" parent="."]
+position = Vector2(435, 1263)
 script = ExtResource("45_y7ygw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="testminigamearea"]
-position = Vector2(840, 1196)
-shape = SubResource("CircleShape2D_wn66p")
+position = Vector2(1245, -288)
+shape = SubResource("CircleShape2D_y7ygw")

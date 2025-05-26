@@ -33,14 +33,14 @@ func _ready():
 
 # Called when a body enters the detection area
 func _on_body_entered(body):
-	# Check if the colliding body is a ball
-	if body.is_in_group("balls"):
+	# Check if the colliding body is a ball by checking its name
+	if body.name == "minigameball":
 		activate_bumper()
 
 # Called when a body exits the detection area
 func _on_body_exited(body):
 	# Check if the exiting body is a ball
-	if body.is_in_group("balls"):
+	if body.name == "minigameball":
 		deactivate_bumper()
 
 # Activate the bumper (show active sprite, hide normal sprite)
