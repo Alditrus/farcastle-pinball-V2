@@ -10,6 +10,9 @@ var has_been_dragged = false  # Track if the goathead has been dragged at least 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Make sure this node always processes even when the tree is paused
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	
 	# Store the initial position
 	initial_position = position
 	
@@ -65,17 +68,15 @@ func _on_drag_area_input_event(_viewport, event, _shape_idx):
 					var spawn_area = $SpawnArea
 					
 					if ball and spawn_area:
+						
 						# Make ball visible and position it at spawn point
 						ball.visible = true
 						ball.global_position = spawn_area.global_position
 						
-						# Ensure the physics are fully active for the ball
+						# Completely reset physics state
 						ball.freeze = false
 						ball.sleeping = false
 						ball.can_sleep = false
-						
-						# Force an initial velocity to help with physics activation
-						ball.linear_velocity = Vector2(0, 10)
 
 # Helper function to find the ball in either context
 func _find_ball():
