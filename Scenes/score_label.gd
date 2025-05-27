@@ -11,6 +11,17 @@ var spinner_initial_speed = 1.0
 var spinner_current_speed = 1.0
 const SPINNER_SLOWDOWN_RATE = 1.0
 
+# Bumper level system
+var current_bumper_level = 1
+var bumper_level_points = {
+	1: 2000,   # Default
+	2: 3500,
+	3: 5000,
+	4: 6500,
+	5: 8000,
+	6: 10000
+}
+
 # Called when the node enters the scene tree for the first time
 func _ready():
 	update_score_text()
@@ -70,7 +81,7 @@ func increase_score(element_type: String):
 	# Determine points based on element type
 	match element_type:
 		"bumper":
-			points = 2000
+			points = bumper_level_points[current_bumper_level]
 		"alcove_bumper":
 			points = 5000
 		"slingshot":
@@ -83,6 +94,8 @@ func increase_score(element_type: String):
 			points = 7000
 		"candle_set_complete":
 			points = 80000
+			# Upgrade bumper level when candle set is completed
+			upgrade_bumper_level()
 		"rail_exit":
 			points = 200
 		"spinner":
@@ -117,6 +130,20 @@ func increase_score(element_type: String):
 	# Register collision with missions system
 	if missions_ref and missions_ref.has_method("register_collision"):
 		missions_ref.register_collision(element_type)
+
+# Function to upgrade bumper level when candle set is completed
+func upgrade_bumper_level():
+	if current_bumper_level < 6:  # Max level is 6
+		current_bumper_level += 1
+		update_bumper_sprites()
+
+# Update the bumper sprites to match the current level
+func update_bumper_sprites():
+	# Find all bumpers in the scene
+	var bumpers = get_tree().get_nodes_in_group("bumpers")
+	for bumper in bumpers:
+		if bumper.has_method("set_level"):
+			bumper.set_level(current_bumper_level)
 
 # Function to start spinner points calculation
 func start_spinner_points(speed_scale):
@@ -177,4 +204,10 @@ func apply_multiplier(multiplier: int):
 # Function to reset score
 func reset_score():
 	score = 0
+	current_bumper_level = 1  # Reset bumper level as well
 	update_score_text()
+	update_bumper_sprites()  # Reset bumper sprites
+
+# Get current bumper level (for other scripts to reference)
+func get_bumper_level():
+	return current_bumper_level

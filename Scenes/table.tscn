@@ -461,6 +461,7 @@ offset_right = 3888.0
 offset_bottom = 694.0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
+visible = false
 top_level = true
 light_mask = 24
 visibility_layer = 24
@@ -474,7 +475,7 @@ script = ExtResource("43_2rdwm")
 [node name="SubViewport" type="SubViewport" parent="minigamewindow"]
 handle_input_locally = false
 size = Vector2i(700, 1260)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Guard" parent="." instance=ExtResource("5_5cpa6")]
 position = Vector2(796, 377)
@@ -493,7 +494,6 @@ script = ExtResource("44_fick8")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Guardarea2"]
 position = Vector2(733.419, 348.991)
 rotation = -1.37881
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_wn66p")
 
 [node name="testminigamearea" type="Area2D" parent="."]
