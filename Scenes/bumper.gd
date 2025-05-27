@@ -7,6 +7,35 @@ var active_timer: float = 0.0
 var is_active: bool = false
 var normal_sprite: Sprite2D
 var active_sprite: Sprite2D
+var current_level: int = 1
+
+# Sprite textures for different levels
+var level_textures = {
+	1: {
+		"normal": preload("res://Assets/table/bumper.png"),
+		"active": preload("res://Assets/table/bumper_active.png")
+	},
+	2: {
+		"normal": preload("res://Assets/table/bumperlvl2.png"),
+		"active": preload("res://Assets/table/bumper_activelvl2.png")
+	},
+	3: {
+		"normal": preload("res://Assets/table/bumperlvl3.png"),
+		"active": preload("res://Assets/table/bumper_activelvl3.png")
+	},
+	4: {
+		"normal": preload("res://Assets/table/bumperlvl4.png"),
+		"active": preload("res://Assets/table/bumper_activelvl4.png")
+	},
+	5: {
+		"normal": preload("res://Assets/table/bumperlvl5.png"),
+		"active": preload("res://Assets/table/bumper_activelvl5.png")
+	},
+	6: {
+		"normal": preload("res://Assets/table/bumperlvl6.png"),
+		"active": preload("res://Assets/table/bumper_activelvl6.png")
+	}
+}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -42,6 +71,9 @@ func _ready():
 	
 	# Connect the body entered signal
 	area.body_entered.connect(_on_body_entered)
+	
+	# Add this bumper to the "bumpers" group for level management
+	add_to_group("bumpers")
 
 # Process function to handle the active sprite timer
 func _process(delta):
@@ -85,10 +117,22 @@ func activate_bumper():
 	normal_sprite.visible = false
 	active_sprite.visible = true
 	is_active = true
-	active_timer = 0.1  # Set timer for half a second
+	active_timer = 0.1  # Set timer for a tenth of a second
 
 # Deactivate the bumper (show normal sprite, hide active sprite)
 func deactivate_bumper():
 	normal_sprite.visible = true
 	active_sprite.visible = false
 	is_active = false
+	
+# Set the bumper level and update sprites
+func set_level(level: int):
+	if level >= 1 and level <= 6:
+		current_level = level
+		update_sprites()
+		
+# Update the bumper sprites based on current level
+func update_sprites():
+	if level_textures.has(current_level):
+		normal_sprite.texture = level_textures[current_level]["normal"]
+		active_sprite.texture = level_textures[current_level]["active"]
