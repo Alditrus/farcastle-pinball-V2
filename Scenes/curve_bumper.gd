@@ -2,23 +2,13 @@ extends Node2D
 
 var bumper_body: RigidBody2D
 var original_position: Vector2
-@export var bumper_force: float = 10.0
-var active_timer: float = 0.0
-var is_active: bool = false
-var normal_sprite: Sprite2D
-var active_sprite: Sprite2D
+@export var bumper_force: float = 5.0
+var reset_timer: Timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	bumper_body = $RigidBody2D
 	original_position = bumper_body.position
-	
-	# Get references to both sprites
-	normal_sprite = $RigidBody2D/Sprite2D
-	active_sprite = $RigidBody2D/Sprite2D2
-	
-	# Make sure active sprite is hidden initially
-	active_sprite.visible = false
 	
 	# Configure the bumper physics body
 	bumper_body.mass = 5.0
@@ -45,28 +35,12 @@ func _ready():
 	
 	print("Bumper initialized at position: ", global_position)
 
-# Process function to handle the active sprite timer
-func _process(delta):
-	# If the bumper is active, count down the timer
-	if is_active:
-		active_timer -= delta
-		
-		# If the timer has expired, deactivate the bumper
-		if active_timer <= 0:
-			deactivate_bumper()
-
 # Called when a body enters the detection area
 func _on_body_entered(body):
 	# Check if the colliding body is a ball
 	if body.is_in_group("balls"):
 		print("Ball detected, launching!")
 		bump_ball(body)
-		activate_bumper()
-
-		# Increase score
-		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
-		if score_label:
-			score_label.increase_score("alcove_bumper")
 
 # Function to launch the ball
 func bump_ball(ball_node):
@@ -85,16 +59,3 @@ func bump_ball(ball_node):
 		
 		# Ensure the ball is not sleeping
 		ball_node.sleeping = false
-
-# Activate the bumper (show active sprite, hide normal sprite)
-func activate_bumper():
-	normal_sprite.visible = false
-	active_sprite.visible = true
-	is_active = true
-	active_timer = 0.1  # Set timer for half a second
-
-# Deactivate the bumper (show normal sprite, hide active sprite)
-func deactivate_bumper():
-	normal_sprite.visible = true
-	active_sprite.visible = false
-	is_active = false

@@ -18,8 +18,16 @@ var fade_progress = 0.0        # Current animation progress
 # Fade timer
 var fade_timer = null
 
+# Cooling down period after a ball has been ejected
+var cooldown_active = false
+var cooldown_duration = 3.0  # seconds
+var cooldown_timer = null
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Add to a group for easy reference
+	add_to_group("minigame_areas")
+	
 	# Connect the body_entered signal to our handler function
 	body_entered.connect(_on_body_entered)
 	
@@ -33,13 +41,20 @@ func _ready():
 	fade_timer.timeout.connect(_on_fade_timer_timeout)
 	add_child(fade_timer)
 	
+	# Create a cooldown timer
+	cooldown_timer = Timer.new()
+	cooldown_timer.one_shot = true
+	cooldown_timer.wait_time = cooldown_duration
+	cooldown_timer.timeout.connect(_on_cooldown_timeout)
+	add_child(cooldown_timer)
+	
 	# Disable physics process until needed
 	set_physics_process(false)
 
 # Called when a physics body enters this area
 func _on_body_entered(body):
 	# Check if the body that entered is a ball
-	if body.is_in_group("balls") and not captured_ball and not suction_complete:
+	if body.is_in_group("balls") and not captured_ball and not suction_complete and not cooldown_active:
 		# Capture the ball reference
 		captured_ball = body
 		
@@ -70,6 +85,11 @@ func _on_body_entered(body):
 		
 		# Start the suction physics process
 		set_physics_process(true)
+
+# Called when the cooldown timer expires
+func _on_cooldown_timeout():
+	cooldown_active = false
+	print("Minigame area cooldown finished - ready for next ball")
 
 # Called every physics frame while a ball is being sucked in
 func _physics_process(delta):
@@ -220,7 +240,7 @@ func freeze_main_table_balls():
 var restore_duration = 0.5  # Duration for fade-in animation
 
 # Function to restore a ball's appearance - called from jackpot.gd and floormultipliers.gd
-static func restore_ball_appearance(ball):
+func _restore_ball_appearance_impl(ball):
 	if ball:
 		# IMPORTANT: First check if this is the captured ball
 		var was_captured = ball.has_meta("original_position")
@@ -291,10 +311,33 @@ static func restore_ball_appearance(ball):
 				# Use apply_torque_impulse for more reliable spin
 				ball.apply_torque_impulse(spin * 1000)
 				
+				# Activate cooldown to prevent immediate re-capture
+				cooldown_active = true
+				if cooldown_timer:
+					cooldown_timer.start(cooldown_duration)
+					print("Starting minigame area cooldown for " + str(cooldown_duration) + " seconds")
+				
+				# Reset state variables
+				suction_complete = false
+				captured_ball = null
+				
 				# Pause briefly to let physics system process this
 				await ball.get_tree().create_timer(0.05).timeout
 				return true
 		
 		# For balls that were not captured, return a simple callback
+		return func():
+			return true
+			
+# Static wrapper for the instance method to maintain compatibility with existing code
+static func restore_ball_appearance(ball):
+	# Find all minigamearea instances in the scene
+	var areas = ball.get_tree().get_nodes_in_group("minigame_areas")
+	if areas.size() > 0:
+		# Use the first one found
+		var area = areas[0]
+		return area._restore_ball_appearance_impl(ball)
+	else:
+		# Fallback to a simple callback if no areas found
 		return func():
 			return true
