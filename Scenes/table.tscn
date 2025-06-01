@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=68 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://dw7lc5y4lqcxi" path="res://Scenes/curve_bumper.tscn" id="19_5kx35"]
 [ext_resource type="PackedScene" uid="uid://dr0vb6dmbqko1" path="res://Scenes/rail.tscn" id="20_3leha"]
 [ext_resource type="Script" uid="uid://xnib25tjuj1p" path="res://Scenes/railareaentrance1.gd" id="21_pxje1"]
+[ext_resource type="Script" uid="uid://cr84088y3obpv" path="res://Scenes/curve_bumper.gd" id="21_wn66p"]
 [ext_resource type="Script" uid="uid://68dj1ss6kgqc" path="res://Scenes/railareaentrance2.gd" id="22_rgeaq"]
 [ext_resource type="Script" uid="uid://bf4nk4wm0i4wf" path="res://Scenes/railareaexit.gd" id="23_rgeaq"]
 [ext_resource type="Script" uid="uid://bf1a5aotihem7" path="res://Scenes/Exit.gd" id="24_sln7q"]
@@ -45,6 +46,7 @@
 [ext_resource type="Script" uid="uid://hjecv2g386am" path="res://Scenes/guardarea_1.gd" id="43_fick8"]
 [ext_resource type="Script" uid="uid://006sb4ild22j" path="res://Scenes/guardarea_2.gd" id="44_fick8"]
 [ext_resource type="Script" uid="uid://b5k1c8vjhve34" path="res://Scenes/minigamearea.gd" id="45_y7ygw"]
+[ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="46_wn66p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -99,6 +101,12 @@ size = Vector2(191.593, 21)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_y7ygw"]
 radius = 26.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wb73q"]
+size = Vector2(437, 909)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oc5ru"]
+size = Vector2(364.5, 909.5)
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
@@ -181,14 +189,12 @@ position = Vector2(487, 403)
 scale = Vector2(0.8, 0.8)
 bumper_force = 15.0
 
-[node name="ball" parent="." instance=ExtResource("3_r4jc3")]
-position = Vector2(840, 1259)
-
 [node name="flipper" parent="." instance=ExtResource("4_0xndo")]
 position = Vector2(305, 1476)
 rotation = 0.523599
 scale = Vector2(1.1, 1.1)
 keycode = "Left"
+touch_area_name = "leftflipperarea"
 snap_time = 0.05
 snap_angle = -65
 flipper_proximity = 110.0
@@ -198,6 +204,7 @@ position = Vector2(567, 1477)
 rotation = -0.523599
 scale = Vector2(-1.1, -1.1)
 keycode = "Right"
+touch_area_name = "rightflipperarea"
 snap_time = 0.05
 snap_angle = 65
 flipper_proximity = 110.0
@@ -244,6 +251,7 @@ position = Vector2(613, 645)
 rotation = 0.523599
 scale = Vector2(0.65, 0.65)
 keycode = "Left"
+touch_area_name = "leftflipperarea"
 snap_time = 0.05
 snap_angle = -65
 flipper_proximity = 100.0
@@ -300,30 +308,37 @@ rotation = -2.33001
 [node name="curveBumper" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(285, 291)
 rotation = 1.15192
+script = ExtResource("21_wn66p")
 
 [node name="curveBumper2" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(229, 326)
 rotation = 0.872665
+script = ExtResource("21_wn66p")
 
 [node name="curveBumper3" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(185, 374)
 rotation = 0.602139
+script = ExtResource("21_wn66p")
 
 [node name="curveBumper4" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(157, 433)
 rotation = 0.253073
+script = ExtResource("21_wn66p")
 
 [node name="curveBumper7" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(147, 501)
 rotation = 0.0261799
+script = ExtResource("21_wn66p")
 
 [node name="curveBumper5" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(567, 293)
 rotation = -1.15192
+script = ExtResource("21_wn66p")
 
 [node name="curveBumper6" parent="." instance=ExtResource("19_5kx35")]
 position = Vector2(619, 333)
 rotation = -0.680678
+script = ExtResource("21_wn66p")
 
 [node name="alcoveBumper" parent="." instance=ExtResource("25_hh0i4")]
 position = Vector2(601, 585)
@@ -503,3 +518,25 @@ script = ExtResource("45_y7ygw")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="testminigamearea"]
 position = Vector2(1245, -288)
 shape = SubResource("CircleShape2D_y7ygw")
+
+[node name="ball" parent="." instance=ExtResource("3_r4jc3")]
+position = Vector2(838, 1287)
+
+[node name="Node2D" parent="." instance=ExtResource("46_wn66p")]
+position = Vector2(1311, 802)
+
+[node name="leftflipperarea" type="Area2D" parent="."]
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="leftflipperarea"]
+position = Vector2(214.5, 1127.5)
+shape = SubResource("RectangleShape2D_wb73q")
+debug_color = Color(0.694749, 0.282514, 1, 0.42)
+
+[node name="rightflipperarea" type="Area2D" parent="."]
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="rightflipperarea"]
+position = Vector2(618.75, 1127.75)
+shape = SubResource("RectangleShape2D_oc5ru")
+debug_color = Color(0.549094, 0.564183, 1.92523e-07, 0.42)

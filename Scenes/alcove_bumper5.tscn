@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://6rvwg8dpbnto"]
 
-[ext_resource type="Script" path="res://Scenes/bumper.gd" id="1_pwotr"]
+[ext_resource type="Script" uid="uid://dtp61a1ibu2xn" path="res://Scenes/alcove_bumper.gd" id="1_pgkb8"]
 [ext_resource type="Texture2D" uid="uid://df4bx4s85oyrh" path="res://Assets/table/panebumper4.png" id="2_w3gmd"]
 [ext_resource type="Texture2D" uid="uid://cjqvlo63xtqos" path="res://Assets/table/panebumperactive4.png" id="3_55v11"]
 
@@ -8,8 +8,7 @@
 size = Vector2(14, 50)
 
 [node name="alcoveBumper" type="Node2D"]
-script = ExtResource("1_pwotr")
-bumper_force = 10.0
+script = ExtResource("1_pgkb8")
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
 lock_rotation = true

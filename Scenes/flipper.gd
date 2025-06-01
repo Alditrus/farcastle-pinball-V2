@@ -9,6 +9,9 @@ extends Node2D
 # so you may not want to use the shift keys for your flippers.
 @export var keycode = "ui_left"
 
+# The area name to use for touch control
+@export var touch_area_name = ""
+
 # The flipper takes this long to traverse its arc.
 @export var snap_time = 0.25
 
@@ -25,6 +28,7 @@ var is_active = false
 var last_rotation = 0.0
 var current_rotation_speed = 0.0
 var is_tilted = false  # Track whether the table is tilted
+var touch_pressed = false
 
 func _ready():
 	flipper_body = $RigidBody2D
@@ -50,6 +54,11 @@ func _ready():
 	var nudge_system = find_nudge_system()
 	if nudge_system:
 		nudge_system.tilt_state_changed.connect(_on_tilt_state_changed)
+		
+	# Set up touch control if a touch area name is specified
+	if touch_area_name != "":
+		await get_tree().process_frame
+		_setup_touch_controls()
 
 # Find the nudge system in the scene
 func find_nudge_system():
@@ -75,8 +84,27 @@ func find_nudge_system():
 func _on_tilt_state_changed(tilted):
 	is_tilted = tilted
 
+# Set up touch control connection
+func _setup_touch_controls():
+	var touch_area = get_parent().find_child(touch_area_name, true, false)
+	if touch_area:
+		# Connect to the input event signals
+		touch_area.input_event.connect(_on_touch_area_input_event)
+		print("Connected touch controls for ", name, " to ", touch_area_name)
+	else:
+		print("Warning: Could not find touch area named ", touch_area_name, " for flipper ", name)
+
+# Handle touch input events
+func _on_touch_area_input_event(_viewport, event, _shape_idx):
+	if event is InputEventScreenTouch:
+		touch_pressed = event.pressed
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		# This allows testing touch functionality with the mouse
+		touch_pressed = event.pressed
+
 func _physics_process(delta):
-	var is_pressing = Input.is_action_pressed(keycode) and not is_tilted  # Disable when tilted
+	# Combine keyboard and touch input
+	var is_pressing = (Input.is_action_pressed(keycode) or touch_pressed) and not is_tilted  # Disable when tilted
 	var prev_rotation = flipper_body.rotation_degrees
 	
 	if is_pressing:

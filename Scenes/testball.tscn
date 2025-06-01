@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://dphgdaqewm0iq"]
+
+[ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="1_ug874"]
+[ext_resource type="Script" uid="uid://cebwgd6tj8du4" path="res://testball.gd" id="2_rpb78"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lffan"]
+radius = 19.0263
+
+[sub_resource type="Gradient" id="Gradient_vxcrw"]
+offsets = PackedFloat32Array(0.433962, 0.459119, 0.553459, 0.578616)
+colors = PackedColorArray(0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bno80"]
+gradient = SubResource("Gradient_vxcrw")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="ball" parent="." instance=ExtResource("1_ug874")]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+script = ExtResource("2_rpb78")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -42)
+shape = SubResource("CircleShape2D_lffan")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(0, -42)
+scale = Vector2(0.59375, 0.59375)
+texture = SubResource("GradientTexture2D_bno80")
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+node_a = NodePath("../StaticBody2D")
+node_b = NodePath("../ball")
+length = 20.0
