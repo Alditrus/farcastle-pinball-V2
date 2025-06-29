@@ -39,11 +39,6 @@ func _on_area_body_entered(body):
 		if score_label:
 			score_label.increase_score("candle")
 		
-		# Record collision for mission system
-		var missions_node = get_node("../missions")
-		if missions_node:
-			missions_node.record_collision(missions_node.CollisionType.CANDLE)
-		
 		# Update particle effect based on new state
 		update_particle_effect()
 		

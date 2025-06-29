@@ -54,6 +54,7 @@ var all_missions: Dictionary = {
 var active_missions: Dictionary = {}
 var completed_missions: Dictionary = {}
 var last_active_mission: Dictionary = {} # Stores last mission state for resuming
+var missions_paused: bool = false # Pause missions when ball respawns
 
 signal mission_started(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
@@ -89,6 +90,10 @@ func start_mission(mission_id: String = "") -> bool:
 	return false
 
 func record_collision(collision_type: CollisionType):
+	# Don't record collisions if missions are paused
+	if missions_paused:
+		return
+		
 	for mission_id in active_missions:
 		var mission = active_missions[mission_id]
 		var current_phase_requirements = mission.phases[mission.current_phase]
@@ -129,7 +134,7 @@ func complete_mission(mission: Mission):
 		last_active_mission.clear()
 	
 	# Add mission reward points to score
-	var score_label = get_node("/root/Main/score_label")
+	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 	if score_label:
 		score_label.score += mission.reward_points
 		score_label.update_score_text()
@@ -158,3 +163,11 @@ func save_mission_state():
 		}
 	# Clear active missions (for game over)
 	active_missions.clear()
+
+func pause_missions():
+	# Pause mission progress
+	missions_paused = true
+
+func unpause_missions():
+	# Resume mission progress
+	missions_paused = false

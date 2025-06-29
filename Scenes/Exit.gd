@@ -187,7 +187,7 @@ func reset_table():
 		if nudge.has_method("reset_tilt"):
 			nudge.reset_tilt()
 	
-	# Reset missions sinkhole condition
+	# Pause missions when ball respawns
 	var missions_node = get_node_or_null("../missions")
-	if missions_node and missions_node.has_method("reset_sinkhole_condition"):
-		missions_node.reset_sinkhole_condition()
+	if missions_node and missions_node.has_method("pause_missions"):
+		missions_node.pause_missions()

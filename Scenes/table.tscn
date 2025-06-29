@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=80 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -57,6 +57,7 @@
 [ext_resource type="Script" uid="uid://blgrfad20o14y" path="res://Scenes/missions.gd" id="51_pkrpy"]
 [ext_resource type="PackedScene" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
+[ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -117,6 +118,9 @@ size = Vector2(49, 5.375)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dce1t"]
 radius = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wjnp8"]
+size = Vector2(86, 12.25)
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
@@ -546,6 +550,22 @@ rotation = 0.837758
 [node name="ramp_light" parent="mission_lights" instance=ExtResource("47_wu2rx")]
 position = Vector2(171, 680)
 
+[node name="candle_1_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
+position = Vector2(57, 1138)
+rotation = 3.14159
+
+[node name="candle_2_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
+position = Vector2(117, 1138)
+rotation = 3.14159
+
+[node name="candle_3_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
+position = Vector2(181, 1138)
+rotation = 3.14159
+
+[node name="candle_4_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
+position = Vector2(761, 1138)
+rotation = 3.14159
+
 [node name="candleset" parent="." instance=ExtResource("39_hotvi")]
 position = Vector2(428, 238)
 
@@ -553,7 +573,7 @@ position = Vector2(428, 238)
 position = Vector2(838, 1287)
 
 [node name="testball" parent="." instance=ExtResource("46_wn66p")]
-position = Vector2(344, 926)
+position = Vector2(122, 1079)
 
 [node name="flaps1" parent="." instance=ExtResource("11_x0duj")]
 position = Vector2(669, 417)
@@ -608,3 +628,11 @@ script = ExtResource("52_p1j83")
 position = Vector2(37, 795)
 shape = SubResource("CircleShape2D_dce1t")
 debug_color = Color(0.991026, 0, 0.2709, 0.42)
+
+[node name="light_control" type="Area2D" parent="."]
+script = ExtResource("58_6umbq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="light_control"]
+position = Vector2(810, 421)
+rotation = -0.253073
+shape = SubResource("RectangleShape2D_wjnp8")

@@ -26,6 +26,8 @@ func _on_body_entered(body):
 		if missions_node:
 			# Start mission (will resume last mission or start first mission)
 			missions_node.start_mission()
+			# Unpause missions so progress can continue
+			missions_node.unpause_missions()
 			mission_started_this_ball = true
 
 func _on_node_removed(node):
