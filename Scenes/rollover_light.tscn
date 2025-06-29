@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1sb2h6wq85jf"]
+
+[ext_resource type="Script" uid="uid://c7pf3sm4sh0vo" path="res://Scenes/mission_light_regular.gd" id="1_5ys2o"]
+[ext_resource type="Texture2D" uid="uid://dda0axju062j6" path="res://Assets/table/rolloverlight_off.png" id="1_tkd04"]
+[ext_resource type="Texture2D" uid="uid://owlf5xdtyxdn" path="res://Assets/table/rolloverlight_on.png" id="2_kgmuf"]
+
+[node name="rollover_light" type="Node2D"]
+script = ExtResource("1_5ys2o")
+
+[node name="inactive" type="Sprite2D" parent="."]
+texture = ExtResource("1_tkd04")
+
+[node name="active" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_kgmuf")

@@ -44,10 +44,15 @@ func _on_body_entered(body):
 	if not guard_activated and body is RigidBody2D and (body.is_in_group("balls") or body.name == "Ball"):
 		activate_guard()
 
-		# Increase score
+		# Increase score and register collision
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
 			score_label.increase_score("sinkhole")
+
+		# Record collision for mission system
+		var missions_node = get_node("../missions")
+		if missions_node:
+			missions_node.record_collision(missions_node.CollisionType.SINKHOLE_LEFT)
 
 # Called when a node is removed from the scene
 func _on_node_removed(node):

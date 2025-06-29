@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvwgh078k0r7x"]
+
+[ext_resource type="Script" uid="uid://bfvcte05qlym" path="res://Scenes/mission_light_ramp.gd" id="1_fkgik"]
+[ext_resource type="Texture2D" uid="uid://bkn8hpssg8x1y" path="res://Assets/table/ramplight_1.png" id="1_q7dgo"]
+
+[node name="ramp_light" type="Node2D"]
+script = ExtResource("1_fkgik")
+
+[node name="active_1" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2, 0)
+rotation = 0.0523599
+scale = Vector2(0.72, 0.72)
+texture = ExtResource("1_q7dgo")
+
+[node name="active_2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-24, -41)
+rotation = 0.10472
+scale = Vector2(0.51, 0.51)
+texture = ExtResource("1_q7dgo")
+
+[node name="active_3" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(34, 50)
+texture = ExtResource("1_q7dgo")

@@ -9,7 +9,6 @@ extends Node2D
 # Initial Y position of the jaw
 var jaw_initial_y = 0
 var jaw_open_offset = 30  # How far the jaw should move (30 pixels down)
-var missions_node: Node
 var is_entrance_active = false
 
 # Called when the node enters the scene tree for the first time
@@ -32,13 +31,8 @@ func _ready():
 	if flame2:
 		flame2.emitting = false
 	
-	# Find and connect to missions system
-	missions_node = get_node_or_null("/root/Table/Missions")
-	if missions_node:
-		missions_node.jaw_progress.connect(_on_jaw_progress)
-		
-		# Update the UI with the target object type
-		update_target_hint()
+	# Open jaw automatically since missions are removed
+	_on_jaw_progress(1.0)
 
 # Update the jaw position based on progress (0.0 to 1.0)
 func _on_jaw_progress(progress_percent: float):
@@ -50,14 +44,6 @@ func _on_jaw_progress(progress_percent: float):
 	# If jaw is fully open, activate the minigame entrance
 	if progress_percent >= 1.0 and not is_entrance_active:
 		activate_minigame_entrance()
-
-# Add a visual indicator for what needs to be hit
-func update_target_hint():
-	if missions_node:
-		var target_name = missions_node.get_jaw_target_name()
-		var required_hits = missions_node.jaw_hits_required
-		print("Hint: Hit %s %d times to open the jaw" % [target_name, required_hits])
-		# Could add a label or other UI element here
 
 # Activate the minigame entrance when jaw is fully open
 func activate_minigame_entrance():
@@ -132,22 +118,7 @@ func _complete_entrance_reset():
 	# Fully reset the entrance state
 	is_entrance_active = false
 	
-	# Use the class-level missions_node reference or find it if not already set
-	if not missions_node:
-		missions_node = get_node_or_null("/root/Table/Missions")
-		
-	if missions_node:
-		# Reset the jaw progress
-		missions_node.jaw_current_hits = 0
-		missions_node.emit_signal("jaw_progress", 0.0)
-		
-		# Select a new random target type for the jaw
-		missions_node.select_random_jaw_target()
-		
-		# Update the UI hint
-		update_target_hint()
-		
-		print("Minigame entrance reset complete - new target: " + missions_node.get_jaw_target_name())
+	print("Minigame entrance reset complete")
 	
 	# Find and reset the minigame window
 	var minigame_window = get_node_or_null("/root/Table/minigamewindow")

@@ -126,10 +126,31 @@ func check_all_targets_down():
 		var timer = Timer.new()
 		timer.one_shot = true
 		timer.wait_time = 1.0
+		
+		# This is target set 1
+		var set_id = "target_set_1"
+		
+		print("Target set completed: " + set_id)
+		
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
 			score_label.increase_score("target_set_complete")
+			
+		# Record collision for mission system
+		var missions_node = get_node("../missions")
+		if missions_node:
+			missions_node.record_collision(missions_node.CollisionType.TARGET_SET1)
+		
+		# Turn off the target lights for this specific set
+		var lights_parent = get_node_or_null("/root/Table/Lights")
+		if lights_parent:
+			var light_name = "target_lights_1"
+				
+			var light_node = lights_parent.get_node_or_null(light_name)
+			if light_node and light_node.has_method("set_mode") and "LightMode" in light_node:
+				light_node.set_mode(light_node.LightMode.INACTIVE)
+		
 		add_child(timer)
 		timer.timeout.connect(func(): 
 			call_deferred("reset_all_targets")
