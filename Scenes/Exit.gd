@@ -151,6 +151,11 @@ func reset_table():
 	if gutter_area1 and gutter_area1.has_method("deactivate_guard"):
 		gutter_area1.deactivate_guard()
 	
+	# Reset guardarea lights flag for new ball
+	var guard_area = get_node_or_null("../guardarea_1")
+	if guard_area and guard_area.has_method("reset_lights_flag"):
+		guard_area.reset_lights_flag()
+	
 	# Reset the gutterarea2 state
 	var gutter_area2 = get_node_or_null("../gutterarea2")
 	if gutter_area2 and gutter_area2.has_method("deactivate_guard"):
@@ -168,10 +173,21 @@ func reset_table():
 		if rail_exit and rail_exit.has_method("enable_rail1"):
 			rail_exit.enable_rail1()
 	
-	# No longer reset targets when ball exits
+	# Reset ALL target lights to inactive when ball exits
+	var lights_parent = get_node_or_null("../Lights")
+	if lights_parent:
+		for light in lights_parent.get_children():
+			if light.has_method("set_mode") and "LightMode" in light:
+				light.set_mode(light.LightMode.INACTIVE)
+	
 				
 	# Reset tilt state if table is tilted
 	var nudge_nodes = get_tree().get_nodes_in_group("nudge_system")
 	for nudge in nudge_nodes:
 		if nudge.has_method("reset_tilt"):
 			nudge.reset_tilt()
+	
+	# Reset missions sinkhole condition
+	var missions_node = get_node_or_null("../missions")
+	if missions_node and missions_node.has_method("reset_sinkhole_condition"):
+		missions_node.reset_sinkhole_condition()

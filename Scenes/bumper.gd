@@ -97,6 +97,12 @@ func _on_body_entered(body):
 		if score_label:
 			score_label.increase_score("bumper")
 
+		# Record collision for mission system
+		var missions_node = get_node("../missions")
+		if missions_node:
+			missions_node.record_collision(missions_node.CollisionType.BUMPER)
+		
+
 # Function to launch the ball
 func bump_ball(ball_node):
 	if ball_node != null:

@@ -1,7 +1,7 @@
 extends Node2D
 
 # References to the candles in the set
-@onready var candles = [$candle, $candle2, $candle3]
+@onready var candles = [$candle1, $candle2, $candle3]
 
 # Signal to notify when all candles are activated
 signal all_candles_activated
@@ -43,6 +43,10 @@ func check_all_active():
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
 			score_label.increase_score("candle_set_complete")
+		# Record collision for mission system
+		var missions_node = get_node("../missions")
+		if missions_node:
+			missions_node.record_collision(missions_node.CollisionType.CANDLESET)
 
 # Trigger the complete flame effect on all candles
 func trigger_complete_flame():

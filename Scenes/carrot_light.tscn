@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw0wbdd8qiics"]
+
+[ext_resource type="Script" uid="uid://c7pf3sm4sh0vo" path="res://Scenes/mission_light_regular.gd" id="1_ecpwn"]
+[ext_resource type="Texture2D" uid="uid://dhvfek64xdm8r" path="res://Assets/table/lightcarrot_off.png" id="1_whrcp"]
+[ext_resource type="Texture2D" uid="uid://dydusa3nbuakv" path="res://Assets/table/lightcarrot_on.png" id="2_ecpwn"]
+
+[node name="carrot_light" type="Node2D"]
+script = ExtResource("1_ecpwn")
+
+[node name="inactive" type="Sprite2D" parent="."]
+texture = ExtResource("1_whrcp")
+
+[node name="active" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_ecpwn")

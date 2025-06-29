@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4khkob7ygk0p"]
+
+[ext_resource type="Script" uid="uid://u7khc1fkcf7p" path="res://Scenes/mission_light_target.gd" id="1_0c0yk"]
+[ext_resource type="Texture2D" uid="uid://cjtpc0b4nb4yy" path="res://Assets/table/lightcircle_off.png" id="1_sf6ny"]
+[ext_resource type="Texture2D" uid="uid://d4l3bvefk2tw8" path="res://Assets/table/lightcircle_on.png" id="2_0c0yk"]
+
+[node name="target_lights" type="Node2D"]
+script = ExtResource("1_0c0yk")
+
+[node name="target_1_light" type="Node2D" parent="."]
+
+[node name="inactive" type="Sprite2D" parent="target_1_light"]
+position = Vector2(-49.5, -0.5)
+texture = ExtResource("1_sf6ny")
+
+[node name="active" type="Sprite2D" parent="target_1_light"]
+visible = false
+position = Vector2(-49.5, -0.5)
+texture = ExtResource("2_0c0yk")
+
+[node name="target_2_light" type="Node2D" parent="."]
+
+[node name="inactive" type="Sprite2D" parent="target_2_light"]
+texture = ExtResource("1_sf6ny")
+
+[node name="active" type="Sprite2D" parent="target_2_light"]
+visible = false
+texture = ExtResource("2_0c0yk")
+
+[node name="target_3_light" type="Node2D" parent="."]
+
+[node name="inactive" type="Sprite2D" parent="target_3_light"]
+position = Vector2(48.5, -0.5)
+texture = ExtResource("1_sf6ny")
+
+[node name="active" type="Sprite2D" parent="target_3_light"]
+visible = false
+position = Vector2(48.5, -0.5)
+texture = ExtResource("2_0c0yk")

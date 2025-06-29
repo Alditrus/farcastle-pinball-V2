@@ -75,8 +75,6 @@ func _process(delta):
 # Function to increase score based on element type
 func increase_score(element_type: String):
 	var points = 0
-	# Get missions reference once at the beginning
-	var missions_ref = get_node_or_null("/root/Table/Missions")
 	
 	# Determine points based on element type
 	match element_type:
@@ -98,12 +96,11 @@ func increase_score(element_type: String):
 			upgrade_bumper_level()
 		"rail_exit":
 			points = 200
+		"rollover":
+			points = 6000
 		"spinner":
 			# Start the spinner point calculation
 			start_spinner_points(1.0)
-			# Register spinner hit with missions system
-			if missions_ref and missions_ref.has_method("register_collision"):
-				missions_ref.register_collision("spinner")
 			return
 		"sinkhole":
 			points = 70000
@@ -112,10 +109,6 @@ func increase_score(element_type: String):
 		"minigame_win":
 			points = 500
 			update_score_text()
-			
-			# Register minigame win with missions system
-			if missions_ref and missions_ref.has_method("register_collision"):
-				missions_ref.register_collision("minigame_win")
 			return
 		_:
 			# Default points if element type is not recognized
@@ -126,10 +119,6 @@ func increase_score(element_type: String):
 	
 	# Update the displayed score
 	update_score_text()
-	
-	# Register collision with missions system
-	if missions_ref and missions_ref.has_method("register_collision"):
-		missions_ref.register_collision(element_type)
 
 # Function to upgrade bumper level when candle set is completed
 func upgrade_bumper_level():
@@ -195,11 +184,6 @@ func apply_multiplier(multiplier: int):
 	
 	# Optional: You could add visual feedback here
 	print("Score multiplied by " + str(multiplier) + "x: " + str(previous_score) + " → " + str(score))
-	
-	# Register with missions system if needed
-	var missions_ref = get_node_or_null("/root/Table/Missions")
-	if missions_ref and missions_ref.has_method("register_collision"):
-		missions_ref.register_collision("multiplier_" + str(multiplier))
 
 # Function to reset score
 func reset_score():
