@@ -6,10 +6,17 @@ extends Node2D
 @onready var flame1 = $activeflame1
 @onready var flame2 = $activeflame2
 
+# Reference to missions node
+var missions_node: Node2D
+
 # Initial Y position of the jaw
 var jaw_initial_y = 0
 var jaw_open_offset = 30  # How far the jaw should move (30 pixels down)
 var is_entrance_active = false
+
+# Animation variables
+var current_jaw_progress = 0.0
+var jaw_tween: Tween
 
 # Called when the node enters the scene tree for the first time
 func _ready():
@@ -31,19 +38,96 @@ func _ready():
 	if flame2:
 		flame2.emitting = false
 	
-	# Open jaw automatically since missions are removed
+	# Connect to missions system
+	missions_node = get_node_or_null("../missions")
+	if missions_node:
+		missions_node.mission_completed.connect(_on_mission_completed)
+		missions_node.mission_progress_updated.connect(_on_mission_progress_updated)
+		missions_node.mission_started.connect(_on_mission_started)
+	else:
+		push_error("Could not find missions node")
+	
+	# Keep jaw closed initially - will open when mission is completed
+	_on_jaw_progress(0.0)
+
+# Called when a mission is started
+func _on_mission_started(mission):
+	print("Mission started: " + mission.name + " - Resetting jaw progress")
+	# Reset jaw to closed when mission starts
+	_on_jaw_progress(0.0)
+
+# Called when mission progress is updated
+func _on_mission_progress_updated(mission, _collision_type, _current_count, _required_count):
+	# Calculate overall mission progress
+	var progress = calculate_mission_progress(mission)
+	_on_jaw_progress(progress)
+
+# Called when a mission is completed
+func _on_mission_completed(mission):
+	print("Mission completed: " + mission.name + " - Opening minigame entrance!")
+	# Open the jaw when mission is completed
 	_on_jaw_progress(1.0)
 
-# Update the jaw position based on progress (0.0 to 1.0)
+# Calculate overall mission progress (0.0 to 1.0)
+func calculate_mission_progress(mission) -> float:
+	if not mission:
+		return 0.0
+	
+	# Calculate progress within current phase
+	var current_phase_requirements = mission.phases[mission.current_phase]
+	var phase_progress = 0.0
+	var total_requirements = 0
+	var completed_requirements = 0
+	
+	# Check progress within current phase
+	for collision_type in current_phase_requirements:
+		var required = current_phase_requirements[collision_type]
+		var current = mission.progress.get(collision_type, 0)
+		total_requirements += required
+		completed_requirements += min(current, required)
+	
+	# Calculate current phase completion (0.0 to 1.0)
+	if total_requirements > 0:
+		phase_progress = float(completed_requirements) / float(total_requirements)
+	
+	# Calculate overall mission progress
+	# (completed phases + current phase progress) / total phases
+	var overall_progress = (float(mission.current_phase) + phase_progress) / float(mission.phases.size())
+	
+	return clamp(overall_progress, 0.0, 1.0)
+
+# Update the jaw position based on progress (0.0 to 1.0) with smooth animation
 func _on_jaw_progress(progress_percent: float):
-	if jaw_sprite:
-		# Calculate the jaw's new Y position
-		var offset = jaw_open_offset * progress_percent
-		jaw_sprite.position.y = jaw_initial_y + offset
+	if not jaw_sprite:
+		return
+	
+	# Don't animate if progress hasn't changed significantly
+	if abs(progress_percent - current_jaw_progress) < 0.01:
+		return
+	
+	# Stop any existing tween
+	if jaw_tween:
+		jaw_tween.kill()
+	
+	# Create new tween for smooth animation
+	jaw_tween = create_tween()
+	jaw_tween.set_ease(Tween.EASE_OUT)
+	jaw_tween.set_trans(Tween.TRANS_CUBIC)
+	
+	# Calculate target Y position
+	var target_offset = jaw_open_offset * progress_percent
+	var target_y = jaw_initial_y + target_offset
+	
+	# Animate jaw to new position over 0.5 seconds
+	jaw_tween.tween_property(jaw_sprite, "position:y", target_y, 0.5)
+	
+	# Update current progress
+	current_jaw_progress = progress_percent
 	
 	# If jaw is fully open, activate the minigame entrance
 	if progress_percent >= 1.0 and not is_entrance_active:
-		activate_minigame_entrance()
+		# Wait for animation to complete before activating
+		jaw_tween.tween_callback(activate_minigame_entrance)
 
 # Activate the minigame entrance when jaw is fully open
 func activate_minigame_entrance():
@@ -69,12 +153,6 @@ func add_entrance_effects():
 		flame1.emitting = true
 	if flame2:
 		flame2.emitting = true
-	
-	# Make the jaw sprite flash
-	var tween = create_tween()
-	tween.tween_property(jaw_sprite, "modulate", Color(1.5, 1.5, 1.5), 0.2)
-	tween.tween_property(jaw_sprite, "modulate", Color(1, 1, 1), 0.2)
-	tween.set_loops(3)
 
 # Reset the entrance (called when resetting the game)
 func reset_entrance():

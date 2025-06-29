@@ -1,15 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://d3o7qjbdijm76"]
+[gd_scene load_steps=4 format=3 uid="uid://d3o7qjbdijm76"]
 
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="1_i5mbo"]
 [ext_resource type="Script" uid="uid://dlujm6sr1883p" path="res://Scenes/candleset.gd" id="1_pao51"]
+[ext_resource type="Script" uid="uid://wsrtpvcdm11c" path="res://Scenes/bumper_candle.gd" id="3_iuyff"]
 
 [node name="candleset" type="Node2D"]
 script = ExtResource("1_pao51")
 
 [node name="candle1" parent="." instance=ExtResource("1_i5mbo")]
 position = Vector2(-59, 0)
+script = ExtResource("3_iuyff")
 
 [node name="candle2" parent="." instance=ExtResource("1_i5mbo")]
+script = ExtResource("3_iuyff")
 
 [node name="candle3" parent="." instance=ExtResource("1_i5mbo")]
 position = Vector2(60, 0)
+script = ExtResource("3_iuyff")
