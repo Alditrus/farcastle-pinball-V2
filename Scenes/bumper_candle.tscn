@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bworr8h1prbs1"]
+[gd_scene load_steps=6 format=3 uid="uid://cyxjm5jj8nu5g"]
 
-[ext_resource type="Script" uid="uid://dr4frklupvpkf" path="res://Scenes/candle.gd" id="1_45ia7"]
-[ext_resource type="Texture2D" uid="uid://bimpqb81q4ynr" path="res://Assets/table/flameparticle.png" id="1_xsvjb"]
-[ext_resource type="Texture2D" uid="uid://dfuq062nls8l8" path="res://Assets/table/candle.png" id="2_45ia7"]
-[ext_resource type="PackedScene" uid="uid://cw0wbdd8qiics" path="res://Scenes/carrot_light.tscn" id="4_oi8ik"]
+[ext_resource type="Script" uid="uid://wsrtpvcdm11c" path="res://Scenes/bumper_candle.gd" id="1_ewlv0"]
+[ext_resource type="Texture2D" uid="uid://bimpqb81q4ynr" path="res://Assets/table/flameparticle.png" id="3_xorr6"]
+[ext_resource type="Texture2D" uid="uid://dfuq062nls8l8" path="res://Assets/table/candle.png" id="4_xmffs"]
 
 [sub_resource type="Curve" id="Curve_oi8ik"]
 _data = [Vector2(0.0165746, 1), 0.0, -0.107037, 0, 0, Vector2(1, 0), -3.23307, 0.0, 0, 0]
@@ -13,16 +12,12 @@ point_count = 2
 size = Vector2(20, 34)
 
 [node name="candle" type="Node2D"]
-script = ExtResource("1_45ia7")
-
-[node name="carrot_light" parent="." instance=ExtResource("4_oi8ik")]
-position = Vector2(0, -87)
-rotation = -3.14159
+script = ExtResource("1_ewlv0")
 
 [node name="normalflame" type="CPUParticles2D" parent="."]
 position = Vector2(0, -29)
 amount = 5
-texture = ExtResource("1_xsvjb")
+texture = ExtResource("3_xorr6")
 lifetime = 0.25
 speed_scale = 0.4
 gravity = Vector2(0, -980)
@@ -34,7 +29,7 @@ scale_amount_curve = SubResource("Curve_oi8ik")
 position = Vector2(0, -29)
 emitting = false
 amount = 10
-texture = ExtResource("1_xsvjb")
+texture = ExtResource("3_xorr6")
 lifetime = 0.4
 one_shot = true
 speed_scale = 0.6
@@ -44,7 +39,7 @@ scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_oi8ik")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_45ia7")
+texture = ExtResource("4_xmffs")
 
 [node name="Area2D" type="Area2D" parent="."]
 

@@ -24,20 +24,12 @@ func _on_node_removed(node):
 		lights_controlled_this_ball = false
 
 func control_mission_lights():
-	# Find the mission_lights node
+	# Find the mission_lights controller node
 	var mission_lights_node = get_node_or_null("../mission_lights")
 	if not mission_lights_node:
 		push_error("Could not find mission_lights node")
 		return
 	
-	# Set all mission lights to inactive, except left_sinkhole_light
-	for light in mission_lights_node.get_children():
-		if light.has_method("set_mode") and "LightMode" in light:
-			if light.name == "left_sinkhole_light":
-				# Set left sinkhole light to active
-				light.set_mode(light.LightMode.ACTIVE)
-			else:
-				# Set all other lights to inactive
-				light.set_mode(light.LightMode.INACTIVE)
-	
-	print("Mission lights controlled: all inactive except left_sinkhole_light")
+	# Use the central controller to activate left sinkhole mode
+	# This sets all lights to inactive except left_sinkhole_light which becomes active
+	mission_lights_node.activate_left_sinkhole_mode()

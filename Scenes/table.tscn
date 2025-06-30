@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=77 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -47,16 +47,13 @@
 [ext_resource type="Script" uid="uid://bwy0ovk7wo7hs" path="res://Scenes/minigamewindow.gd" id="43_2rdwm"]
 [ext_resource type="Script" uid="uid://hjecv2g386am" path="res://Scenes/guardarea_1.gd" id="43_fick8"]
 [ext_resource type="Script" uid="uid://006sb4ild22j" path="res://Scenes/guardarea_2.gd" id="44_fick8"]
-[ext_resource type="PackedScene" uid="uid://b4khkob7ygk0p" path="res://Scenes/target_lights.tscn" id="44_pkrpy"]
 [ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="46_wn66p"]
-[ext_resource type="PackedScene" uid="uid://cvwgh078k0r7x" path="res://Scenes/ramp_light.tscn" id="47_wu2rx"]
 [ext_resource type="PackedScene" uid="uid://cv6bgtmjvcx4j" path="res://Scenes/rollover.tscn" id="48_oc5ru"]
 [ext_resource type="PackedScene" uid="uid://c1m58a70gtp65" path="res://Scenes/arrow_light.tscn" id="48_pkrpy"]
-[ext_resource type="PackedScene" uid="uid://c1sb2h6wq85jf" path="res://Scenes/rollover_light.tscn" id="49_p1j83"]
-[ext_resource type="PackedScene" uid="uid://cw0wbdd8qiics" path="res://Scenes/carrot_light.tscn" id="50_dce1t"]
 [ext_resource type="Script" uid="uid://blgrfad20o14y" path="res://Scenes/missions.gd" id="51_pkrpy"]
 [ext_resource type="PackedScene" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
+[ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
@@ -507,64 +504,9 @@ position = Vector2(621, 210)
 rotation = 0.453786
 script = ExtResource("42_6umbq")
 
-[node name="mission_lights" type="Node2D" parent="."]
-
-[node name="candleset_lights" parent="mission_lights" instance=ExtResource("44_pkrpy")]
-position = Vector2(429, 176)
-
-[node name="target_2_lights" parent="mission_lights" instance=ExtResource("44_pkrpy")]
-position = Vector2(620, 909)
-rotation = 0.811578
-
-[node name="target_1_lights" parent="mission_lights" instance=ExtResource("44_pkrpy")]
-position = Vector2(407, 676)
-
-[node name="spinner_1_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
-position = Vector2(738, 381)
-rotation = -2.07171
-
-[node name="spinner_2_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
-position = Vector2(581, 782)
-rotation = 0.863938
-
-[node name="right_sinkhole_light" parent="mission_lights" instance=ExtResource("48_pkrpy")]
-position = Vector2(700, 1012)
-rotation = 0.514872
-
-[node name="left_sinkhole_light" parent="mission_lights" instance=ExtResource("48_pkrpy")]
-position = Vector2(140, 963)
-rotation = -0.558505
-
-[node name="rollover_ 2_light" parent="mission_lights" instance=ExtResource("49_p1j83")]
-position = Vector2(621, 210)
-rotation = 0.453786
-
-[node name="rollover_1_light" parent="mission_lights" instance=ExtResource("49_p1j83")]
-position = Vector2(164, 257)
-rotation = -0.680678
-
-[node name="bumper_light" parent="mission_lights" instance=ExtResource("48_pkrpy")]
+[node name="bumper_light" parent="." instance=ExtResource("48_pkrpy")]
 position = Vector2(280, 554)
 rotation = 0.837758
-
-[node name="ramp_light" parent="mission_lights" instance=ExtResource("47_wu2rx")]
-position = Vector2(171, 680)
-
-[node name="candle_1_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
-position = Vector2(57, 1138)
-rotation = 3.14159
-
-[node name="candle_2_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
-position = Vector2(117, 1138)
-rotation = 3.14159
-
-[node name="candle_3_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
-position = Vector2(181, 1138)
-rotation = 3.14159
-
-[node name="candle_4_light" parent="mission_lights" instance=ExtResource("50_dce1t")]
-position = Vector2(761, 1138)
-rotation = 3.14159
 
 [node name="candleset" parent="." instance=ExtResource("39_hotvi")]
 position = Vector2(428, 238)
@@ -573,11 +515,11 @@ position = Vector2(428, 238)
 position = Vector2(838, 1287)
 
 [node name="testball" parent="." instance=ExtResource("46_wn66p")]
-position = Vector2(122, 1079)
+position = Vector2(845, 961)
 
 [node name="flaps1" parent="." instance=ExtResource("11_x0duj")]
 position = Vector2(669, 417)
-rotation = 1.1013
+rotation = -2.03156
 scale = Vector2(1.2, 1.2)
 
 [node name="flaps2" parent="." instance=ExtResource("11_x0duj")]
@@ -636,3 +578,14 @@ script = ExtResource("58_6umbq")
 position = Vector2(810, 421)
 rotation = -0.253073
 shape = SubResource("RectangleShape2D_wjnp8")
+
+[node name="mission_lights" type="Node2D" parent="."]
+script = ExtResource("55_7077j")
+
+[node name="left_sinkhole_light" parent="." instance=ExtResource("48_pkrpy")]
+position = Vector2(133, 957)
+rotation = -0.567232
+
+[node name="right_sinkhole_light" parent="." instance=ExtResource("48_pkrpy")]
+position = Vector2(708, 1007)
+rotation = 0.514872

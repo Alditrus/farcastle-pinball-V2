@@ -1,8 +1,9 @@
-[gd_scene load_steps=50 format=3 uid="uid://7f7pn5l6cc4n"]
+[gd_scene load_steps=51 format=3 uid="uid://7f7pn5l6cc4n"]
 
 [ext_resource type="Texture2D" uid="uid://ch0l3v3oc2y0u" path="res://Assets/table/flap_pivot.png" id="1_643ue"]
 [ext_resource type="Script" uid="uid://cnn73vg8apyjj" path="res://Scenes/flaps.gd" id="1_u2go8"]
 [ext_resource type="Texture2D" uid="uid://c7jn7nmbx6f3c" path="res://Assets/table/flap_sheet.png" id="2_hlt2v"]
+[ext_resource type="PackedScene" uid="uid://cw0wbdd8qiics" path="res://Scenes/carrot_light.tscn" id="4_as1ew"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ygsqr"]
 size = Vector2(64, 54)
@@ -339,3 +340,6 @@ texture = ExtResource("1_643ue")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Area2D"]
 sprite_frames = SubResource("SpriteFrames_3fs6k")
 frame_progress = 0.504743
+
+[node name="carrot_light" parent="." instance=ExtResource("4_as1ew")]
+position = Vector2(0, 65)

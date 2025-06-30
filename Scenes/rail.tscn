@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dr0vb6dmbqko1"]
+[gd_scene load_steps=3 format=3 uid="uid://dr0vb6dmbqko1"]
 
 [ext_resource type="Texture2D" uid="uid://bkuhl3pv6cp6q" path="res://Assets/table/rail.png" id="1_jeey1"]
+[ext_resource type="PackedScene" uid="uid://cvwgh078k0r7x" path="res://Scenes/ramp_light.tscn" id="2_3fs6a"]
 
 [node name="rail" type="Node2D"]
 
@@ -48,3 +49,6 @@ polygon = PackedVector2Array(187, 780, 177, 764, 164, 741, 141, 697, 126, 664, 1
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="rail2"]
 position = Vector2(-456, -799)
 polygon = PackedVector2Array(155, 604, 172, 634, 193, 666, 207, 685, 222, 703, 239, 722, 254, 735, 240, 721, 224, 702, 209, 684, 195, 665, 174, 633, 158, 603)
+
+[node name="ramp_light" parent="." instance=ExtResource("2_3fs6a")]
+position = Vector2(-287, -117)
