@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://mqwh8awxx35t"]
+[gd_scene load_steps=7 format=3 uid="uid://mqwh8awxx35t"]
 
 [ext_resource type="Texture2D" uid="uid://dwpy5y356oy74" path="res://Assets/table/target_dead.png" id="1_7x1ls"]
 [ext_resource type="Texture2D" uid="uid://vpdnnxj72bts" path="res://Assets/table/target_live.png" id="2_2qnx0"]
+[ext_resource type="PackedScene" uid="uid://b4khkob7ygk0p" path="res://Scenes/target_lights.tscn" id="3_gxnfq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0dux2"]
 size = Vector2(10, 14)
@@ -55,3 +56,6 @@ texture = ExtResource("2_2qnx0")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="target3"]
 position = Vector2(116, -7)
 shape = SubResource("RectangleShape2D_pjvfw")
+
+[node name="target_lights" parent="." instance=ExtResource("3_gxnfq")]
+position = Vector2(69, -40)
