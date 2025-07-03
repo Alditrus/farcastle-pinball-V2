@@ -113,6 +113,9 @@ func target_down(target_node):
 			# Use set_deferred to change collision state safely during signal processing
 			collision.set_deferred("disabled", true)
 		
+		# Deactivate the individual light for this specific target
+		deactivate_individual_light(target_node)
+		
 		# Increment targets down counter
 		targets_down_count += 1
 		
@@ -141,6 +144,9 @@ func check_all_targets_down():
 		var missions_node = get_node("../missions")
 		if missions_node:
 			missions_node.record_collision(missions_node.CollisionType.TARGET_SET1)
+			
+			# Check if more TARGET_SET1 completions are needed and reset lights if so
+			reset_lights_if_more_completions_needed(missions_node, missions_node.CollisionType.TARGET_SET1)
 		
 		# Turn off the target lights for this specific set
 		var lights_parent = get_node_or_null("/root/Table/Lights")
@@ -157,3 +163,47 @@ func check_all_targets_down():
 			timer.queue_free()
 		)
 		timer.start()
+
+# Deactivate individual light for specific target
+func deactivate_individual_light(target_node):
+	if not target_node:
+		return
+	
+	# Get the target lights node
+	var target_lights = get_node_or_null("target_lights")
+	if not target_lights or not target_lights.has_method("set_mode"):
+		return
+	
+	# Determine which target was hit and call the appropriate deactivation function
+	match target_node.name:
+		"target1":
+			if target_lights.has_method("deactivate_target_1"):
+				target_lights.deactivate_target_1()
+		"target2":
+			if target_lights.has_method("deactivate_target_2"):
+				target_lights.deactivate_target_2()
+		"target3":
+			if target_lights.has_method("deactivate_target_3"):
+				target_lights.deactivate_target_3()
+
+# Reset target lights if more completions are needed for current mission phase
+func reset_lights_if_more_completions_needed(missions_node, collision_type):
+	# Get active missions
+	var active_missions = missions_node.get_active_missions()
+	
+	for mission_id in active_missions:
+		var mission = active_missions[mission_id]
+		var current_phase_requirements = mission.phases[mission.current_phase]
+		
+		# Check if this collision type is required in current phase
+		if collision_type in current_phase_requirements:
+			var current_count = mission.progress[collision_type]
+			var required_count = current_phase_requirements[collision_type]
+			
+			# If we still need more completions, reset the lights to active
+			if current_count < required_count:
+				var target_lights = get_node_or_null("target_lights")
+				if target_lights and target_lights.has_method("set_mode"):
+					# Get the ACTIVE mode properly
+					if "LightMode" in target_lights:
+						target_lights.set_mode(target_lights.LightMode.ACTIVE)

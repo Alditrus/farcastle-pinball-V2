@@ -51,7 +51,7 @@
 [ext_resource type="PackedScene" uid="uid://cv6bgtmjvcx4j" path="res://Scenes/rollover.tscn" id="48_oc5ru"]
 [ext_resource type="PackedScene" uid="uid://c1m58a70gtp65" path="res://Scenes/arrow_light.tscn" id="48_pkrpy"]
 [ext_resource type="Script" uid="uid://blgrfad20o14y" path="res://Scenes/missions.gd" id="51_pkrpy"]
-[ext_resource type="PackedScene" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
+[ext_resource type="PackedScene" uid="uid://bxc8h4x5n0k2l" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
 [ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
