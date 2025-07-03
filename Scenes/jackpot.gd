@@ -64,7 +64,6 @@ func on_jackpot_hit(ball):
 			var minigame_window = get_node_or_null("/root/Table/minigamewindow")
 			if minigame_window and minigame_window.has_method("deactivate"):
 				minigame_window.deactivate()
-				print("Jackpot! Minigame closed, returning to main table")
 				
 				# Unfreeze all main table balls and wait for the process to complete
 				await unfreeze_main_table_balls()

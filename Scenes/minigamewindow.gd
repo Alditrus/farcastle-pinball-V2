@@ -173,5 +173,3 @@ func reset_minigame_scene():
 			goat_head.reset()
 		elif goat_head.get("initial_position") != null:
 			goat_head.position = goat_head.initial_position
-	
-	print("Minigame scene completely reset and ready for next activation")

@@ -181,9 +181,6 @@ func apply_multiplier(multiplier: int):
 	
 	# Update the displayed score
 	update_score_text()
-	
-	# Optional: You could add visual feedback here
-	print("Score multiplied by " + str(multiplier) + "x: " + str(previous_score) + " → " + str(score))
 
 # Function to reset score
 func reset_score():

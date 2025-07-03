@@ -23,7 +23,6 @@ func _ready():
 func _on_plier_body_entered(body, area_name):
 	# Check specifically for the minigameball
 	if body.name == "minigameball":
-		print("Minigame Complete!")
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
 			var multiplier = multipliers[area_name]

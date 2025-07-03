@@ -52,7 +52,6 @@ func _ready():
 
 # Called when a mission is started
 func _on_mission_started(mission):
-	print("Mission started: " + mission.name + " - Resetting jaw progress")
 	# Reset jaw to closed when mission starts
 	_on_jaw_progress(0.0)
 
@@ -64,7 +63,6 @@ func _on_mission_progress_updated(mission, _collision_type, _current_count, _req
 
 # Called when a mission is completed
 func _on_mission_completed(mission):
-	print("Mission completed: " + mission.name + " - Opening minigame entrance!")
 	# Open the jaw when mission is completed
 	_on_jaw_progress(1.0)
 
@@ -137,17 +135,11 @@ func activate_minigame_entrance():
 		entrance_area.set_deferred("monitorable", true)
 		is_entrance_active = true
 		
-		# Visual feedback
-		print("🎮 MINIGAME ENTRANCE ACTIVATED! 🎮")
-		
 		# Optional: Add visual effects
 		add_entrance_effects()
 
 # Add visual effects to indicate the entrance is active
 func add_entrance_effects():
-	# You could add particles, animation, or other visual effects here
-	print("Minigame entrance is now active and ready for the ball!")
-	
 	# Activate the particle flame effects
 	if flame1:
 		flame1.emitting = true
@@ -195,8 +187,6 @@ func reset_entrance():
 func _complete_entrance_reset():
 	# Fully reset the entrance state
 	is_entrance_active = false
-	
-	print("Minigame entrance reset complete")
 	
 	# Find and reset the minigame window
 	var minigame_window = get_node_or_null("/root/Table/minigamewindow")

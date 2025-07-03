@@ -90,9 +90,6 @@ func _setup_touch_controls():
 	if touch_area:
 		# Connect to the input event signals
 		touch_area.input_event.connect(_on_touch_area_input_event)
-		print("Connected touch controls for ", name, " to ", touch_area_name)
-	else:
-		print("Warning: Could not find touch area named ", touch_area_name, " for flipper ", name)
 
 # Handle touch input events
 func _on_touch_area_input_event(_viewport, event, _shape_idx):

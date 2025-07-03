@@ -89,7 +89,6 @@ func _on_body_entered(body):
 # Called when the cooldown timer expires
 func _on_cooldown_timeout():
 	cooldown_active = false
-	print("Minigame area cooldown finished - ready for next ball")
 
 # Called every physics frame while a ball is being sucked in
 func _physics_process(delta):
@@ -277,14 +276,11 @@ func _restore_ball_appearance_impl(ball):
 		# Return a special callback for the captured ball
 		if was_captured:
 			return func():
-				print("Preparing to eject captured ball")
-				
 				# The callback needs to immediately unfreeze the ball to allow physics to work
 				ball.freeze = false
 				
 				# Position the ball at its original position
 				if ball.has_meta("original_position"):
-					print("Repositioning ball to:", ball.get_meta("original_position"))
 					ball.global_position = ball.get_meta("original_position")
 					ball.remove_meta("original_position")
 				
@@ -297,7 +293,6 @@ func _restore_ball_appearance_impl(ball):
 				
 				# Apply strong launch force
 				var launch_force = 500.0  # Increased for more dramatic effect
-				print("Applying velocity:", launch_direction * launch_force)
 				
 				# We need to use this approach because linear_velocity might be ignored if the ball is frozen
 				ball.linear_velocity = Vector2.ZERO  # Reset first
@@ -305,7 +300,6 @@ func _restore_ball_appearance_impl(ball):
 				
 				# Apply spin (higher value for more noticeable spin)
 				var spin = randf_range(8.0, 15.0) * (1 if randf() > 0.5 else -1)
-				print("Applying spin:", spin)
 				ball.angular_velocity = spin
 				
 				# Use apply_torque_impulse for more reliable spin
@@ -315,7 +309,6 @@ func _restore_ball_appearance_impl(ball):
 				cooldown_active = true
 				if cooldown_timer:
 					cooldown_timer.start(cooldown_duration)
-					print("Starting minigame area cooldown for " + str(cooldown_duration) + " seconds")
 				
 				# Reset state variables
 				suction_complete = false
