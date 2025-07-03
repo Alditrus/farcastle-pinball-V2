@@ -41,22 +41,17 @@ func _ready():
 func cache_all_lights():
 	light_cache.clear()
 	var table_node = get_node("..")
-	print("Mission lights: Caching lights...")
 	
 	for light_path in mission_light_paths:
 		var light = table_node.get_node_or_null(light_path)
 		if light and light.has_method("set_mode") and "LightMode" in light:
 			light_cache[light_path] = light
-			print("Cached light: ", light_path, " -> ", light)
 		else:
 			# Try alternative paths or search for the light
 			var light_name = light_path.get_file()
 			var found_light = find_light_by_name(table_node, light_name)
 			if found_light:
 				light_cache[light_path] = found_light
-				print("Found and cached light: ", light_path, " -> ", found_light)
-			else:
-				print("Light not found: ", light_path)
 
 # Recursively search for a light by name
 func find_light_by_name(node: Node, light_name: String) -> Node:
@@ -98,11 +93,9 @@ func set_all_lights_active(exceptions: Array = []):
 
 # Set specific light to a mode by exact path
 func set_light_mode_by_path(light_path: String, mode):
-	print("Mission lights: set_light_mode_by_path(", light_path, ", ", mode, ")")
 	if light_path in light_cache:
 		var cached_light = light_cache[light_path]
 		if cached_light and cached_light.has_method("set_mode") and "LightMode" in cached_light:
-			print("Mission lights: Calling cached_light.set_mode(", mode, ") on ", cached_light)
 			cached_light.set_mode(mode)
 			return true
 	
@@ -110,13 +103,11 @@ func set_light_mode_by_path(light_path: String, mode):
 	var table_node = get_node("..")
 	var found_light = table_node.get_node_or_null(light_path)
 	if found_light and found_light.has_method("set_mode") and "LightMode" in found_light:
-		print("Mission lights: Calling found_light.set_mode(", mode, ") on ", found_light)
 		found_light.set_mode(mode)
 		# Add to cache for future use
 		light_cache[light_path] = found_light
 		return true
 	
-	push_warning("Light not found at path: " + light_path)
 	return false
 
 # Set specific light to a mode
@@ -137,26 +128,21 @@ func set_light_mode(light_name: String, mode):
 		light_cache[light_name] = found_light
 		return true
 	
-	push_warning("Light not found: " + light_name)
 	return false
 
 # Control lights for left sinkhole activation (all inactive except left sinkhole)
 func activate_left_sinkhole_mode():
 	set_all_lights_inactive()
 	set_light_mode("left_sinkhole_light", get_light_mode_active())
-	print("Mission lights: Left sinkhole mode activated")
 
 # Get the ACTIVE light mode (handles different light implementations)
 func get_light_mode_active():
 	# Try to get from any cached light
 	for light in light_cache.values():
 		if light and "LightMode" in light:
-			var active_mode = light.LightMode.ACTIVE
-			print("Mission lights: get_light_mode_active() from ", light, " -> ", active_mode)
-			return active_mode
+			return light.LightMode.ACTIVE
 	
 	# Fallback - this should be standardized across all light scripts
-	print("Mission lights: get_light_mode_active() fallback -> 1")
 	return 1  # Assuming ACTIVE = 1
 
 # Get the INACTIVE light mode
@@ -171,19 +157,14 @@ func get_light_mode_inactive():
 
 # Control lights based on mission progress
 func update_lights_for_mission_progress(_active_mission, current_phase_requirements: Dictionary):
-	print("Mission lights: Updating lights for mission progress")
-	print("Phase requirements: ", current_phase_requirements)
-	
 	# Set all lights to inactive first
 	set_all_lights_inactive()
 	
 	# Activate lights for current phase requirements
 	for collision_type in current_phase_requirements:
 		var light_paths = get_light_paths_for_collision_type(collision_type)
-		print("Collision type: ", collision_type, " -> Light paths: ", light_paths)
 		for light_path in light_paths:
-			var success = set_light_mode_by_path(light_path, get_light_mode_active())
-			print("Setting light path: ", light_path, " -> Success: ", success)
+			set_light_mode_by_path(light_path, get_light_mode_active())
 
 # Map collision types to light paths (can return multiple paths)
 func get_light_paths_for_collision_type(collision_type) -> Array:
@@ -225,8 +206,6 @@ func get_light_name_for_collision_type(collision_type) -> String:
 
 # Deactivate individual rollover light
 func deactivate_individual_rollover_light(rollover_number: int):
-	print("Mission lights: Deactivating rollover ", rollover_number, " light")
-	
 	var light_path = ""
 	match rollover_number:
 		1:
@@ -234,13 +213,10 @@ func deactivate_individual_rollover_light(rollover_number: int):
 		2:
 			light_path = "rollover2/rollover_light"
 		_:
-			push_warning("Invalid rollover number: " + str(rollover_number))
 			return
 	
-	var success = set_light_mode_by_path(light_path, get_light_mode_inactive())
-	print("Mission lights: Deactivated rollover ", rollover_number, " light -> Success: ", success)
+	set_light_mode_by_path(light_path, get_light_mode_inactive())
 
 # Reset all lights (called on ball respawn)
 func reset_all_lights():
 	set_all_lights_inactive()
-	print("All mission lights reset to inactive")

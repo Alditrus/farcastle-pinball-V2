@@ -133,8 +133,6 @@ func check_all_targets_down():
 		# This is target set 2
 		var set_id = "target_set_2"
 		
-		print("Target set completed: " + set_id)
-		
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
