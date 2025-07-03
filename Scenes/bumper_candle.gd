@@ -42,6 +42,9 @@ func _on_area_body_entered(body):
 		# Update particle effect based on new state
 		update_particle_effect()
 		
+		# Deactivate individual light when candle is hit
+		deactivate_individual_light()
+		
 		# Emit signal to notify candleset
 		emit_signal("candle_state_changed", self, is_active)
 
@@ -78,3 +81,26 @@ func reset():
 	is_active = false
 	is_complete = false
 	update_particle_effect()
+
+# Deactivate individual light for this specific candle
+func deactivate_individual_light():
+	# Get the parent candleset, then get its target lights
+	var candleset = get_parent()
+	if not candleset:
+		return
+	
+	var target_lights = candleset.get_node_or_null("target_lights")
+	if not target_lights or not target_lights.has_method("set_mode"):
+		return
+	
+	# Determine which candle this is and call the appropriate deactivation function
+	match self.name:
+		"candle1":
+			if target_lights.has_method("deactivate_target_1"):
+				target_lights.deactivate_target_1()
+		"candle2":
+			if target_lights.has_method("deactivate_target_2"):
+				target_lights.deactivate_target_2()
+		"candle3":
+			if target_lights.has_method("deactivate_target_3"):
+				target_lights.deactivate_target_3()

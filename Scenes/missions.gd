@@ -56,9 +56,18 @@ var completed_missions: Dictionary = {}
 var last_active_mission: Dictionary = {} # Stores last mission state for resuming
 var missions_paused: bool = false # Pause missions when ball respawns
 
+# Reference to mission lights controller
+var mission_lights_node: Node2D
+
 signal mission_started(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
 signal mission_completed(mission: Mission)
+
+func _ready():
+	# Get reference to mission lights controller
+	mission_lights_node = get_node("../mission_lights")
+	if not mission_lights_node:
+		push_error("Could not find mission_lights node")
 
 func start_mission(mission_id: String = "") -> bool:
 	var target_mission_id = mission_id
@@ -85,6 +94,10 @@ func start_mission(mission_id: String = "") -> bool:
 		
 		mission.is_active = true
 		active_missions[target_mission_id] = mission
+		
+		# Update mission lights for new phase
+		update_mission_lights(mission)
+		
 		mission_started.emit(mission)
 		return true
 	return false
@@ -122,6 +135,9 @@ func advance_mission_phase(mission: Mission):
 		mission.progress.clear()
 		for collision_type in mission.phases[mission.current_phase]:
 			mission.progress[collision_type] = 0
+		
+		# Update mission lights for new phase
+		update_mission_lights(mission)
 
 func complete_mission(mission: Mission):
 	mission.is_completed = true
@@ -171,3 +187,14 @@ func pause_missions():
 func unpause_missions():
 	# Resume mission progress
 	missions_paused = false
+
+# Update mission lights based on current mission phase
+func update_mission_lights(mission: Mission):
+	if not mission_lights_node:
+		return
+	
+	# Get current phase requirements
+	var current_phase_requirements = mission.phases[mission.current_phase]
+	
+	# Use the mission lights controller to update lights for current phase
+	mission_lights_node.update_lights_for_mission_progress(mission, current_phase_requirements)

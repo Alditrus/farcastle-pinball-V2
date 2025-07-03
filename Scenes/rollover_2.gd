@@ -22,3 +22,13 @@ func _on_area_body_entered(body):
 		var missions_node = get_node("../missions")
 		if missions_node:
 			missions_node.record_collision(missions_node.CollisionType.ROLLOVER2)
+		
+		# Deactivate the individual rollover light
+		deactivate_individual_rollover_light()
+
+# Deactivate individual rollover light
+func deactivate_individual_rollover_light():
+	# Get the mission lights controller
+	var mission_lights_node = get_node("../mission_lights")
+	if mission_lights_node and mission_lights_node.has_method("deactivate_individual_rollover_light"):
+		mission_lights_node.deactivate_individual_rollover_light(2)

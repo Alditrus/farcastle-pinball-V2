@@ -47,6 +47,9 @@ func check_all_active():
 		var missions_node = get_node("../missions")
 		if missions_node:
 			missions_node.record_collision(missions_node.CollisionType.CANDLESET)
+			
+			# Check if more CANDLESET completions are needed and reset lights if so
+			reset_lights_if_more_completions_needed(missions_node, missions_node.CollisionType.CANDLESET)
 
 # Trigger the complete flame effect on all candles
 func trigger_complete_flame():
@@ -68,3 +71,25 @@ func _on_complete_flame_timeout():
 func reset():
 	for candle in candles:
 		candle.reset()
+
+# Reset target lights if more completions are needed for current mission phase
+func reset_lights_if_more_completions_needed(missions_node, collision_type):
+	# Get active missions
+	var active_missions = missions_node.get_active_missions()
+	
+	for mission_id in active_missions:
+		var mission = active_missions[mission_id]
+		var current_phase_requirements = mission.phases[mission.current_phase]
+		
+		# Check if this collision type is required in current phase
+		if collision_type in current_phase_requirements:
+			var current_count = mission.progress[collision_type]
+			var required_count = current_phase_requirements[collision_type]
+			
+			# If we still need more completions, reset the lights to active
+			if current_count < required_count:
+				var target_lights = get_node_or_null("target_lights")
+				if target_lights and target_lights.has_method("set_mode"):
+					# Get the ACTIVE mode properly
+					if "LightMode" in target_lights:
+						target_lights.set_mode(target_lights.LightMode.ACTIVE)
