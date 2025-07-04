@@ -49,6 +49,20 @@ var all_missions: Dictionary = {
 			{CollisionType.ROLLOVER1: 1, CollisionType.ROLLOVER2: 1},      # Phase 3: Hit rollover1 and rollover2
 			{CollisionType.BUMPER: 8}           # Phase 4: Hit main bumpers 8x
 		]
+	},
+	"communion_with_the_void": {
+		"name": "Communion with the Void",
+		"description": "Perform a dark ritual to commune with the void",
+		"reward_points": 1000000,
+		"phases": [
+			{CollisionType.TARGET_SET1: 1, CollisionType.TARGET_SET2: 1},  # Phase 0: Complete 1 set of either target set
+			{CollisionType.ALCOVE_BUMPER: 10},                            # Phase 1: Hit alcove bumpers 10x
+			{CollisionType.SINKHOLE_LEFT: 2},                             # Phase 2: Hit left sinkhole twice
+			{CollisionType.SPINNER: 15}                                   # Phase 3: Spin either spinners 15x
+		],
+		"phase_logic": {
+			0: "OR"  # Phase 0 uses OR logic (complete either target set)
+		}
 	}
 }
 var active_missions: Dictionary = {}
@@ -72,13 +86,20 @@ func _ready():
 func start_mission(mission_id: String = "") -> bool:
 	var target_mission_id = mission_id
 	
-	# If no mission_id provided, check for last active mission or start first mission
+	# If no mission_id provided, check for last active mission or start next available mission
 	if target_mission_id == "":
 		if last_active_mission.has("id"):
 			target_mission_id = last_active_mission.id
 		else:
-			# Start first mission if none have been started
-			target_mission_id = "raise_the_dead"
+			# Start next available mission in order
+			var mission_order = ["raise_the_dead", "communion_with_the_void"]
+			for mission in mission_order:
+				if not is_mission_completed(mission):
+					target_mission_id = mission
+					break
+			# If all missions completed, default to first mission
+			if target_mission_id == "":
+				target_mission_id = "raise_the_dead"
 	
 	if target_mission_id in all_missions and not target_mission_id in active_missions:
 		var mission_data = all_missions[target_mission_id]
@@ -121,10 +142,24 @@ func record_collision(collision_type: CollisionType):
 
 func check_phase_complete(mission: Mission) -> bool:
 	var current_phase_requirements = mission.phases[mission.current_phase]
-	for collision_type in current_phase_requirements:
-		if mission.progress[collision_type] < current_phase_requirements[collision_type]:
-			return false
-	return true
+	
+	# Check if this phase has special logic defined
+	var mission_data = all_missions[mission.id]
+	var phase_logic = mission_data.get("phase_logic", {})
+	var current_phase_logic = phase_logic.get(mission.current_phase, "AND")
+	
+	if current_phase_logic == "OR":
+		# OR logic: complete when ANY requirement is met
+		for collision_type in current_phase_requirements:
+			if mission.progress[collision_type] >= current_phase_requirements[collision_type]:
+				return true
+		return false
+	else:
+		# Default AND logic: complete when ALL requirements are met
+		for collision_type in current_phase_requirements:
+			if mission.progress[collision_type] < current_phase_requirements[collision_type]:
+				return false
+		return true
 
 func advance_mission_phase(mission: Mission):
 	mission.current_phase += 1
@@ -156,6 +191,20 @@ func complete_mission(mission: Mission):
 		score_label.update_score_text()
 	
 	mission_completed.emit(mission)
+	
+	# Automatically start the next mission in sequence
+	var mission_order = ["raise_the_dead", "communion_with_the_void"]
+	var current_mission_index = mission_order.find(mission.id)
+	if current_mission_index != -1:
+		# Calculate next mission index (loop back to 0 if at end)
+		var next_mission_index = (current_mission_index + 1) % mission_order.size()
+		var next_mission_id = mission_order[next_mission_index]
+		
+		# If we're looping back, clear completion status for all missions
+		if next_mission_index == 0:
+			completed_missions.clear()
+		
+		start_mission(next_mission_id)
 
 func get_active_missions() -> Dictionary:
 	return active_missions

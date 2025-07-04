@@ -8,6 +8,8 @@ var initial_speed_scale = 1.0
 var current_speed_scale = 1.0
 var last_ball_position = Vector2.ZERO
 var checking_ball_direction = false
+var revolution_counter = 0.0
+var last_revolution_reported = 0
 
 # Constants for animation speed scaling
 const BASE_VELOCITY = 300.0   # Reference velocity for normal animation speed
@@ -29,6 +31,25 @@ func _process(delta):
 	if animation_active:
 		timer += delta
 		
+		# Track revolutions based on animation speed and time
+		if animated_sprite.speed_scale > 0:
+			# Calculate revolutions based on animation speed
+			# Animation has 44 frames at 49 fps = ~0.9 seconds per revolution at normal speed
+			var frames_per_revolution = 44.0
+			var base_fps = 49.0
+			var current_fps = base_fps * abs(animated_sprite.speed_scale)
+			var revolutions_per_second = current_fps / frames_per_revolution
+			revolution_counter += revolutions_per_second * delta
+			
+			# Check if we completed a full revolution
+			var current_revolutions = int(revolution_counter)
+			if current_revolutions > last_revolution_reported:
+				# Report each new revolution to missions system
+				var missions_node = get_node("/root/Table/missions")
+				if missions_node:
+					missions_node.record_collision(missions_node.CollisionType.SPINNER)
+				last_revolution_reported = current_revolutions
+		
 		# Apply exponential slowdown after ball has exited
 		if ball_exited:
 			# Calculate new speed scale using exponential decay: e^(-kt)
@@ -45,6 +66,9 @@ func _process(delta):
 				animation_active = false
 				timer = 0.0
 				ball_exited = false
+				# Reset revolution tracking
+				revolution_counter = 0.0
+				last_revolution_reported = 0
 		
 		# If ball hasn't exited but time limit reached, pause animation
 		elif timer >= 5.0:
@@ -52,6 +76,9 @@ func _process(delta):
 			animation_active = false
 			timer = 0.0
 			ball_exited = false
+			# Reset revolution tracking
+			revolution_counter = 0.0
+			last_revolution_reported = 0
 	
 	# Check ball direction if needed
 	if checking_ball_direction:
@@ -103,6 +130,9 @@ func _on_area_2d_body_entered(body):
 		animation_active = true
 		ball_exited = false
 		timer = 0.0
+		# Reset revolution tracking when ball enters
+		revolution_counter = 0.0
+		last_revolution_reported = 0
 
 # Called when a body exits the Area2D
 var timer_at_exit = 0.0

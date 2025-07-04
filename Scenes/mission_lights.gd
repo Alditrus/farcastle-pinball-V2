@@ -177,7 +177,7 @@ func get_light_paths_for_collision_type(collision_type) -> Array:
 		missions_node.CollisionType.BUMPER:
 			return ["bumper_light"]
 		missions_node.CollisionType.ALCOVE_BUMPER:
-			return ["bumper_light"]
+			return ["rail/ramp_light"]
 		missions_node.CollisionType.RAMP:
 			return ["rail/ramp_light"]
 		missions_node.CollisionType.CANDLESET:
