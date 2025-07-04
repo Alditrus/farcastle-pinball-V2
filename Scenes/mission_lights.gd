@@ -220,3 +220,12 @@ func deactivate_individual_rollover_light(rollover_number: int):
 # Reset all lights (called on ball respawn)
 func reset_all_lights():
 	set_all_lights_inactive()
+
+# Activate right sinkhole light for mission start requirement
+func activate_right_sinkhole_light():
+	set_all_lights_inactive()
+	set_light_mode("right_sinkhole_light", get_light_mode_active())
+
+# Deactivate right sinkhole light when requirement is met
+func deactivate_right_sinkhole_light():
+	set_light_mode("right_sinkhole_light", get_light_mode_inactive())

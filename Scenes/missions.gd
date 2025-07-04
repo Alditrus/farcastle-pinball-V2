@@ -26,6 +26,7 @@ class Mission:
 	var is_active: bool = false
 	var is_completed: bool = false
 	var progress: Dictionary = {}
+	var waiting_for_right_sinkhole: bool = false
 	
 	func _init(mission_id: String, mission_name: String, mission_desc: String, mission_phases: Array, points: int = 0):
 		id = mission_id
@@ -43,7 +44,6 @@ var all_missions: Dictionary = {
 		"description": "Raise an army of the undead to fight Moloch",
 		"reward_points": 500000,
 		"phases": [
-			{CollisionType.SINKHOLE_RIGHT: 1},  # Phase 0: Enter right sinkhole lane
 			{CollisionType.CANDLESET: 2},       # Phase 1: Complete candleset 2x
 			{CollisionType.TARGET_SET1: 1, CollisionType.TARGET_SET2: 1},  # Phase 2: Complete target sets 1 and 2
 			{CollisionType.ROLLOVER1: 1, CollisionType.ROLLOVER2: 1},      # Phase 3: Hit rollover1 and rollover2
@@ -69,6 +69,7 @@ var active_missions: Dictionary = {}
 var completed_missions: Dictionary = {}
 var last_active_mission: Dictionary = {} # Stores last mission state for resuming
 var missions_paused: bool = false # Pause missions when ball respawns
+var waiting_for_right_sinkhole_to_start: bool = false # Flag to indicate we're waiting for right sinkhole to start mission
 
 # Reference to mission lights controller
 var mission_lights_node: Node2D
@@ -102,11 +103,30 @@ func start_mission(mission_id: String = "") -> bool:
 				target_mission_id = "raise_the_dead"
 	
 	if target_mission_id in all_missions and not target_mission_id in active_missions:
+		# First, activate the right sinkhole requirement
+		waiting_for_right_sinkhole_to_start = true
 		var mission_data = all_missions[target_mission_id]
-		var mission = Mission.new(target_mission_id, mission_data.name, mission_data.description, mission_data.phases, mission_data.reward_points)
+		
+		# Activate right sinkhole light to indicate where player needs to hit
+		if mission_lights_node:
+			mission_lights_node.activate_right_sinkhole_light()
+		
+		# Store mission info for when right sinkhole is hit
+		last_active_mission = {
+			"id": target_mission_id,
+			"current_phase": last_active_mission.get("current_phase", 0) if last_active_mission.has("id") and last_active_mission.id == target_mission_id else 0
+		}
+		
+		return true
+	return false
+
+func actually_start_mission(mission_id: String) -> bool:
+	if mission_id in all_missions:
+		var mission_data = all_missions[mission_id]
+		var mission = Mission.new(mission_id, mission_data.name, mission_data.description, mission_data.phases, mission_data.reward_points)
 		
 		# Resume from last active phase if this was the last active mission
-		if last_active_mission.has("id") and last_active_mission.id == target_mission_id:
+		if last_active_mission.has("id") and last_active_mission.id == mission_id:
 			mission.current_phase = last_active_mission.current_phase
 			# Initialize progress for current phase
 			mission.progress.clear()
@@ -114,7 +134,7 @@ func start_mission(mission_id: String = "") -> bool:
 				mission.progress[collision_type] = 0
 		
 		mission.is_active = true
-		active_missions[target_mission_id] = mission
+		active_missions[mission_id] = mission
 		
 		# Update mission lights for new phase
 		update_mission_lights(mission)
@@ -126,6 +146,17 @@ func start_mission(mission_id: String = "") -> bool:
 func record_collision(collision_type: CollisionType):
 	# Don't record collisions if missions are paused
 	if missions_paused:
+		return
+	
+	# Check if we're waiting for right sinkhole to start mission
+	if waiting_for_right_sinkhole_to_start and collision_type == CollisionType.SINKHOLE_RIGHT:
+		waiting_for_right_sinkhole_to_start = false
+		# Deactivate right sinkhole light
+		if mission_lights_node:
+			mission_lights_node.deactivate_right_sinkhole_light()
+		# Actually start the mission now
+		if last_active_mission.has("id"):
+			actually_start_mission(last_active_mission.id)
 		return
 		
 	for mission_id in active_missions:
