@@ -180,9 +180,10 @@ func reset_table():
 			if light.has_method("set_mode") and "LightMode" in light:
 				light.set_mode(light.LightMode.INACTIVE)
 	
-	# Reset minigame entrance when ball respawns
+	# Reset minigame entrance when ball respawns (with delay to ensure proper initialization)
 	var minigame_entrance = get_node_or_null("../minigameentrance")
 	if minigame_entrance and minigame_entrance.has_method("reset_entrance"):
+		await get_tree().create_timer(0.1).timeout
 		minigame_entrance.reset_entrance()
 				
 	# Reset tilt state if table is tilted

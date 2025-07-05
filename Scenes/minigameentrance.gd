@@ -161,9 +161,6 @@ func reset_entrance():
 		var tween = create_tween()
 		tween.tween_property(jaw_sprite, "position:y", jaw_initial_y, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		
-		# Reset the jaw color
-		jaw_sprite.modulate = Color(1, 1, 1)
-		
 		# When the jaw animation completes, turn off the flame particles and complete the reset
 		tween.tween_callback(func():
 			# Turn off flame particles after jaw closes
