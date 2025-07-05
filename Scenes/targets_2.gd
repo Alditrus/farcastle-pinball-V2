@@ -130,9 +130,6 @@ func check_all_targets_down():
 		timer.one_shot = true
 		timer.wait_time = 1.0
 		
-		# This is target set 2
-		var set_id = "target_set_2"
-		
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:

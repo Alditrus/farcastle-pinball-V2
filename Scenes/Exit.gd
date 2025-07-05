@@ -126,6 +126,9 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 	table.add_child(new_ball)
 	new_ball.name = "ball"
 	
+	# Reset table elements when ball respawns
+	reset_table()
+	
 	# Notify any systems that need to know about ball respawn
 	notify_ball_respawn()
 	
@@ -180,6 +183,10 @@ func reset_table():
 			if light.has_method("set_mode") and "LightMode" in light:
 				light.set_mode(light.LightMode.INACTIVE)
 	
+	# Reset minigame entrance when ball respawns
+	var minigame_entrance = get_node_or_null("../minigameentrance")
+	if minigame_entrance and minigame_entrance.has_method("reset_entrance"):
+		minigame_entrance.reset_entrance()
 				
 	# Reset tilt state if table is tilted
 	var nudge_nodes = get_tree().get_nodes_in_group("nudge_system")

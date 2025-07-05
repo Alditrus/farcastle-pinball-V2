@@ -51,18 +51,20 @@ func _ready():
 	_on_jaw_progress(0.0)
 
 # Called when a mission is started
-func _on_mission_started(mission):
+func _on_mission_started(_mission):
 	# Reset jaw to closed when mission starts
 	_on_jaw_progress(0.0)
 
 # Called when mission progress is updated
 func _on_mission_progress_updated(mission, _collision_type, _current_count, _required_count):
-	# Calculate overall mission progress
-	var progress = calculate_mission_progress(mission)
-	_on_jaw_progress(progress)
+	# Only calculate progress if mission is active
+	if mission and mission.is_active:
+		# Calculate overall mission progress
+		var progress = calculate_mission_progress(mission)
+		_on_jaw_progress(progress)
 
 # Called when a mission is completed
-func _on_mission_completed(mission):
+func _on_mission_completed(_mission):
 	# Open the jaw when mission is completed
 	_on_jaw_progress(1.0)
 
@@ -149,8 +151,8 @@ func add_entrance_effects():
 # Reset the entrance (called when resetting the game)
 func reset_entrance():
 	if entrance_area:
-		entrance_area.monitoring = false
-		entrance_area.monitorable = false
+		entrance_area.set_deferred("monitoring", false)
+		entrance_area.set_deferred("monitorable", false)
 		is_entrance_active = false
 	
 	# Start a gradual jaw closing animation

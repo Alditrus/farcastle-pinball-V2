@@ -176,7 +176,7 @@ func format_score_with_commas(number: int) -> String:
 
 # Function to apply a multiplier to the current score
 func apply_multiplier(multiplier: int):
-	var previous_score = score
+	var _previous_score = score
 	score *= multiplier
 	
 	# Update the displayed score
