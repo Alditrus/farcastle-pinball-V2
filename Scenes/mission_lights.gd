@@ -190,6 +190,10 @@ func get_light_paths_for_collision_type(collision_type) -> Array:
 			return ["rollover1/rollover_light"]
 		missions_node.CollisionType.ROLLOVER2:
 			return ["rollover2/rollover_light"]
+		missions_node.CollisionType.SPINNER_1:
+			return ["flaps1/carrot_light"]
+		missions_node.CollisionType.SPINNER_2:
+			return ["flaps2/carrot_light"]
 		missions_node.CollisionType.SINKHOLE_LEFT:
 			return ["left_sinkhole_light"]
 		missions_node.CollisionType.SINKHOLE_RIGHT:
