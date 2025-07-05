@@ -47,7 +47,7 @@ func _process(delta):
 				# Report each new revolution to missions system
 				var missions_node = get_node("/root/Table/missions")
 				if missions_node:
-					missions_node.record_collision(missions_node.CollisionType.SPINNER)
+					missions_node.record_collision(missions_node.CollisionType.SPINNER_2)
 				last_revolution_reported = current_revolutions
 		
 		# Apply exponential slowdown after ball has exited

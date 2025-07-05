@@ -9,7 +9,8 @@ enum CollisionType {
 	SINKHOLE_RIGHT,
 	ROLLOVER1,
 	ROLLOVER2,
-	SPINNER,
+	SPINNER_1,
+	SPINNER_2,
 	CANDLE,
 	CANDLESET,
 	TARGET_SET1,
@@ -58,10 +59,11 @@ var all_missions: Dictionary = {
 			{CollisionType.TARGET_SET1: 1, CollisionType.TARGET_SET2: 1},  # Phase 0: Complete 1 set of either target set
 			{CollisionType.ALCOVE_BUMPER: 10},                            # Phase 1: Hit alcove bumpers 10x
 			{CollisionType.SINKHOLE_LEFT: 2},                             # Phase 2: Hit left sinkhole twice
-			{CollisionType.SPINNER: 15}                                   # Phase 3: Spin either spinners 15x
+			{CollisionType.SPINNER_1: 15, CollisionType.SPINNER_2: 15}  # Phase 3: Spin either spinners 15x
 		],
 		"phase_logic": {
-			0: "OR"  # Phase 0 uses OR logic (complete either target set)
+			0: "OR",  # Phase 0 uses OR logic (complete either target set)
+			3: "OR"   # Phase 3 uses OR logic (complete either spinner)
 		}
 	}
 }

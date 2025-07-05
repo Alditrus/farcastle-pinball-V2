@@ -98,7 +98,9 @@ func get_collision_type_name(collision_type) -> String:
 			return "Rollover 1"
 		missions_node.CollisionType.ROLLOVER2:
 			return "Rollover 2"
-		missions_node.CollisionType.SPINNER:
+		missions_node.CollisionType.SPINNER_1:
+			return "Spinner"
+		missions_node.CollisionType.SPINNER_2:
 			return "Spinner"
 		missions_node.CollisionType.CANDLE:
 			return "Candle"
