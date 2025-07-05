@@ -105,7 +105,7 @@ func start_mission(mission_id: String = "") -> bool:
 	if target_mission_id in all_missions and not target_mission_id in active_missions:
 		# First, activate the right sinkhole requirement
 		waiting_for_right_sinkhole_to_start = true
-		var mission_data = all_missions[target_mission_id]
+		var _mission_data = all_missions[target_mission_id]
 		
 		# Activate right sinkhole light to indicate where player needs to hit
 		if mission_lights_node:
@@ -135,6 +135,11 @@ func actually_start_mission(mission_id: String) -> bool:
 		
 		mission.is_active = true
 		active_missions[mission_id] = mission
+		
+		# Deactivate minigame entrance if it's open
+		var minigame_entrance = get_node_or_null("../minigameentrance")
+		if minigame_entrance and minigame_entrance.has_method("reset_entrance"):
+			minigame_entrance.reset_entrance()
 		
 		# Update mission lights for new phase
 		update_mission_lights(mission)

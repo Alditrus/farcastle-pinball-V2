@@ -91,7 +91,7 @@ func _on_cooldown_timeout():
 	cooldown_active = false
 
 # Called every physics frame while a ball is being sucked in
-func _physics_process(delta):
+func _physics_process(_delta):
 	if captured_ball and not suction_complete:
 		# Calculate direction vector from ball to center
 		var direction = capture_center - captured_ball.global_position
