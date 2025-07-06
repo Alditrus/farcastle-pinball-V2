@@ -5,10 +5,17 @@ extends Control
 @onready var objective_label = $VBoxContainer/ObjectiveLabel
 @onready var progress_label = $VBoxContainer/ProgressLabel
 
+var timer_label: Label
+
 var missions_node: Node2D
 var current_mission = null
+var is_timed_mission = false
+var mission_time_limit = 0.0
 
 func _ready():
+	# Try to get the timer label if it exists
+	timer_label = get_node_or_null("VBoxContainer/TimerLabel")
+	
 	missions_node = get_node("../missions")
 	if missions_node:
 		missions_node.mission_started.connect(_on_mission_started)
@@ -16,6 +23,17 @@ func _ready():
 		missions_node.mission_completed.connect(_on_mission_completed)
 	
 	update_display()
+
+func _process(_delta):
+	# Update timer display for timed missions
+	if is_timed_mission and missions_node and missions_node.mission_timer and timer_label:
+		var time_left = missions_node.mission_timer.time_left
+		if time_left > 0:
+			var minutes = int(time_left) / 60
+			var seconds = int(time_left) % 60
+			timer_label.text = "Time: %02d:%02d" % [minutes, seconds]
+		else:
+			timer_label.text = "Time: 00:00"
 
 func update_display():
 	if not missions_node:
@@ -28,7 +46,10 @@ func update_display():
 		phase_label.text = "Phase: -"
 		objective_label.text = "Objective: -"
 		progress_label.text = "Progress: -"
+		if timer_label:
+			timer_label.text = ""
 		current_mission = null
+		is_timed_mission = false
 		return
 	
 	# Get the first active mission (assuming one mission at a time)
@@ -45,6 +66,19 @@ func update_display():
 	# Get progress text
 	var progress_text = get_progress_text(current_mission, current_phase_reqs)
 	progress_label.text = "Progress: " + progress_text
+	
+	# Check if this is a timed mission
+	var mission_data = missions_node.all_missions[current_mission.id]
+	if mission_data.has("time_limit"):
+		is_timed_mission = true
+		mission_time_limit = mission_data.time_limit
+		if timer_label:
+			timer_label.visible = true
+	else:
+		is_timed_mission = false
+		if timer_label:
+			timer_label.visible = false
+			timer_label.text = ""
 
 func get_objective_text(phase_requirements: Dictionary) -> String:
 	var objectives = []
@@ -98,9 +132,7 @@ func get_collision_type_name(collision_type) -> String:
 			return "Rollover 1"
 		missions_node.CollisionType.ROLLOVER2:
 			return "Rollover 2"
-		missions_node.CollisionType.SPINNER_1:
-			return "Spinner"
-		missions_node.CollisionType.SPINNER_2:
+		missions_node.CollisionType.SPINNER:
 			return "Spinner"
 		missions_node.CollisionType.CANDLE:
 			return "Candle"

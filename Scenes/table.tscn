@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=77 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -48,10 +48,8 @@
 [ext_resource type="Script" uid="uid://hjecv2g386am" path="res://Scenes/guardarea_1.gd" id="43_fick8"]
 [ext_resource type="Script" uid="uid://006sb4ild22j" path="res://Scenes/guardarea_2.gd" id="44_fick8"]
 [ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="46_wn66p"]
-[ext_resource type="Script" uid="uid://vieqj3l15rhd" path="res://Scenes/spinner_1.gd" id="48_bnbux"]
 [ext_resource type="PackedScene" uid="uid://cv6bgtmjvcx4j" path="res://Scenes/rollover.tscn" id="48_oc5ru"]
 [ext_resource type="PackedScene" uid="uid://c1m58a70gtp65" path="res://Scenes/arrow_light.tscn" id="48_pkrpy"]
-[ext_resource type="Script" uid="uid://dhtdecgje8bj" path="res://Scenes/spinner_2.gd" id="49_6umbq"]
 [ext_resource type="Script" uid="uid://blgrfad20o14y" path="res://Scenes/missions.gd" id="51_pkrpy"]
 [ext_resource type="PackedScene" uid="uid://bxc8h4x5n0k2l" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
@@ -523,13 +521,11 @@ position = Vector2(845, 961)
 position = Vector2(669, 417)
 rotation = -2.03156
 scale = Vector2(1.2, 1.2)
-script = ExtResource("48_bnbux")
 
 [node name="flaps2" parent="." instance=ExtResource("11_x0duj")]
 position = Vector2(640, 733)
 rotation = 0.863938
 scale = Vector2(1.2, 1.2)
-script = ExtResource("49_6umbq")
 
 [node name="rail" parent="." instance=ExtResource("20_3leha")]
 position = Vector2(458, 797)

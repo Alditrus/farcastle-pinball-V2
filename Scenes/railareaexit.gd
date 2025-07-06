@@ -43,6 +43,11 @@ func _on_body_entered(body):
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
 			score_label.increase_score("rail_exit")
+
+		# Record collision for mission system
+		var missions_node = get_node("../missions")
+		if missions_node:
+			missions_node.record_collision(missions_node.CollisionType.RAMP)
 		
 		# Switch from rail1 to rail2
 		if rail1 and rail2:
