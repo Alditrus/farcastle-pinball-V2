@@ -9,8 +9,7 @@ enum CollisionType {
 	SINKHOLE_RIGHT,
 	ROLLOVER1,
 	ROLLOVER2,
-	SPINNER_1,
-	SPINNER_2,
+	SPINNER,
 	CANDLE,
 	CANDLESET,
 	TARGET_SET1,
@@ -59,11 +58,62 @@ var all_missions: Dictionary = {
 			{CollisionType.TARGET_SET1: 1, CollisionType.TARGET_SET2: 1},  # Phase 0: Complete 1 set of either target set
 			{CollisionType.ALCOVE_BUMPER: 10},                            # Phase 1: Hit alcove bumpers 10x
 			{CollisionType.SINKHOLE_LEFT: 2},                             # Phase 2: Hit left sinkhole twice
-			{CollisionType.SPINNER_1: 15, CollisionType.SPINNER_2: 15}  # Phase 3: Spin either spinners 15x
+			{CollisionType.SPINNER: 10}  # Phase 3: Spin either spinners 15x
 		],
 		"phase_logic": {
 			0: "OR",  # Phase 0 uses OR logic (complete either target set)
-			3: "OR"   # Phase 3 uses OR logic (complete either spinner)
+		}
+	},
+	"wrath_of_baalhorn": {
+		"name": "Wrath of Baalhorn",
+		"description": "Destroy the heretics",
+		"reward_points": 1500000,
+		"phases": [
+			{CollisionType.CANDLESET: 1},  # Phase 0: Complete candleset once and hit main bumpers 5x
+			{CollisionType.BUMPER: 5}
+		],
+		"phase_logic": {
+			0: "AND"  # Phase 0 uses AND logic (complete both requirements)
+		},
+		"time_limit": 60.0  # 1 minute time limit
+	},
+	"requiem_of_the_moon": {
+		"name": "Requiem of the Moon",
+		"description": "Help the Veiled Lady compose and perform her song to rally the Shades",
+		"reward_points": 2000000,
+		"phases": [
+			{CollisionType.TARGET_SET1: 1, CollisionType.TARGET_SET2: 1},
+			{CollisionType.ROLLOVER1: 2, CollisionType.ROLLOVER2: 2},
+			{CollisionType.RAMP: 2},
+			{CollisionType.SINKHOLE_LEFT: 1, CollisionType.SINKHOLE_RIGHT: 1}
+		],
+		"phase_logic": {
+			0: "OR",  # Phase 0 uses OR logic (complete either target set)
+		}
+	},
+	"the_wardens_coffers": {
+		"name": "The Warden’s Coffers",
+		"description": "Collect penance from the shades of the castle",
+		"reward_points": 3500000,
+		"phases": [
+			{CollisionType.SPINNER: 20},
+			{CollisionType.ALCOVE_BUMPER: 10},
+			{CollisionType.BUMPER: 8},
+			{CollisionType.TARGET: 5}
+		]
+	},
+	"the_stone_blacksmiths_apprentice": {
+		"name": "The Stone Blacksmith’s Apprentice",
+		"description": "Assist the Blacksmith in forging an enchanted claymore",
+		"reward_points": 4000000,
+		"phases": [
+			{CollisionType.SINKHOLE_RIGHT: 3},
+			{CollisionType.TARGET_SET1: 1, CollisionType.TARGET_SET2: 1},
+			{CollisionType.RAMP: 2},
+			{CollisionType.CANDLESET: 1, CollisionType.BUMPER: 10}
+		],
+		"phase_logic": {
+			0: "OR",  # Phase 0 uses OR logic (complete either target set)
 		}
 	}
 }
@@ -72,6 +122,10 @@ var completed_missions: Dictionary = {}
 var last_active_mission: Dictionary = {} # Stores last mission state for resuming
 var missions_paused: bool = false # Pause missions when ball respawns
 var waiting_for_right_sinkhole_to_start: bool = false # Flag to indicate we're waiting for right sinkhole to start mission
+
+# Timer variables for timed missions
+var mission_timer: Timer
+var current_timed_mission: Mission = null
 
 # Reference to mission lights controller
 var mission_lights_node: Node2D
@@ -85,6 +139,13 @@ func _ready():
 	mission_lights_node = get_node("../mission_lights")
 	if not mission_lights_node:
 		push_error("Could not find mission_lights node")
+	
+	# Initialize mission timer
+	mission_timer = Timer.new()
+	mission_timer.wait_time = 60.0  # Default 1 minute
+	mission_timer.one_shot = true
+	mission_timer.timeout.connect(_on_mission_timer_timeout)
+	add_child(mission_timer)
 
 func start_mission(mission_id: String = "") -> bool:
 	var target_mission_id = mission_id
@@ -95,7 +156,7 @@ func start_mission(mission_id: String = "") -> bool:
 			target_mission_id = last_active_mission.id
 		else:
 			# Start next available mission in order
-			var mission_order = ["raise_the_dead", "communion_with_the_void"]
+			var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice"]
 			for mission in mission_order:
 				if not is_mission_completed(mission):
 					target_mission_id = mission
@@ -145,6 +206,12 @@ func actually_start_mission(mission_id: String) -> bool:
 		
 		# Update mission lights for new phase
 		update_mission_lights(mission)
+		
+		# Start timer for timed missions
+		if mission_data.has("time_limit"):
+			mission_timer.wait_time = mission_data.time_limit
+			mission_timer.start()
+			current_timed_mission = mission
 		
 		mission_started.emit(mission)
 		return true
@@ -230,8 +297,13 @@ func complete_mission(mission: Mission):
 	
 	mission_completed.emit(mission)
 	
+	# Stop timer if this was a timed mission
+	if current_timed_mission == mission:
+		mission_timer.stop()
+		current_timed_mission = null
+	
 	# Automatically start the next mission in sequence
-	var mission_order = ["raise_the_dead", "communion_with_the_void"]
+	var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice"]
 	var current_mission_index = mission_order.find(mission.id)
 	if current_mission_index != -1:
 		# Calculate next mission index (loop back to 0 if at end)
@@ -285,3 +357,20 @@ func update_mission_lights(mission: Mission):
 	
 	# Use the mission lights controller to update lights for current phase
 	mission_lights_node.update_lights_for_mission_progress(mission, current_phase_requirements)
+
+# Handle timed mission timeout
+func _on_mission_timer_timeout():
+	if current_timed_mission:
+		# Reset the timed mission - remove from active missions but don't mark as completed
+		var mission_id = current_timed_mission.id
+		active_missions.erase(mission_id)
+		
+		# Clear last active mission if it was this mission
+		if last_active_mission.has("id") and last_active_mission.id == mission_id:
+			last_active_mission.clear()
+		
+		# Reset current timed mission
+		current_timed_mission = null
+		
+		# Start the same mission again (will require right sinkhole activation)
+		start_mission(mission_id)

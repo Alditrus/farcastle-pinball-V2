@@ -1,6 +1,7 @@
-[gd_scene load_steps=50 format=3 uid="uid://7f7pn5l6cc4n"]
+[gd_scene load_steps=51 format=3 uid="uid://7f7pn5l6cc4n"]
 
 [ext_resource type="Texture2D" uid="uid://ch0l3v3oc2y0u" path="res://Assets/table/flap_pivot.png" id="1_643ue"]
+[ext_resource type="Script" path="res://Scenes/spinner.gd" id="1_as1ew"]
 [ext_resource type="Texture2D" uid="uid://c7jn7nmbx6f3c" path="res://Assets/table/flap_sheet.png" id="2_hlt2v"]
 [ext_resource type="PackedScene" uid="uid://cw0wbdd8qiics" path="res://Scenes/carrot_light.tscn" id="4_as1ew"]
 
@@ -324,6 +325,7 @@ animations = [{
 }]
 
 [node name="flaps" type="Node2D"]
+script = ExtResource("1_as1ew")
 
 [node name="Area2D" type="Area2D" parent="."]
 
