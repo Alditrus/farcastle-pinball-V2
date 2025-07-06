@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=78 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -54,6 +54,7 @@
 [ext_resource type="PackedScene" uid="uid://bxc8h4x5n0k2l" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
 [ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
+[ext_resource type="PackedScene" uid="uid://c8qrcy8mrr5ki" path="res://Scenes/sigil.tscn" id="56_hvgsx"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
@@ -436,10 +437,10 @@ text = "0"
 script = ExtResource("41_ecrf2")
 
 [node name="MissionUI" parent="." instance=ExtResource("52_mission_ui")]
-offset_left = 236.0
-offset_top = 1007.0
-offset_right = 616.0
-offset_bottom = 1137.0
+offset_left = 1129.0
+offset_top = 919.0
+offset_right = 1509.0
+offset_bottom = 1049.0
 grow_vertical = 0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
@@ -589,3 +590,7 @@ rotation = -0.567232
 [node name="right_sinkhole_light" parent="." instance=ExtResource("48_pkrpy")]
 position = Vector2(708, 1007)
 rotation = 0.514872
+
+[node name="Sigil" parent="." instance=ExtResource("56_hvgsx")]
+position = Vector2(437, 1027)
+scale = Vector2(0.53, 0.53)

@@ -94,6 +94,11 @@ func _on_specific_area_entered(body, target):
 		if score_label:
 			score_label.increase_score("target")
 
+		# Mission Collision
+		var missions_node = get_node("../missions")
+		if missions_node:
+			missions_node.record_collision(missions_node.CollisionType.TARGET)
+
 # Function to turn up sprite invisible
 func target_down(target_node):
 	if target_node != null:

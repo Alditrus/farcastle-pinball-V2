@@ -1,0 +1,80 @@
+[gd_scene load_steps=15 format=3 uid="uid://c8qrcy8mrr5ki"]
+
+[ext_resource type="Script" uid="uid://brlbwobsvcv4i" path="res://Scenes/sigil.gd" id="1_ks8xi"]
+[ext_resource type="Texture2D" uid="uid://ci5q0yuq0v7o5" path="res://Assets/table/sigil_off.png" id="1_u7xfm"]
+[ext_resource type="Texture2D" uid="uid://dw2ygnicxad8n" path="res://Assets/table/sigil_circle.png" id="2_7vrib"]
+[ext_resource type="Texture2D" uid="uid://dkv7mlxqtmfmu" path="res://Assets/table/sigil4.png" id="3_ks8xi"]
+[ext_resource type="Texture2D" uid="uid://dkawb703bj32c" path="res://Assets/table/sigil1.png" id="4_iyv52"]
+[ext_resource type="Texture2D" uid="uid://chfsxrk7e1i6d" path="res://Assets/table/sigil2.png" id="5_d08dw"]
+[ext_resource type="Texture2D" uid="uid://d2pal5u387elj" path="res://Assets/table/sigil3.png" id="6_s5v5d"]
+[ext_resource type="Texture2D" uid="uid://dm164knh6rtqr" path="res://Assets/table/M.png" id="7_gq4kd"]
+[ext_resource type="Texture2D" uid="uid://gdkmoht0jhyk" path="res://Assets/table/O.png" id="8_eoo3l"]
+[ext_resource type="Texture2D" uid="uid://1as6704ihg17" path="res://Assets/table/L.png" id="9_mpm63"]
+[ext_resource type="Texture2D" uid="uid://cii8ww8pyspxe" path="res://Assets/table/O1.png" id="10_wy3vg"]
+[ext_resource type="Texture2D" uid="uid://b4nrauw475u3e" path="res://Assets/table/C.png" id="11_gop4o"]
+[ext_resource type="Texture2D" uid="uid://d1frup1guwjuk" path="res://Assets/table/H.png" id="12_3bhjp"]
+[ext_resource type="Texture2D" uid="uid://dd7gc26yset2x" path="res://Assets/table/sigil_full.png" id="13_7vrib"]
+
+[node name="Sigil" type="Node2D"]
+script = ExtResource("1_ks8xi")
+
+[node name="sigil_off" type="Sprite2D" parent="."]
+texture = ExtResource("1_u7xfm")
+
+[node name="sigil_circle" type="Sprite2D" parent="."]
+texture = ExtResource("2_7vrib")
+
+[node name="sigil_line_1" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(28, -6)
+texture = ExtResource("4_iyv52")
+
+[node name="sigil_line_2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -20)
+texture = ExtResource("5_d08dw")
+
+[node name="sigil_line_3" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1, 116)
+texture = ExtResource("6_s5v5d")
+
+[node name="sigil_line_4" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-96, 0)
+texture = ExtResource("3_ks8xi")
+
+[node name="M" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-2, -186)
+texture = ExtResource("7_gq4kd")
+
+[node name="O" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(162, -91)
+texture = ExtResource("8_eoo3l")
+
+[node name="L" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(162, 89)
+texture = ExtResource("9_mpm63")
+
+[node name="O2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1, 188)
+texture = ExtResource("10_wy3vg")
+
+[node name="C" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-162, 96)
+texture = ExtResource("11_gop4o")
+
+[node name="H" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-163, -90)
+texture = ExtResource("12_3bhjp")
+
+[node name="sigil_full" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-2, 0)
+texture = ExtResource("13_7vrib")
