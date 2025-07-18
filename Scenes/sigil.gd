@@ -27,6 +27,7 @@ func _ready():
 	missions_node = get_node("../missions")
 	if missions_node:
 		missions_node.mission_started.connect(_on_mission_started)
+		missions_node.mission_phase_advanced.connect(_on_mission_phase_advanced)
 		missions_node.mission_progress_updated.connect(_on_mission_progress_updated)
 		missions_node.mission_completed.connect(_on_mission_completed)
 	
@@ -305,15 +306,16 @@ func _on_mission_started(mission):
 	# When a mission starts, show the sigil line for the current phase
 	update_sigil_for_phase(mission.current_phase)
 
-func _on_mission_progress_updated(mission, collision_type, current_count, required_count):
-	# Check if phase completed and advance sigil if needed
-	if missions_node:
-		var active_missions = missions_node.get_active_missions()
-		if not active_missions.is_empty():
-			var current_mission = active_missions.values()[0]
-			update_sigil_for_phase(current_mission.current_phase)
+func _on_mission_phase_advanced(mission):
+	# Update sigil when phase advances
+	if mission.id == current_mission_id:
+		update_sigil_for_phase(mission.current_phase)
 
-func _on_mission_completed(mission):
+func _on_mission_progress_updated(_mission, _collision_type, _current_count, _required_count):
+	# Mission progress updated - no longer need to check phase changes here
+	pass
+
+func _on_mission_completed(_mission):
 	# Reset timed mission state
 	if current_mission_id == "wrath_of_baalhorn":
 		is_timed_mission_active = false
