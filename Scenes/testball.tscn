@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://dphgdaqewm0iq"]
 
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="1_ug874"]
-[ext_resource type="Script" uid="uid://4awqp0jerc2s" path="res://Scenes/testball.gd" id="2_rpb78"]
-[ext_resource type="Script" uid="uid://blyx5mxwwans6" path="res://Scenes/testballarea.gd" id="2_ug874"]
+[ext_resource type="Script" uid="uid://dgkb1v2smdcus" path="res://Scenes/testball.gd" id="2_rpb78"]
+[ext_resource type="Script" uid="uid://wefp3qdfpkwl" path="res://Scenes/testballarea.gd" id="2_ug874"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lffan"]
 radius = 19.0263
