@@ -36,7 +36,6 @@
 [ext_resource type="PackedScene" uid="uid://tok40skelu0o" path="res://Scenes/alcove_bumper6.tscn" id="30_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://btsrktuu746ao" path="res://Scenes/alcove_bumper7.tscn" id="31_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://c4vxi50m2wu62" path="res://Scenes/alcove_bumper8.tscn" id="32_hotvi"]
-[ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://pupil.tscn" id="34_r2pup"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
@@ -54,6 +53,7 @@
 [ext_resource type="PackedScene" uid="uid://bxc8h4x5n0k2l" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
 [ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
+[ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://Scenes/pupil.tscn" id="56_bnbux"]
 [ext_resource type="PackedScene" uid="uid://c8qrcy8mrr5ki" path="res://Scenes/sigil.tscn" id="56_hvgsx"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
 
@@ -376,9 +376,6 @@ rotation = -2.94961
 position = Vector2(761, 673)
 rotation = -2.37365
 
-[node name="pupil" parent="." instance=ExtResource("34_r2pup")]
-position = Vector2(723, 801)
-
 [node name="Exit" type="Area2D" parent="."]
 collision_layer = 11
 collision_mask = 11
@@ -437,10 +434,10 @@ text = "0"
 script = ExtResource("41_ecrf2")
 
 [node name="MissionUI" parent="." instance=ExtResource("52_mission_ui")]
-offset_left = 1129.0
-offset_top = 919.0
-offset_right = 1509.0
-offset_bottom = 1049.0
+offset_left = 187.0
+offset_top = 781.0
+offset_right = 567.0
+offset_bottom = 911.0
 grow_vertical = 0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
@@ -594,3 +591,6 @@ rotation = 0.514872
 [node name="Sigil" parent="." instance=ExtResource("56_hvgsx")]
 position = Vector2(437, 1027)
 scale = Vector2(0.53, 0.53)
+
+[node name="pupil" parent="." instance=ExtResource("56_bnbux")]
+position = Vector2(721, 801)

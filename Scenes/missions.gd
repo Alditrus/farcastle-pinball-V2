@@ -131,6 +131,7 @@ var current_timed_mission: Mission = null
 var mission_lights_node: Node2D
 
 signal mission_started(mission: Mission)
+signal mission_phase_advanced(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
 signal mission_completed(mission: Mission)
 
@@ -278,6 +279,9 @@ func advance_mission_phase(mission: Mission):
 		
 		# Update mission lights for new phase
 		update_mission_lights(mission)
+		
+		# Emit mission_phase_advanced signal to update UI and other systems for the new phase
+		mission_phase_advanced.emit(mission)
 
 func complete_mission(mission: Mission):
 	mission.is_completed = true

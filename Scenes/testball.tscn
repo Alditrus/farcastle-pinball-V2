@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dphgdaqewm0iq"]
+[gd_scene load_steps=7 format=3 uid="uid://dphgdaqewm0iq"]
 
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="1_ug874"]
-[ext_resource type="Script" uid="uid://cebwgd6tj8du4" path="res://testball.gd" id="2_rpb78"]
+[ext_resource type="Script" uid="uid://dcd5fxhf6n755" path="res://Scenes/testball.gd" id="2_rpb78"]
+[ext_resource type="Script" uid="uid://bdjnm3cwnrs6f" path="res://Scenes/testballarea.gd" id="2_ug874"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lffan"]
 radius = 19.0263
@@ -18,9 +19,10 @@ fill_from = Vector2(0.5, 0.5)
 [node name="Node2D" type="Node2D"]
 
 [node name="ball" parent="." instance=ExtResource("1_ug874")]
+script = ExtResource("2_rpb78")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-script = ExtResource("2_rpb78")
+script = ExtResource("2_ug874")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(0, -42)

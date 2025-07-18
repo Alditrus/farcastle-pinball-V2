@@ -30,6 +30,20 @@ func control_mission_lights():
 		push_error("Could not find mission_lights node")
 		return
 	
-	# Use the central controller to activate left sinkhole mode
-	# This sets all lights to inactive except left_sinkhole_light which becomes active
-	mission_lights_node.activate_left_sinkhole_mode()
+	# Find the missions node to get the active mission
+	var missions_node = get_node_or_null("../missions")
+	if not missions_node:
+		push_error("Could not find missions node")
+		return
+	
+	# Get active missions and update lights for current phase
+	var active_missions = missions_node.get_active_missions()
+	if not active_missions.is_empty():
+		# There's an active mission, update lights for current phase
+		var current_mission = active_missions.values()[0]
+		var current_phase_requirements = current_mission.phases[current_mission.current_phase]
+		mission_lights_node.update_lights_for_mission_progress(current_mission, current_phase_requirements)
+	else:
+		# No active missions - don't interfere with the mission start flow
+		# The mission system will handle right sinkhole light activation
+		pass
