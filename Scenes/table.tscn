@@ -53,7 +53,7 @@
 [ext_resource type="PackedScene" uid="uid://bxc8h4x5n0k2l" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
 [ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
-[ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://Scenes/pupil.tscn" id="56_bnbux"]
+[ext_resource type="PackedScene" path="res://Scenes/pupil.tscn" id="56_bnbux"]
 [ext_resource type="PackedScene" uid="uid://c8qrcy8mrr5ki" path="res://Scenes/sigil.tscn" id="56_hvgsx"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
 
