@@ -36,7 +36,7 @@
 [ext_resource type="PackedScene" uid="uid://tok40skelu0o" path="res://Scenes/alcove_bumper6.tscn" id="30_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://btsrktuu746ao" path="res://Scenes/alcove_bumper7.tscn" id="31_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://c4vxi50m2wu62" path="res://Scenes/alcove_bumper8.tscn" id="32_hotvi"]
-[ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://pupil.tscn" id="34_r2pup"]
+[ext_resource type="PackedScene" path="res://Scenes/pupil.tscn" id="34_r2pup"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="40_dwwbe"]

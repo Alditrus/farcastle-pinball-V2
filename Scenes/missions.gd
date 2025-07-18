@@ -131,6 +131,7 @@ var current_timed_mission: Mission = null
 var mission_lights_node: Node2D
 
 signal mission_started(mission: Mission)
+signal mission_phase_advanced(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
 signal mission_completed(mission: Mission)
 
@@ -279,6 +280,9 @@ func advance_mission_phase(mission: Mission):
 		# Update mission lights for new phase
 		update_mission_lights(mission)
 
+		# Emit mission_phase_advanced signal to update UI and other systems for the new phase
+		mission_phase_advanced.emit(mission)
+
 func complete_mission(mission: Mission):
 	mission.is_completed = true
 	mission.is_active = false
@@ -346,6 +350,15 @@ func pause_missions():
 func unpause_missions():
 	# Resume mission progress
 	missions_paused = false
+
+	# If we have an active mission, update the lights to show the current phase requirements
+	if not active_missions.is_empty():
+		var mission = active_missions.values()[0]  # Get the first (and should be only) active mission
+		update_mission_lights(mission)
+
+	# Turn off the left sinkhole light since the left lane requirement has been met
+	if mission_lights_node:
+		mission_lights_node.set_light_mode("left_sinkhole_light", mission_lights_node.get_light_mode_inactive())
 
 # Update mission lights based on current mission phase
 func update_mission_lights(mission: Mission):

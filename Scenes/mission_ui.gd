@@ -19,6 +19,7 @@ func _ready():
 	missions_node = get_node("../missions")
 	if missions_node:
 		missions_node.mission_started.connect(_on_mission_started)
+		missions_node.mission_phase_advanced.connect(_on_mission_phase_advanced)
 		missions_node.mission_progress_updated.connect(_on_mission_progress_updated)
 		missions_node.mission_completed.connect(_on_mission_completed)
 	
@@ -148,6 +149,10 @@ func get_collision_type_name(collision_type) -> String:
 func _on_mission_started(mission):
 	current_mission = mission
 	update_display()
+
+func _on_mission_phase_advanced(mission):
+	if mission == current_mission:
+		update_display()
 
 func _on_mission_progress_updated(mission, _collision_type, _current_count, _required_count):
 	if mission == current_mission:

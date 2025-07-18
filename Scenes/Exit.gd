@@ -48,11 +48,16 @@ func _physics_process(_delta):
 		# Count how many balls are in the exit area
 		var overlapping_bodies = get_overlapping_bodies()
 		for body in overlapping_bodies:
-			if body is RigidBody2D and body.is_in_group("balls"):
+			if body is RigidBody2D and body.is_in_group("balls") and not body.is_in_group("testballs"):
 				overlapping_balls += 1
 		
 		# Get all balls in the game
 		var ball_nodes = get_tree().get_nodes_in_group("balls")
+		var filtered_ball_nodes = []
+		for ball in ball_nodes:
+			if not ball.is_in_group("testballs"):
+				filtered_ball_nodes.append(ball)
+		ball_nodes = filtered_ball_nodes
 		
 		# Only reset if there are no balls in the exit area and balls exist elsewhere
 		if overlapping_balls == 0 and ball_nodes.size() > 0:
