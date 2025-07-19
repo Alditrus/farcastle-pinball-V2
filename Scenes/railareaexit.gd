@@ -5,6 +5,9 @@ var rail_node: Node2D
 var rail1: RigidBody2D
 var rail2: RigidBody2D
 
+# Timer for switching back to rail1
+var rail_reset_timer: Timer
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Find the rail node in the scene
@@ -31,6 +34,13 @@ func _ready():
 	
 	# Connect signal
 	body_entered.connect(_on_body_entered)
+	
+	# Create and configure the rail reset timer
+	rail_reset_timer = Timer.new()
+	rail_reset_timer.wait_time = 90.0  # 90 seconds
+	rail_reset_timer.one_shot = true
+	rail_reset_timer.timeout.connect(_on_rail_reset_timer_timeout)
+	add_child(rail_reset_timer)
 
 
 func _on_body_entered(body):
@@ -52,6 +62,8 @@ func _on_body_entered(body):
 		# Switch from rail1 to rail2
 		if rail1 and rail2:
 			enable_rail2()
+			# Start the timer to switch back to rail1 after 90 seconds
+			rail_reset_timer.start()
 		
 		# Also make rail half opaque by setting alpha to 125 (half opacity)
 		if rail_node:
@@ -82,3 +94,17 @@ func enable_rail2():
 	# Enable rail2
 	rail2.collision_layer = 2
 	rail2.collision_mask = 1
+
+
+# Called when the rail reset timer times out
+func _on_rail_reset_timer_timeout():
+	# Switch back to rail1
+	if rail1 and rail2:
+		enable_rail1()
+	
+	# Restore full opacity to the rail
+	if rail_node:
+		var sprite = rail_node.get_node_or_null("Sprite2D")
+		if sprite:
+			var current_color = sprite.modulate
+			sprite.modulate = Color(current_color.r, current_color.g, current_color.b, 1.0)

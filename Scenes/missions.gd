@@ -243,6 +243,9 @@ func record_collision(collision_type: CollisionType):
 			var required = current_phase_requirements[collision_type]
 			mission_progress_updated.emit(mission, collision_type, mission.progress[collision_type], required)
 			
+			# Update mission lights to reflect current progress
+			update_mission_lights(mission)
+			
 			if check_phase_complete(mission):
 				advance_mission_phase(mission)
 

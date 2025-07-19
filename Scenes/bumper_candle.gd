@@ -31,8 +31,9 @@ func _ready():
 # Called when a body enters the Area2D
 func _on_area_body_entered(body):
 	if body is RigidBody2D and body.is_in_group("balls"):
-		# Toggle the candle state
-		is_active = !is_active
+		# Only activate the candle if it's not already active (don't toggle off)
+		if not is_active:
+			is_active = true
 
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
@@ -41,7 +42,7 @@ func _on_area_body_entered(body):
 		
 		# Update particle effect based on new state
 		update_particle_effect()
-		
+
 		# Deactivate individual light when candle is hit
 		deactivate_individual_light()
 		
