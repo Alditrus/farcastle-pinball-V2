@@ -156,15 +156,20 @@ func get_light_mode_inactive():
 	return 0  # Assuming INACTIVE = 0
 
 # Control lights based on mission progress
-func update_lights_for_mission_progress(_active_mission, current_phase_requirements: Dictionary):
+func update_lights_for_mission_progress(active_mission, current_phase_requirements: Dictionary):
 	# Set all lights to inactive first
 	set_all_lights_inactive()
 	
-	# Activate lights for current phase requirements
+	# Activate lights only for requirements that haven't been met yet
 	for collision_type in current_phase_requirements:
-		var light_paths = get_light_paths_for_collision_type(collision_type)
-		for light_path in light_paths:
-			set_light_mode_by_path(light_path, get_light_mode_active())
+		var required_count = current_phase_requirements[collision_type]
+		var current_count = active_mission.progress.get(collision_type, 0)
+		
+		# Only activate lights if this target still needs more hits
+		if current_count < required_count:
+			var light_paths = get_light_paths_for_collision_type(collision_type)
+			for light_path in light_paths:
+				set_light_mode_by_path(light_path, get_light_mode_active())
 
 # Map collision types to light paths (can return multiple paths)
 func get_light_paths_for_collision_type(collision_type) -> Array:
@@ -186,6 +191,8 @@ func get_light_paths_for_collision_type(collision_type) -> Array:
 			return ["targets1/target_lights"]
 		missions_node.CollisionType.TARGET_SET2:
 			return ["targets2/target_lights"]
+		missions_node.CollisionType.TARGET:
+			return ["targets1/target_lights", "targets2/target_lights"]
 		missions_node.CollisionType.ROLLOVER1:
 			return ["rollover1/rollover_light"]
 		missions_node.CollisionType.ROLLOVER2:

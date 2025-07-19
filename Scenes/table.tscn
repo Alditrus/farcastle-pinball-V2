@@ -437,10 +437,10 @@ text = "0"
 script = ExtResource("41_ecrf2")
 
 [node name="MissionUI" parent="." instance=ExtResource("52_mission_ui")]
-offset_left = 1129.0
-offset_top = 919.0
-offset_right = 1509.0
-offset_bottom = 1049.0
+offset_left = 192.0
+offset_top = 766.0
+offset_right = 572.0
+offset_bottom = 896.0
 grow_vertical = 0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
