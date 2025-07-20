@@ -151,6 +151,17 @@ func notify_ball_respawn():
 
 # Function to reset the table
 func reset_table():
+	# Reduce ball count in score label
+	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+	if score_label and score_label.has_method("get") and "ball_count" in score_label:
+		score_label.ball_count -= 1
+		# Update the ball count display
+		if score_label.has_method("update_ball_count_text"):
+			score_label.update_ball_count_text()
+		# Check for game over condition
+		if score_label.has_method("check_game_over"):
+			score_label.check_game_over()
+	
 	# Reset the gutterarea1 state
 	var gutter_area1 = get_node_or_null("../gutterarea1")
 	if gutter_area1 and gutter_area1.has_method("deactivate_guard"):

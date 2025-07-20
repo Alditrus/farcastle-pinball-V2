@@ -1,0 +1,243 @@
+[gd_scene load_steps=15 format=3 uid="uid://heosbhq3pf4p"]
+
+[ext_resource type="Script" uid="uid://4xui40ddex3" path="res://Scenes/game_over_ui.gd" id="1_game_over_ui"]
+[ext_resource type="Texture2D" uid="uid://befm3yucojq0j" path="res://Assets/table/mockup.png" id="2_lth8f"]
+[ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="3_qqn7r"]
+[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="4_vec04"]
+[ext_resource type="Texture2D" uid="uid://padekhdc527a" path="res://Assets/table/gameover_divider.svg" id="4_xy24n"]
+[ext_resource type="Texture2D" uid="uid://bwdyfvuaa2rc2" path="res://Assets/table/sharebutton.svg" id="6_1xoaq"]
+
+[sub_resource type="SystemFont" id="SystemFont_xy24n"]
+font_names = PackedStringArray("Almendra SC")
+
+[sub_resource type="SystemFont" id="SystemFont_1xoaq"]
+font_names = PackedStringArray("Almendra SC")
+
+[sub_resource type="SystemFont" id="SystemFont_qkxqm"]
+font_names = PackedStringArray("Almendra SC")
+
+[sub_resource type="SystemFont" id="SystemFont_xtdma"]
+font_names = PackedStringArray("Almendra SC")
+
+[sub_resource type="SystemFont" id="SystemFont_63167"]
+font_names = PackedStringArray("Almendra SC")
+
+[sub_resource type="SystemFont" id="SystemFont_pu4f3"]
+font_names = PackedStringArray("Almendra SC")
+
+[sub_resource type="SystemFont" id="SystemFont_vec04"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
+
+[sub_resource type="SystemFont" id="SystemFont_v1ufb"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
+
+[node name="GameOverUI" type="Control"]
+layout_mode = 3
+anchor_left = 0.5
+anchor_top = 0.501
+anchor_right = 0.5
+anchor_bottom = 0.501
+offset_left = -450.0
+offset_top = -791.079
+offset_right = 450.0
+offset_bottom = 787.921
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_game_over_ui")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -440.0
+offset_top = -791.0
+offset_right = 460.0
+offset_bottom = 788.0
+color = Color(0.0627451, 0, 0.0705882, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(450, 791)
+scale = Vector2(1.79541, 1.79365)
+texture = ExtResource("2_lth8f")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.515
+anchor_top = 0.499
+anchor_right = 0.515
+anchor_bottom = 0.499
+offset_left = -463.5
+offset_top = -787.921
+offset_right = 436.5
+offset_bottom = 791.079
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(800, 1200)
+layout_mode = 2
+
+[node name="GameOverLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_qqn7r")
+theme_override_font_sizes/font_size = 64
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="Spacer1" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="CenterContainer/VBoxContainer/Spacer1"]
+position = Vector2(399, 32)
+scale = Vector2(1.75, 1.75)
+texture = ExtResource("4_xy24n")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="FinalScoreLabel" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_vec04")
+theme_override_font_sizes/font_size = 110
+text = "200,000,000"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="ShareButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+icon = ExtResource("6_1xoaq")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Spacer3" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 61.29)
+layout_mode = 2
+
+[node name="HighScoreContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HighScoreTitle" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_qqn7r")
+theme_override_font_sizes/font_size = 55
+text = "High Scores"
+horizontal_alignment = 1
+
+[node name="Spacer3" type="Control" parent="CenterContainer/VBoxContainer/HighScoreContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="ScoresList" type="VBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer"]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+
+[node name="Score1" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = SubResource("SystemFont_xy24n")
+theme_override_font_sizes/font_size = 45
+text = "500,000"
+horizontal_alignment = 1
+
+[node name="Score2" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = SubResource("SystemFont_1xoaq")
+theme_override_font_sizes/font_size = 45
+text = "400,000"
+horizontal_alignment = 1
+
+[node name="Score3" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = SubResource("SystemFont_qkxqm")
+theme_override_font_sizes/font_size = 45
+text = "300,000"
+horizontal_alignment = 1
+
+[node name="Score4" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = SubResource("SystemFont_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "200,000"
+horizontal_alignment = 1
+
+[node name="Score5" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = SubResource("SystemFont_63167")
+theme_override_font_sizes/font_size = 45
+text = "100,000"
+horizontal_alignment = 1
+
+[node name="Score6" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = SubResource("SystemFont_pu4f3")
+theme_override_font_sizes/font_size = 45
+text = "90,000"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayAgainButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_vec04")
+theme_override_font_sizes/font_size = 75
+text = "Play again"
+flat = true
+
+[node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_v1ufb")
+theme_override_font_sizes/font_size = 75
+text = "Exit"
+flat = true

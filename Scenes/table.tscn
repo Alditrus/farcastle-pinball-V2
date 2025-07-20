@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=80 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -37,6 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://btsrktuu746ao" path="res://Scenes/alcove_bumper7.tscn" id="31_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://c4vxi50m2wu62" path="res://Scenes/alcove_bumper8.tscn" id="32_hotvi"]
 [ext_resource type="PackedScene" path="res://Scenes/pupil.tscn" id="34_r2pup"]
+[ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="35_6umbq"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
@@ -55,6 +56,7 @@
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
 [ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
 [ext_resource type="PackedScene" uid="uid://c8qrcy8mrr5ki" path="res://Scenes/sigil.tscn" id="56_hvgsx"]
+[ext_resource type="PackedScene" uid="uid://heosbhq3pf4p" path="res://Scenes/game_over_ui.tscn" id="57_bnbux"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
@@ -426,22 +428,33 @@ color = Color(0.0627451, 0, 0.0705882, 1)
 
 [node name="ScoreLabel" type="Label" parent="ScoreboardUI"]
 layout_mode = 0
-offset_left = 139.0
-offset_top = 1.0
-offset_right = 429.0
-offset_bottom = 100.0
+offset_left = 155.0
+offset_top = 2.0
+offset_right = 445.0
+offset_bottom = 101.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("40_dwwbe")
 theme_override_font_sizes/font_size = 0
 text = "0"
 script = ExtResource("41_ecrf2")
 
+[node name="BallCountLabel" type="Label" parent="ScoreboardUI"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 11.0
+offset_right = 870.0
+offset_bottom = 103.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("35_6umbq")
+theme_override_font_sizes/font_size = 0
+text = "2 Balls"
+horizontal_alignment = 2
+
 [node name="MissionUI" parent="." instance=ExtResource("52_mission_ui")]
-offset_left = 192.0
-offset_top = 766.0
-offset_right = 572.0
-offset_bottom = 896.0
-grow_vertical = 0
+offset_left = 1258.0
+offset_top = 856.0
+offset_right = 1638.0
+offset_bottom = 986.0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
 visible = false
@@ -594,3 +607,16 @@ rotation = 0.514872
 [node name="Sigil" parent="." instance=ExtResource("56_hvgsx")]
 position = Vector2(437, 1027)
 scale = Vector2(0.53, 0.53)
+
+[node name="GameOverUI" parent="." instance=ExtResource("57_bnbux")]
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 440.0
+offset_top = 791.0
+offset_right = 440.0
+offset_bottom = 791.0
+grow_horizontal = 1
+grow_vertical = 1

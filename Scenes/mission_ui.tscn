@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bxc8h4x5n0k2l"]
 
-[ext_resource type="Script" path="res://Scenes/mission_ui.gd" id="1_mission_ui"]
+[ext_resource type="Script" uid="uid://ccjr0rxc860c7" path="res://Scenes/mission_ui.gd" id="1_mission_ui"]
 
 [node name="MissionUI" type="Control"]
 layout_mode = 3
@@ -11,6 +11,7 @@ offset_left = 20.0
 offset_top = -150.0
 offset_right = 400.0
 offset_bottom = -20.0
+grow_vertical = 0
 script = ExtResource("1_mission_ui")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -18,6 +19,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.1, 0.1, 0.1, 0.8)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -29,35 +32,36 @@ offset_left = 10.0
 offset_top = 10.0
 offset_right = -10.0
 offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MissionTitle" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(1, 0.8, 0.4, 1)
+theme_override_font_sizes/font_size = 20
 text = "No Active Mission"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_colors/separator = Color(0.6, 0.6, 0.6, 1)
 
 [node name="PhaseLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 16
 text = "Phase: -"
 horizontal_alignment = 1
 
 [node name="ObjectiveLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 14
 text = "Objective: -"
 autowrap_mode = 3
 
 [node name="ProgressLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
+theme_override_font_sizes/font_size = 14
 text = "Progress: -"
 autowrap_mode = 3
