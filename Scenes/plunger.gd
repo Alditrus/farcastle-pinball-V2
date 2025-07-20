@@ -195,6 +195,11 @@ func launch_ball(pull_distance: float):
 		
 		# Ensure the ball is not sleeping
 		ball_to_launch.sleeping = false
+		
+		# Notify Exit system that ball was launched (for ball save tracking)
+		var exit_node = get_node_or_null("../Exit")
+		if exit_node and exit_node.has_method("on_ball_launched"):
+			exit_node.on_ball_launched()
 
 # Helper function to get the plunger's rectangle for hit detection
 func get_plunger_rect() -> Rect2:

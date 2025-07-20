@@ -13,6 +13,12 @@ var plunger_position: Vector2 = Vector2(840, 1440)  # Default plunger position
 # Flag to prevent multiple respawns in a single physics frame
 var is_respawning = false
 
+# Ball save system variables
+var ball_launch_count = 0
+var ball_save_timer: Timer
+var ball_save_active = false
+var ball_save_duration = 20.0  # 20 seconds
+
 # Signal for ball respawn events
 signal ball_respawned
 
@@ -40,6 +46,13 @@ func _ready():
 	var plunger_node = get_node_or_null("../plunger")
 	if plunger_node:
 		plunger_position = plunger_node.global_position
+	
+	# Initialize ball save timer
+	ball_save_timer = Timer.new()
+	ball_save_timer.wait_time = ball_save_duration
+	ball_save_timer.one_shot = true
+	ball_save_timer.timeout.connect(_on_ball_save_timer_timeout)
+	add_child(ball_save_timer)
 
 func _physics_process(_delta):
 	if not is_respawning:
@@ -61,7 +74,14 @@ func _physics_process(_delta):
 		
 		# Only reset if there are no balls in the exit area and balls exist elsewhere
 		if overlapping_balls == 0 and ball_nodes.size() > 0:
-			# Reduce ball count first and check game state
+			# Check ball save conditions first
+			if check_ball_save_conditions():
+				# Ball save triggered - spawn new ball without reducing ball count
+				print("BALL SAVE ACTIVATED!")
+				spawn_ball_save()
+				return
+			
+			# Normal ball loss - reduce ball count first and check game state
 			var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 			if score_label and score_label.has_method("get") and "ball_count" in score_label:
 				score_label.ball_count -= 1
@@ -217,3 +237,81 @@ func reset_table():
 		missions_node.pause_missions()
 	
 	# Note: Multiball state is now reset by timer, not when balls are lost
+	
+	# Reset ball save conditions when table resets
+	reset_ball_save_conditions()
+
+# Ball save system functions
+func start_ball_save_timer():
+	if not ball_save_active:
+		ball_save_active = true
+		ball_save_timer.start()
+
+func check_ball_save_conditions() -> bool:
+	# Check all three conditions:
+	# 1) Ball has been launched no more than once
+	# 2) It's been less than 20 seconds since first launch
+	# 3) There are 0 balls on the table (already checked in calling function)
+	return ball_launch_count <= 1 and ball_save_active
+
+func spawn_ball_save():
+	# Use the same spawning logic as multiball but simpler
+	if not ball_scene_resource:
+		push_error("Ball scene resource not loaded for ball save")
+		return
+	
+	# Get table reference
+	var table = get_parent()
+	if not table:
+		push_error("Could not find table node for ball save")
+		return
+	
+	# Create new ball
+	var new_ball = ball_scene_resource.instantiate()
+	if not new_ball:
+		push_error("Failed to instantiate ball save ball")
+		return
+	
+	# Set position and properties (same as multiball)
+	var launch_position = Vector2(840, 1240)  # Same position as multiball
+	var launch_velocity = Vector2(0, -2000)   # Same velocity as multiball
+	
+	new_ball.global_position = launch_position
+	new_ball.add_to_group("balls")
+	
+	# Set collision properties
+	new_ball.collision_layer = 1
+	new_ball.collision_mask = 1
+	new_ball.continuous_cd = RigidBody2D.CCD_MODE_CAST_RAY
+	new_ball.sleeping = false
+	
+	# Use call_deferred to avoid physics query flushing error
+	table.call_deferred("add_child", new_ball)
+	new_ball.call_deferred("set", "name", "ball_save_ball")
+	
+	# Launch the ball upward after a brief delay
+	await get_tree().create_timer(0.1).timeout
+	new_ball.linear_velocity = launch_velocity
+	
+	# Disable ball save after use
+	ball_save_active = false
+	ball_save_timer.stop()
+	
+	is_respawning = false
+
+func reset_ball_save_conditions():
+	ball_launch_count = 0
+	ball_save_active = false
+	if ball_save_timer:
+		ball_save_timer.stop()
+
+func _on_ball_save_timer_timeout():
+	ball_save_active = false
+
+# Function to be called when ball is launched (from plunger)
+func on_ball_launched():
+	ball_launch_count += 1
+	
+	# Start timer on first launch
+	if ball_launch_count == 1:
+		start_ball_save_timer()
