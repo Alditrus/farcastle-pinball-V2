@@ -214,6 +214,11 @@ func check_game_over():
 
 # Trigger game over - freeze game and show game over UI
 func trigger_game_over():
+	# Hide the plunger so it doesn't appear on top of game over UI
+	var plunger = get_node_or_null("../../plunger")
+	if plunger:
+		plunger.visible = false
+	
 	# Check if current score is a high score and update
 	if game_over_ui and game_over_ui.has_method("check_and_update_high_score"):
 		game_over_ui.check_and_update_high_score(score)
