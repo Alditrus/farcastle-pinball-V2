@@ -2,6 +2,11 @@ extends Label
 
 var score = 0
 
+# Reference to ball count label
+@onready var ball_count_label = get_node("../BallCountLabel")
+# Reference to game over UI
+@onready var game_over_ui = get_node("../../GameOverUI")
+
 # Spinner variables
 var spinner_active = false
 var spinner_timer = 0.0
@@ -9,6 +14,7 @@ var spinner_timer_at_exit = 0.0
 var spinner_ball_exited = false
 var spinner_initial_speed = 1.0
 var spinner_current_speed = 1.0
+var ball_count = 3.0
 const SPINNER_SLOWDOWN_RATE = 1.0
 
 # Bumper level system
@@ -25,6 +31,7 @@ var bumper_level_points = {
 # Called when the node enters the scene tree for the first time
 func _ready():
 	update_score_text()
+	update_ball_count_text()
 
 # Spinner accumulation variables
 var time_since_last_point = 0.0
@@ -192,3 +199,25 @@ func reset_score():
 # Get current bumper level (for other scripts to reference)
 func get_bumper_level():
 	return current_bumper_level
+
+# Update the ball count display text
+func update_ball_count_text():
+	if ball_count_label:
+		# Don't show negative ball count, show 0 instead
+		var display_count = max(0, int(ball_count))
+		ball_count_label.text = str(display_count) + " Balls"
+
+# Check if game over condition is met and trigger game over
+func check_game_over():
+	if ball_count <= -1:
+		trigger_game_over()
+
+# Trigger game over - freeze game and show game over UI
+func trigger_game_over():
+	# Check if current score is a high score and update
+	if game_over_ui and game_over_ui.has_method("check_and_update_high_score"):
+		game_over_ui.check_and_update_high_score(score)
+	
+	# Show the game over UI with the final score (this will also pause the game)
+	if game_over_ui and game_over_ui.has_method("show_game_over"):
+		game_over_ui.show_game_over(score)

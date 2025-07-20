@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg206"
+   width="281.72995"
+   height="10.261353"
+   viewBox="0 0 281.72995 10.261353"
+   sodipodi:docname="mockup.png"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs210" />
+  <sodipodi:namedview
+     id="namedview208"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="false" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="divider"
+     transform="translate(-109.6091,-161.46051)">
+    <g
+       id="g1995"
+       inkscape:export-filename="gameover_divider.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <rect
+         style="fill:#f9f9f9;stroke:none;stroke-width:1.28872;stroke-dasharray:none"
+         id="rect425"
+         width="7.2558694"
+         height="7.2558694"
+         x="291.28174"
+         y="-62.942089"
+         ry="0"
+         transform="rotate(45)" />
+      <path
+         style="fill:#f9f9f9;stroke:none;stroke-width:1.40007;stroke-dasharray:none"
+         d="m 231.09085,168.56954 v -3.9567 l -121.48175,1.97835 z"
+         id="path1141"
+         sodipodi:nodetypes="cccc" />
+      <path
+         style="fill:#f9f9f9;stroke:none;stroke-width:1.40007;stroke-dasharray:none"
+         d="m 269.85729,164.61284 v 3.9567 l 121.48175,-1.97835 z"
+         id="path1141-3"
+         sodipodi:nodetypes="cccc" />
+    </g>
+  </g>
+</svg>
