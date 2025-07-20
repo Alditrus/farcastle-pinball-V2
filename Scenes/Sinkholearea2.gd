@@ -53,6 +53,11 @@ func _on_body_entered(body):
 		var missions_node = get_node("../missions")
 		if missions_node:
 			missions_node.record_collision(missions_node.CollisionType.SINKHOLE_RIGHT)
+		
+		# Record for multiball sequence
+		var multiball_node = get_node("../multiball")
+		if multiball_node:
+			multiball_node.record_sinkhole_hit("RIGHT")
 
 # Called when a node is removed from the scene
 func _on_node_removed(node):

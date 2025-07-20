@@ -61,9 +61,23 @@ func _physics_process(_delta):
 		
 		# Only reset if there are no balls in the exit area and balls exist elsewhere
 		if overlapping_balls == 0 and ball_nodes.size() > 0:
-			reset_table()
-			is_respawning = true
-			call_deferred("replace_ball_and_plunger", ball_nodes[0])
+			# Reduce ball count first and check game state
+			var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+			if score_label and score_label.has_method("get") and "ball_count" in score_label:
+				score_label.ball_count -= 1
+				# Update the ball count display
+				if score_label.has_method("update_ball_count_text"):
+					score_label.update_ball_count_text()
+				# Check for game over condition
+				if score_label.has_method("check_game_over"):
+					score_label.check_game_over()
+				
+				# If ball_count > -1, continue with normal table reset and respawn
+				if score_label.ball_count > -1:
+					reset_table()
+					is_respawning = true
+					call_deferred("replace_ball_and_plunger", ball_nodes[0])
+				# If ball_count = -1, game over is triggered, don't reset table or respawn
 
 # Function to replace both the ball and plunger
 func replace_ball_and_plunger(old_ball: RigidBody2D):
@@ -151,17 +165,6 @@ func notify_ball_respawn():
 
 # Function to reset the table
 func reset_table():
-	# Reduce ball count in score label
-	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
-	if score_label and score_label.has_method("get") and "ball_count" in score_label:
-		score_label.ball_count -= 1
-		# Update the ball count display
-		if score_label.has_method("update_ball_count_text"):
-			score_label.update_ball_count_text()
-		# Check for game over condition
-		if score_label.has_method("check_game_over"):
-			score_label.check_game_over()
-	
 	# Reset the gutterarea1 state
 	var gutter_area1 = get_node_or_null("../gutterarea1")
 	if gutter_area1 and gutter_area1.has_method("deactivate_guard"):
@@ -212,3 +215,5 @@ func reset_table():
 	var missions_node = get_node_or_null("../missions")
 	if missions_node and missions_node.has_method("pause_missions"):
 		missions_node.pause_missions()
+	
+	# Note: Multiball state is now reset by timer, not when balls are lost

@@ -29,8 +29,17 @@ func _ready():
 # Show the game over UI
 func show_game_over(final_score: int = 0):
 	visible = true
+	
+	# Set initial transparency for fade-in effect
+	modulate = Color(1, 1, 1, 0)
+	
 	update_final_score_display(final_score)
 	update_high_scores_display()
+	
+	# Create fade-in animation that works when paused
+	var tween = create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)  # Continue even when paused
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 1.0)
 	
 	# Pause the game
 	get_tree().paused = true

@@ -8,6 +8,7 @@ extends Control
 var timer_label: Label
 
 var missions_node: Node2D
+var multiball_node: Node2D
 var current_mission = null
 var is_timed_mission = false
 var mission_time_limit = 0.0
@@ -17,11 +18,15 @@ func _ready():
 	timer_label = get_node_or_null("VBoxContainer/TimerLabel")
 	
 	missions_node = get_node("../missions")
+	multiball_node = get_node("../multiball")
 	if missions_node:
 		missions_node.mission_started.connect(_on_mission_started)
 		missions_node.mission_phase_advanced.connect(_on_mission_phase_advanced)
 		missions_node.mission_progress_updated.connect(_on_mission_progress_updated)
 		missions_node.mission_completed.connect(_on_mission_completed)
+	
+	if multiball_node:
+		multiball_node.multiball_activated.connect(_on_multiball_activated)
 	
 	update_display()
 
@@ -35,6 +40,12 @@ func _process(_delta):
 			timer_label.text = "Time: %02d:%02d" % [minutes, seconds]
 		else:
 			timer_label.text = "Time: 00:00"
+	
+	# Update multiball progress display when no mission is active
+	if not current_mission and multiball_node:
+		var active_missions = missions_node.get_active_missions() if missions_node else {}
+		if active_missions.is_empty():
+			update_display()
 
 func update_display():
 	if not missions_node:
@@ -43,10 +54,24 @@ func update_display():
 	var active_missions = missions_node.get_active_missions()
 	
 	if active_missions.is_empty():
-		mission_title.text = "No Active Mission"
-		phase_label.text = "Phase: -"
-		objective_label.text = "Objective: -"
-		progress_label.text = "Progress: -"
+		# Show multiball progress if available
+		if multiball_node and multiball_node.has_method("get_sequence_progress"):
+			if multiball_node.is_multiball_active():
+				mission_title.text = "MULTIBALL ACTIVE"
+				phase_label.text = "Phase: Multiball"
+				objective_label.text = "Multiple balls in play!"
+				progress_label.text = "Score as much as possible!"
+			else:
+				mission_title.text = "Multiball Sequence"
+				phase_label.text = "Phase: -"
+				objective_label.text = "Hit sinkholes in order: R-L-R-R-L-L-R"
+				progress_label.text = "Progress: " + multiball_node.get_sequence_progress()
+		else:
+			mission_title.text = "No Active Mission"
+			phase_label.text = "Phase: -"
+			objective_label.text = "Objective: -"
+			progress_label.text = "Progress: -"
+		
 		if timer_label:
 			timer_label.text = ""
 		current_mission = null
@@ -162,3 +187,6 @@ func _on_mission_completed(mission):
 	if mission == current_mission:
 		current_mission = null
 		update_display()
+
+func _on_multiball_activated():
+	update_display()

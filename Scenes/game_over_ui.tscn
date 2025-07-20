@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://heosbhq3pf4p"]
+[gd_scene load_steps=14 format=3 uid="uid://heosbhq3pf4p"]
 
 [ext_resource type="Script" uid="uid://4xui40ddex3" path="res://Scenes/game_over_ui.gd" id="1_game_over_ui"]
-[ext_resource type="Texture2D" uid="uid://befm3yucojq0j" path="res://Assets/table/mockup.png" id="2_lth8f"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="3_qqn7r"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="4_vec04"]
 [ext_resource type="Texture2D" uid="uid://padekhdc527a" path="res://Assets/table/gameover_divider.svg" id="4_xy24n"]
@@ -54,17 +53,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -440.0
-offset_top = -791.0
-offset_right = 460.0
-offset_bottom = 788.0
+offset_left = -450.0
+offset_top = -789.5
+offset_right = 450.0
+offset_bottom = 789.5
 color = Color(0.0627451, 0, 0.0705882, 1)
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(450, 791)
-scale = Vector2(1.79541, 1.79365)
-texture = ExtResource("2_lth8f")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
