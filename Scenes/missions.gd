@@ -116,7 +116,7 @@ var all_missions: Dictionary = {
 			0: "OR",  # Phase 0 uses OR logic (complete either target set)
 		}
 	},
-	"Lich_mode": {
+	"lich_mode": {
 		"name": "Lich Mode",
 		"description": "Slay Moloch",
 		"reward_points": 5000000,
@@ -129,7 +129,8 @@ var all_missions: Dictionary = {
 		],
 		"phase_logic": {
 			3: "OR",
-		}
+		},
+		"time_limit": 120
 	}
 }
 var active_missions: Dictionary = {}
@@ -149,6 +150,7 @@ signal mission_started(mission: Mission)
 signal mission_phase_advanced(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
 signal mission_completed(mission: Mission)
+signal mission_failed(mission: Mission)
 
 func _ready():
 	# Get reference to mission lights controller
@@ -172,7 +174,7 @@ func start_mission(mission_id: String = "") -> bool:
 			target_mission_id = last_active_mission.id
 		else:
 			# Start next available mission in order
-			var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice"]
+			var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice", "lich_mode"]
 			for mission in mission_order:
 				if not is_mission_completed(mission):
 					target_mission_id = mission
@@ -291,6 +293,10 @@ func advance_mission_phase(mission: Mission):
 	if mission.current_phase >= mission.phases.size():
 		complete_mission(mission)
 	else:
+		# Add 30 seconds to timer for Lich Mode when completing a phase
+		if mission.id == "lich_mode" and current_timed_mission == mission:
+			mission_timer.wait_time -= 30.0
+		
 		mission.progress.clear()
 		for collision_type in mission.phases[mission.current_phase]:
 			mission.progress[collision_type] = 0
@@ -325,7 +331,7 @@ func complete_mission(mission: Mission):
 		current_timed_mission = null
 	
 	# Automatically start the next mission in sequence
-	var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice"]
+	var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice", "lich_mode"]
 	var current_mission_index = mission_order.find(mission.id)
 	if current_mission_index != -1:
 		# Calculate next mission index (loop back to 0 if at end)
@@ -392,8 +398,9 @@ func update_mission_lights(mission: Mission):
 # Handle timed mission timeout
 func _on_mission_timer_timeout():
 	if current_timed_mission:
-		# Reset the timed mission - remove from active missions but don't mark as completed
 		var mission_id = current_timed_mission.id
+		
+		# Reset the timed mission - remove from active missions but don't mark as completed
 		active_missions.erase(mission_id)
 		
 		# Clear last active mission if it was this mission

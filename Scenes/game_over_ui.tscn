@@ -8,21 +8,27 @@
 
 [sub_resource type="SystemFont" id="SystemFont_xy24n"]
 font_names = PackedStringArray("Almendra SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_1xoaq"]
 font_names = PackedStringArray("Almendra SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_qkxqm"]
 font_names = PackedStringArray("Almendra SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_xtdma"]
 font_names = PackedStringArray("Almendra SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_63167"]
 font_names = PackedStringArray("Almendra SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_pu4f3"]
 font_names = PackedStringArray("Almendra SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_vec04"]
 font_names = PackedStringArray("IM FELL Great Primer SC")

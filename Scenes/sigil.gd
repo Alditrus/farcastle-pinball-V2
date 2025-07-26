@@ -83,7 +83,7 @@ func update_mission_letters():
 		return
 	
 	var completed_missions = missions_node.get_completed_missions()
-	var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice"]
+	var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice", "lich_mode"]
 	var letters = [letter_m, letter_o, letter_l, letter_o2, letter_c, letter_h]
 	
 	# Count how many missions in order have been completed
@@ -180,7 +180,7 @@ func update_timed_sigil_dissolve():
 
 func update_sigil_for_phase(phase_number: int):
 	# Check if this is a timed mission (mission 3: wrath_of_baalhorn)
-	if current_mission_id == "wrath_of_baalhorn":
+	if current_mission_id == "wrath_of_baalhorn" or current_mission_id == "lich_mode":
 		# For timed mission, use sigil_full instead of lines
 		activate_timed_sigil()
 		return
@@ -317,7 +317,7 @@ func _on_mission_progress_updated(_mission, _collision_type, _current_count, _re
 
 func _on_mission_completed(_mission):
 	# Reset timed mission state
-	if current_mission_id == "wrath_of_baalhorn":
+	if current_mission_id == "wrath_of_baalhorn" or current_mission_id == "lich_mode":
 		is_timed_mission_active = false
 		reset_sigil_full()
 	else:
@@ -335,7 +335,7 @@ func _on_mission_completed(_mission):
 	# Check if all missions are completed (cycle reset)
 	if missions_node:
 		var completed_missions = missions_node.get_completed_missions()
-		var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice"]
+		var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice", "lich_mode"]
 		
 		# If all missions completed and about to cycle, reset letters
 		if completed_missions.size() >= mission_order.size():
