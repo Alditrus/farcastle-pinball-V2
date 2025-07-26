@@ -115,6 +115,21 @@ var all_missions: Dictionary = {
 		"phase_logic": {
 			0: "OR",  # Phase 0 uses OR logic (complete either target set)
 		}
+	},
+	"Lich_mode": {
+		"name": "Lich Mode",
+		"description": "Slay Moloch",
+		"reward_points": 5000000,
+		"phases": [
+			{CollisionType.SINKHOLE_RIGHT: 1, CollisionType.SINKHOLE_LEFT: 1},
+			{CollisionType.CANDLESET: 3, CollisionType.BUMPER: 3},
+			{CollisionType.ALCOVE_BUMPER: 10},
+			{CollisionType.TARGET_SET1: 3, CollisionType.TARGET_SET2: 3},
+			{CollisionType.SPINNER: 6}
+		],
+		"phase_logic": {
+			3: "OR",
+		}
 	}
 }
 var active_missions: Dictionary = {}
