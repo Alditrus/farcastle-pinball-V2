@@ -452,10 +452,10 @@ text = "2 Balls"
 horizontal_alignment = 2
 
 [node name="MissionUI" parent="." instance=ExtResource("52_mission_ui")]
-offset_left = 1258.0
-offset_top = 856.0
-offset_right = 1638.0
-offset_bottom = 986.0
+offset_left = 989.0
+offset_top = 691.0
+offset_right = 1369.0
+offset_bottom = 821.0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
 visible = false
