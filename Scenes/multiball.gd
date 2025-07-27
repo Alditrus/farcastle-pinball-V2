@@ -19,6 +19,7 @@ var launch_velocity = Vector2(0, -2000)    # Upward velocity for launch
 
 # Signal for multiball activation
 signal multiball_activated
+signal sequence_updated(current_sequence: Array, required_sequence: Array)
 
 func _ready():
 	# Load ball scene resource
@@ -39,12 +40,23 @@ func record_sinkhole_hit(sinkhole_type: String):
 	if multiball_active:
 		return
 	
-	# Add to sequence
-	current_sequence.append(sinkhole_type)
+	# Check if this hit matches the expected next hit in sequence
+	var expected_next = get_next_expected_sinkhole()
+	
+	if expected_next != "" and sinkhole_type == expected_next:
+		# Correct hit - add to sequence
+		current_sequence.append(sinkhole_type)
+	else:
+		# Wrong hit - reset sequence and start over with this hit
+		current_sequence.clear()
+		current_sequence.append(sinkhole_type)
 	
 	# Keep only the last 7 hits (same size as required sequence)
 	if current_sequence.size() > required_sequence.size():
 		current_sequence.pop_front()
+	
+	# Emit signal for sequence update
+	emit_signal("sequence_updated", current_sequence, required_sequence)
 	
 	# Check if sequence matches required pattern
 	if check_sequence():
@@ -152,3 +164,16 @@ func get_sequence_progress() -> String:
 # Get required sequence string (for UI display)
 func get_required_sequence() -> String:
 	return " -> ".join(required_sequence)
+
+# Get the next expected sinkhole in the sequence
+func get_next_expected_sinkhole() -> String:
+	if current_sequence.size() >= required_sequence.size():
+		return ""  # Sequence complete or full
+	return required_sequence[current_sequence.size()]
+
+# Check if current sequence is correct so far
+func is_sequence_valid() -> bool:
+	for i in range(current_sequence.size()):
+		if current_sequence[i] != required_sequence[i]:
+			return false
+	return true
