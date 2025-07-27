@@ -124,9 +124,9 @@ var all_missions: Dictionary = {
 		"phases": [
 			{CollisionType.SINKHOLE_RIGHT: 1, CollisionType.SINKHOLE_LEFT: 1},
 			{CollisionType.CANDLESET: 3, CollisionType.BUMPER: 3},
-			{CollisionType.ALCOVE_BUMPER: 10},
+			{CollisionType.ALCOVE_BUMPER: 20},
 			{CollisionType.TARGET_SET1: 3, CollisionType.TARGET_SET2: 3},
-			{CollisionType.MULTIBALL: 1}
+			{CollisionType.SPINNER: 6, CollisionType.MULTIBALL: 1}
 		],
 		"phase_logic": {
 			3: "OR"
