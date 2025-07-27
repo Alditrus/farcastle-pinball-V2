@@ -160,6 +160,14 @@ func update_lights_for_mission_progress(active_mission, current_phase_requiremen
 	# Set all lights to inactive first
 	set_all_lights_inactive()
 	
+	# Special handling for multiball sequence in lich mode
+	var missions_node = get_node("../missions")
+	if (active_mission.id == "lich_mode" and 
+		missions_node.CollisionType.MULTIBALL in current_phase_requirements and
+		active_mission.progress.get(missions_node.CollisionType.MULTIBALL, 0) < current_phase_requirements[missions_node.CollisionType.MULTIBALL]):
+		update_multiball_sequence_lights()
+		return
+	
 	# Activate lights only for requirements that haven't been met yet
 	for collision_type in current_phase_requirements:
 		var required_count = current_phase_requirements[collision_type]
@@ -203,6 +211,8 @@ func get_light_paths_for_collision_type(collision_type) -> Array:
 			return ["left_sinkhole_light"]
 		missions_node.CollisionType.SINKHOLE_RIGHT:
 			return ["right_sinkhole_light"]
+		missions_node.CollisionType.MULTIBALL:
+			return ["left_sinkhole_light", "right_sinkhole_light"]  # Both sinkholes for multiball sequence
 		_:
 			return []
 
@@ -238,3 +248,21 @@ func activate_right_sinkhole_light():
 # Deactivate right sinkhole light when requirement is met
 func deactivate_right_sinkhole_light():
 	set_light_mode("right_sinkhole_light", get_light_mode_inactive())
+
+# Update sinkhole lights for multiball sequence
+func update_multiball_sequence_lights():
+	# Get multiball node to check sequence progress
+	var multiball_node = get_node("../multiball")
+	if not multiball_node:
+		return
+	
+	# Turn off both sinkhole lights first
+	set_light_mode("left_sinkhole_light", get_light_mode_inactive())
+	set_light_mode("right_sinkhole_light", get_light_mode_inactive())
+	
+	# Get the next expected sinkhole and light it up
+	var next_sinkhole = multiball_node.get_next_expected_sinkhole()
+	if next_sinkhole == "LEFT":
+		set_light_mode("left_sinkhole_light", get_light_mode_active())
+	elif next_sinkhole == "RIGHT":
+		set_light_mode("right_sinkhole_light", get_light_mode_active())

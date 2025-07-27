@@ -163,6 +163,7 @@ func _ready():
 	var multiball_node = get_node("../multiball")
 	if multiball_node:
 		multiball_node.multiball_activated.connect(_on_multiball_activated)
+		multiball_node.sequence_updated.connect(_on_multiball_sequence_updated)
 	else:
 		push_error("Could not find multiball node")
 	
@@ -406,6 +407,23 @@ func update_mission_lights(mission: Mission):
 # Handle multiball activation
 func _on_multiball_activated():
 	record_collision(CollisionType.MULTIBALL)
+
+# Handle multiball sequence updates
+func _on_multiball_sequence_updated(current_sequence: Array, required_sequence: Array):
+	# Only update lights if we have an active lich mode mission in the multiball phase
+	if not active_missions.has("lich_mode"):
+		return
+	
+	var lich_mission = active_missions["lich_mode"]
+	var current_phase_requirements = lich_mission.phases[lich_mission.current_phase]
+	
+	# Check if current phase requires multiball and it hasn't been completed yet
+	if (CollisionType.MULTIBALL in current_phase_requirements and
+		lich_mission.progress.get(CollisionType.MULTIBALL, 0) < current_phase_requirements[CollisionType.MULTIBALL]):
+		
+		# Update mission lights to reflect sequence progress
+		if mission_lights_node:
+			mission_lights_node.update_multiball_sequence_lights()
 
 # Handle timed mission timeout
 func _on_mission_timer_timeout():
