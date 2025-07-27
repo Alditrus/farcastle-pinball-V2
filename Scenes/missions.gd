@@ -13,7 +13,8 @@ enum CollisionType {
 	CANDLE,
 	CANDLESET,
 	TARGET_SET1,
-	TARGET_SET2
+	TARGET_SET2,
+	MULTIBALL
 }
 
 class Mission:
@@ -125,10 +126,10 @@ var all_missions: Dictionary = {
 			{CollisionType.CANDLESET: 3, CollisionType.BUMPER: 3},
 			{CollisionType.ALCOVE_BUMPER: 10},
 			{CollisionType.TARGET_SET1: 3, CollisionType.TARGET_SET2: 3},
-			{CollisionType.SPINNER: 6}
+			{CollisionType.MULTIBALL: 1}
 		],
 		"phase_logic": {
-			3: "OR",
+			3: "OR"
 		},
 		"time_limit": 120
 	}
@@ -157,6 +158,13 @@ func _ready():
 	mission_lights_node = get_node("../mission_lights")
 	if not mission_lights_node:
 		push_error("Could not find mission_lights node")
+	
+	# Connect to multiball activation signal
+	var multiball_node = get_node("../multiball")
+	if multiball_node:
+		multiball_node.multiball_activated.connect(_on_multiball_activated)
+	else:
+		push_error("Could not find multiball node")
 	
 	# Initialize mission timer
 	mission_timer = Timer.new()
@@ -394,6 +402,10 @@ func update_mission_lights(mission: Mission):
 	
 	# Use the mission lights controller to update lights for current phase
 	mission_lights_node.update_lights_for_mission_progress(mission, current_phase_requirements)
+
+# Handle multiball activation
+func _on_multiball_activated():
+	record_collision(CollisionType.MULTIBALL)
 
 # Handle timed mission timeout
 func _on_mission_timer_timeout():
