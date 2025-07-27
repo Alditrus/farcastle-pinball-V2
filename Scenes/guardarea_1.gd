@@ -2,6 +2,7 @@ extends Area2D
 
 @export var guard_path: NodePath = "../Guard"
 var guard: Node2D
+var launch_sound = preload("res://Assets/sounds/launch.wav")
 
 func _ready():
 	if guard_path:
@@ -13,6 +14,7 @@ func _ready():
 func _on_body_entered(body):
 	if body.is_in_group("balls"):
 		if guard:
+			AudioCollection.play_sfx(launch_sound)
 			guard.get_node("StaticBody2D").set_collision_layer_value(1, false)
 			guard.get_node("StaticBody2D").set_collision_layer_value(2, false)
 			guard.get_node("StaticBody2D").set_collision_mask_value(1, false)

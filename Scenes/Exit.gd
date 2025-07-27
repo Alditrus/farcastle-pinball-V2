@@ -6,6 +6,8 @@ var ball_scene_resource: PackedScene
 var plunger_scene_path = "res://Scenes/plunger.tscn"
 var plunger_scene_resource: PackedScene
 
+var respawn_sound = preload("res://Assets/sounds/respawn.wav")
+
 # Tracking original ball position
 var spawn_position: Vector2 = Vector2(839, 1500)  # Position ball just below the plunger
 var plunger_position: Vector2 = Vector2(840, 1440)  # Default plunger position
@@ -107,6 +109,8 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 		push_error("Could not find parent table node")
 		is_respawning = false
 		return
+	
+	AudioCollection.play_sfx(respawn_sound)
 	
 	# 1. Remove the old ball
 	old_ball.queue_free()

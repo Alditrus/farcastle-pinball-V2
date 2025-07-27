@@ -30,6 +30,10 @@ var current_rotation_speed = 0.0
 var is_tilted = false  # Track whether the table is tilted
 var touch_pressed = false
 
+# Sound effects
+var flipper_up_sound = preload("res://Assets/sounds/flipper_up.wav")
+var flipper_down_sound = preload("res://Assets/sounds/flipper_down.wav")
+
 func _ready():
 	flipper_body = $RigidBody2D
 	add_to_group("flippers")
@@ -106,6 +110,9 @@ func _physics_process(delta):
 	
 	if is_pressing:
 		is_active = true
+		# Play flipper up sound when starting to press
+		if not was_pressing:
+			AudioCollection.play_sfx(flipper_up_sound)
 		if intermediate_time < snap_time:
 			intermediate_time += delta
 			if intermediate_time > snap_time:
@@ -113,6 +120,9 @@ func _physics_process(delta):
 			flipper_body.rotation_degrees = (intermediate_time / snap_time) * snap_angle
 	else:
 		is_active = false
+		# Play flipper down sound when releasing
+		if was_pressing:
+			AudioCollection.play_sfx(flipper_down_sound)
 		if intermediate_time > 0:
 			intermediate_time -= delta
 			if intermediate_time < 0:

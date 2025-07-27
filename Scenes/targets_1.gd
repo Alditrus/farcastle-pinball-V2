@@ -6,6 +6,8 @@ var total_targets = 3
 # Dictionary to track which targets have been hit
 var hit_targets = {}
 
+var target_sound = preload("res://Assets/sounds/target.wav")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	call_deferred("reset_all_targets")
@@ -87,6 +89,7 @@ func setup_target_areas():
 func _on_specific_area_entered(body, target):
 	# Check if the colliding body is a ball and the target hasn't been hit already
 	if (body.is_in_group("balls") or body.name == "Ball") and not hit_targets.has(target.get_path()):
+		AudioCollection.play_sfx(target_sound)
 		call_deferred("target_down", target)
 
 		# Increase score

@@ -6,6 +6,7 @@ var original_position: Vector2
 @export var consistent_mode: bool = true  # Whether to use consistent launch mode
 @export_range(0.01, 0.1, 0.01) var stabilize_time: float = 0.05  # Stabilization time before launch
 var reset_timer: Timer  # Timer for handling position reset safely
+var launch_pin_sound = preload("res://Assets/sounds/launch_pin.wav")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -74,6 +75,8 @@ func launch_ball(ball_node):
 		
 		# Apply upward force to the ball (same in both modes)
 		var force = Vector2(0, -launch_force * 100)  # Apply significant upward force
+
+		AudioCollection.play_sfx(launch_pin_sound)
 		
 		# Add a helper method to apply the force in the next physics frame
 		call_deferred("_apply_ball_impulse", ball_node, force)
