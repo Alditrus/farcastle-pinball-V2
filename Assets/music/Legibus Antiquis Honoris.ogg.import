@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dye4ph4l0lhoi"
+path="res://.godot/imported/Legibus Antiquis Honoris.ogg-354d90b34b9aada29d7007f05fe8139b.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/music/Legibus Antiquis Honoris.ogg"
+dest_files=["res://.godot/imported/Legibus Antiquis Honoris.ogg-354d90b34b9aada29d7007f05fe8139b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
