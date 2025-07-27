@@ -9,6 +9,7 @@ signal all_candles_activated
 # Timeout for how long the complete flame effect should run (in seconds)
 var complete_flame_duration = 1.0
 var timer = null
+var fireball_sound = preload("res://Assets/sounds/fireball.wav")
 
 func _ready():
 	# Connect signals from each candle
@@ -53,6 +54,7 @@ func check_all_active():
 
 # Trigger the complete flame effect on all candles
 func trigger_complete_flame():
+	AudioCollection.play_sfx(fireball_sound)
 	# Set all candles to complete state
 	for candle in candles:
 		candle.set_complete(true)

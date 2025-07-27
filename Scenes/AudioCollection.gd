@@ -5,8 +5,11 @@ extends Node2D
 
 # Audio player references
 @onready var music_player: AudioStreamPlayer = $MusicPlayer
-@onready var sfx_player: AudioStreamPlayer = $SFXPlayer  
 @onready var voice_player: AudioStreamPlayer = $VoicePlayer
+
+# SFX player pool for overlapping sounds
+var sfx_players: Array[AudioStreamPlayer] = []
+var sfx_player_count: int = 8  # Number of concurrent SFX players
 
 # Audio bus indices (will be set up in _ready)
 var master_bus_index: int
@@ -22,6 +25,7 @@ const DEFAULT_VOICE_VOLUME: float = 0.0
 
 func _ready():
 	setup_audio_buses()
+	setup_sfx_players()
 	set_default_volumes()
 
 # Set up the audio bus structure: Master -> Music/SFX/Voice
@@ -52,6 +56,15 @@ func setup_audio_buses():
 		voice_bus_index = AudioServer.bus_count - 1
 		AudioServer.set_bus_name(voice_bus_index, "Voice")
 		AudioServer.set_bus_send(voice_bus_index, "Master")
+
+# Set up multiple SFX players for overlapping sounds
+func setup_sfx_players():
+	for i in range(sfx_player_count):
+		var sfx_player = AudioStreamPlayer.new()
+		sfx_player.name = "SFXPlayer" + str(i)
+		sfx_player.bus = "SFX"
+		add_child(sfx_player)
+		sfx_players.append(sfx_player)
 
 # Set default volume levels for all buses
 func set_default_volumes():
@@ -123,9 +136,21 @@ func play_music(audio_stream: AudioStream, loop: bool = true):
 		music_player.play()
 
 func play_sfx(audio_stream: AudioStream):
-	if sfx_player and audio_stream:
-		sfx_player.stream = audio_stream
-		sfx_player.play()
+	if audio_stream:
+		# Find an available SFX player (not currently playing)
+		var available_player = null
+		for player in sfx_players:
+			if not player.playing:
+				available_player = player
+				break
+		
+		# If no available player, use the first one (oldest sound gets cut)
+		if not available_player:
+			available_player = sfx_players[0]
+		
+		# Play the sound
+		available_player.stream = audio_stream
+		available_player.play()
 
 func play_voice(audio_stream: AudioStream):
 	if voice_player and audio_stream:
@@ -138,8 +163,8 @@ func stop_music():
 		music_player.stop()
 
 func stop_sfx():
-	if sfx_player:
-		sfx_player.stop()
+	for player in sfx_players:
+		player.stop()
 
 func stop_voice():
 	if voice_player:
@@ -155,7 +180,10 @@ func is_music_playing() -> bool:
 	return music_player and music_player.playing
 
 func is_sfx_playing() -> bool:
-	return sfx_player and sfx_player.playing
+	for player in sfx_players:
+		if player.playing:
+			return true
+	return false
 
 func is_voice_playing() -> bool:
 	return voice_player and voice_player.playing

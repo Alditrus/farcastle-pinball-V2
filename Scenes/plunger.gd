@@ -11,6 +11,9 @@ var resetting_position: bool = false  # Flag to track when we're resetting posit
 var reset_timer: Timer  # Timer for handling position reset safely
 var return_tween: Tween  # Tween for smoothly animating plunger return
 
+# Sound effects
+var launch_pin_sound = preload("res://Assets/sounds/launch_pin.wav")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	plunger_body = $RigidBody2D
@@ -178,6 +181,9 @@ func launch_ball(pull_distance: float):
 	
 	# Launch the selected ball if one was found
 	if ball_to_launch != null:
+		# Play launch sound effect
+		AudioCollection.play_sfx(launch_pin_sound)
+		
 		# Apply a non-linear curve to the force to prevent excessive force at max pull
 		var force_percent = pull_distance / max_pull_distance
 		

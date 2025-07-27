@@ -10,6 +10,8 @@ var guard_activated: bool = false
 var guard_timer: float = 0.0
 var guard_duration: float = 1.0
 
+var sinkhole_sound = preload("res://Assets/sounds/sinkhole.wav")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Find the guard node in the scene
@@ -43,6 +45,8 @@ func _on_body_entered(body):
 	# Check if the entering body is a ball
 	if not guard_activated and body is RigidBody2D and (body.is_in_group("balls") or body.name == "Ball"):
 		activate_guard()
+
+		AudioCollection.play_sfx(sinkhole_sound)
 
 		# Increase score and register collision
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")

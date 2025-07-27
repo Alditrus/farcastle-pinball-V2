@@ -4,6 +4,8 @@ extends Node2D
 var is_active = false
 var is_complete = false
 
+var flame_sound = preload("res://Assets/sounds/flame.wav")
+
 # References to the particle effect nodes
 @onready var normal_particles = $normalflame
 @onready var complete_particles = $completeflame
@@ -33,6 +35,8 @@ func _on_area_body_entered(body):
 	if body is RigidBody2D and body.is_in_group("balls"):
 		# Toggle the candle state
 		is_active = !is_active
+
+		AudioCollection.play_sfx(flame_sound)
 
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")

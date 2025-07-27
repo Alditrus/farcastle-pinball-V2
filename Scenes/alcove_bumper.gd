@@ -7,6 +7,7 @@ var active_timer: float = 0.0
 var is_active: bool = false
 var normal_sprite: Sprite2D
 var active_sprite: Sprite2D
+var alcove_bumper_sound = preload("res://Assets/sounds/alcove_bumper.wav")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -59,6 +60,7 @@ func _on_body_entered(body):
 	if body.is_in_group("balls"):
 		bump_ball(body)
 		activate_bumper()
+		AudioCollection.play_sfx(alcove_bumper_sound)
 
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")

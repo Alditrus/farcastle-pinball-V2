@@ -11,6 +11,7 @@ var original_position: Vector2
 var reset_timer: Timer  # Timer for handling position reset safely
 var flash_timer: Timer  # Timer for handling active sprite visibility
 var band_active_sprite: Sprite2D  # Reference to the active sprite on the band
+var slingshot_sound = preload("res://Assets/sounds/slingshot.wav")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -65,6 +66,7 @@ func _on_body_entered(body):
 	# Check if the colliding body is a ball
 	if body.is_in_group("balls"):
 		launch_ball(body)
+		AudioCollection.play_sfx(slingshot_sound)
 
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")

@@ -8,6 +8,7 @@ var is_active: bool = false
 var normal_sprite: Sprite2D
 var active_sprite: Sprite2D
 var current_level: int = 1
+var bumper_sound = preload("res://Assets/sounds/bumper.wav")
 
 # Sprite textures for different levels
 var level_textures = {
@@ -91,6 +92,7 @@ func _on_body_entered(body):
 	if body.is_in_group("balls"):
 		bump_ball(body)
 		activate_bumper()
+		AudioCollection.play_sfx(bumper_sound)
 		
 		# Increase score
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
