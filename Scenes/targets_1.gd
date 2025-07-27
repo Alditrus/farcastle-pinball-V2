@@ -7,6 +7,7 @@ var total_targets = 3
 var hit_targets = {}
 
 var target_sound = preload("res://Assets/sounds/target.wav")
+var target_complete_sound = preload("res://Assets/sounds/target_complete.wav")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -16,6 +17,8 @@ func _ready():
 func reset_all_targets():
 	targets_down_count = 0
 	hit_targets.clear()  # Reset the hit targets tracking
+
+	AudioCollection.play_sfx(target_complete_sound)
 	
 	for i in range(1, 4):
 		var target_path = "target" + str(i)

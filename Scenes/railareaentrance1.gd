@@ -6,6 +6,7 @@ var rail_node: Node2D
 # Rail velocity settings
 var rail_speed = 1500.0  # Speed of the ball in the rail
 var rail_angle_degrees = 245.0  # Northwest angle (measured clockwise from right/east)
+var rail_sound = preload("res://Assets/sounds/rail.wav")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,6 +26,8 @@ func _process(_delta):
 
 func _on_body_entered(body):
 	if body.is_in_group("balls") and body is RigidBody2D:
+
+		AudioCollection.play_sfx(rail_sound)
 		# Change ball collision properties
 		body.collision_layer = 4
 		body.collision_mask = 2
