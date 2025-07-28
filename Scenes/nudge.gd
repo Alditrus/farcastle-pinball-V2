@@ -26,6 +26,8 @@ var tilt_count = 0
 var tilt_decay_timer = 0.0
 var is_tilted = false
 
+var TILT_sound = preload("res://Assets/sounds/TILT.wav")
+
 # References
 @onready var camera = get_viewport().get_camera_2d()
 
@@ -189,6 +191,8 @@ func shake_camera(direction, intensity = 1.0):
 # Handle tilt - now just disables controls until reset
 func handle_tilt():
 	is_tilted = true
+
+	AudioCollection.play_sfx(TILT_sound)
 	
 	# Eject any balls from the launch lane
 	eject_balls_from_launch_lane()

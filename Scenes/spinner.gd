@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var animated_sprite = $Area2D/AnimatedSprite2D
+@onready var audio_player = AudioStreamPlayer.new()
 var timer = 0.0
 var animation_active = false
 var ball_exited = false
@@ -11,8 +12,11 @@ var checking_ball_direction = false
 var revolution_counter = 0.0
 var last_revolution_reported = 0
 
+var spinner_sound = preload("res://Assets/sounds/spinner.wav")
+var audio_collection: Node2D
+
 # Constants for animation speed scaling
-const BASE_VELOCITY = 300.0   # Reference velocity for normal animation speed
+const BASE_VELOCITY = 0   # Reference velocity for normal animation speed
 const MIN_SPEED_SCALE = 0.5   # Minimum animation speed scale
 const MAX_SPEED_SCALE = 3.0   # Maximum animation speed scale
 const SLOWDOWN_RATE = 1    # Higher value = faster exponential slowdown
@@ -24,6 +28,14 @@ func _ready():
 	$Area2D.body_exited.connect(_on_area_2d_body_exited)
 	# Make sure the animation is not playing initially
 	animated_sprite.stop()
+	
+	# Set up audio player
+	audio_player.bus = "SFX"
+	audio_player.stream = spinner_sound
+	add_child(audio_player)
+	
+	# Get reference to AudioCollection
+	audio_collection = get_node("/root/Table/AudioCollection")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -60,12 +72,17 @@ func _process(delta):
 			# Apply the new speed scale (keeping the same direction)
 			animated_sprite.speed_scale = current_speed_scale
 			
+			# Update sound volume based on current speed
+			_update_sound_volume(current_speed_scale)
+			
 			# If animation becomes too slow, pause it on the last frame
 			if current_speed_scale < 0.05:
 				animated_sprite.pause()
 				animation_active = false
 				timer = 0.0
 				ball_exited = false
+				# Stop the sound
+				audio_player.stop()
 				# Reset revolution tracking
 				revolution_counter = 0.0
 				last_revolution_reported = 0
@@ -76,6 +93,8 @@ func _process(delta):
 			animation_active = false
 			timer = 0.0
 			ball_exited = false
+			# Stop the sound
+			audio_player.stop()
 			# Reset revolution tracking
 			revolution_counter = 0.0
 			last_revolution_reported = 0
@@ -110,6 +129,21 @@ func calculate_speed_scale(velocity):
 	
 	# Clamp between minimum and maximum speed scales
 	return clamp(relative_speed, MIN_SPEED_SCALE, MAX_SPEED_SCALE)
+
+# Calculate volume based on current animation speed (0.0 = silent, 1.0 = full volume)
+func calculate_volume_from_speed(speed_scale):
+	# If speed is effectively zero, volume should be 0
+	if abs(speed_scale) < 0.05:
+		return 0.0
+	
+	# Map speed scale to volume: normalize speed_scale to 0-1 range
+	# MIN_SPEED_SCALE (0.5) maps to ~0.1 volume, MAX_SPEED_SCALE (3.0) maps to 1.0 volume
+	var normalized_speed = (abs(speed_scale) - MIN_SPEED_SCALE) / (MAX_SPEED_SCALE - MIN_SPEED_SCALE)
+	normalized_speed = clamp(normalized_speed, 0.0, 1.0)
+	
+	# Apply a slight curve to make lower speeds more audible
+	# Map 0-1 to 0.1-1.0 so there's always some volume when spinning
+	return lerp(0.1, 1.0, normalized_speed)
 
 # Called when a body enters the Area2D
 func _on_area_2d_body_entered(body):
@@ -153,8 +187,27 @@ func _on_area_2d_body_exited(body):
 func _play_animation_forwards(speed_scale):
 	animated_sprite.play("default", 1.0) # Direction: forward
 	animated_sprite.speed_scale = speed_scale # Apply speed scaling
+	_start_spinner_sound(speed_scale)
 
 # Plays the animation backwards with specified speed scale (top to bottom entry)
 func _play_animation_backwards(speed_scale):
 	animated_sprite.play("default", -1.0) # Direction: backward
 	animated_sprite.speed_scale = speed_scale # Apply speed scaling
+	_start_spinner_sound(speed_scale)
+
+# Start playing spinner sound with volume based on speed
+func _start_spinner_sound(speed_scale):
+	var volume = calculate_volume_from_speed(speed_scale)
+	audio_player.volume_db = audio_collection.linear_to_db(volume) if audio_collection else -80.0
+	if volume > 0.0 and not audio_player.playing:
+		audio_player.play()
+
+# Update sound volume based on current animation speed
+func _update_sound_volume(speed_scale):
+	var volume = calculate_volume_from_speed(speed_scale)
+	if volume > 0.0:
+		audio_player.volume_db = audio_collection.linear_to_db(volume) if audio_collection else -80.0
+		if not audio_player.playing:
+			audio_player.play()
+	else:
+		audio_player.stop()
