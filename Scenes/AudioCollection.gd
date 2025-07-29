@@ -30,6 +30,9 @@ var music_tracks: Array[String] = [
 	"res://Assets/music/Sanctum.ogg"
 ]
 
+# Lich mode track
+var lich_mode_track: String = "res://Assets/music/lich_mode.ogg"
+
 # Current track for table scene (randomly selected)
 var current_track: String
 
@@ -109,6 +112,11 @@ func play_current_track():
 # Switch to a random track (called when mission is completed)
 func switch_to_random_track():
 	select_random_track()
+	play_current_track()
+
+# Switch to lich mode track
+func switch_to_lich_mode_track():
+	current_track = lich_mode_track
 	play_current_track()
 
 # Volume control functions (volumes in dB)

@@ -240,6 +240,12 @@ func actually_start_mission(mission_id: String) -> bool:
 			mission_timer.start()
 			current_timed_mission = mission
 		
+		# Switch track when mission is initiated
+		if mission.id == "lich_mode":
+			AudioCollection.switch_to_lich_mode_track()
+		else:
+			AudioCollection.switch_to_random_track()
+		
 		mission_started.emit(mission)
 		return true
 	return false
@@ -334,8 +340,9 @@ func complete_mission(mission: Mission):
 	
 	mission_completed.emit(mission)
 	
-	# Switch to a random track when mission is completed
-	AudioCollection.switch_to_random_track()
+	# Switch back to playlist track if lich mode was completed
+	if mission.id == "lich_mode":
+		AudioCollection.switch_to_random_track()
 	
 	# Stop timer if this was a timed mission
 	if current_timed_mission == mission:
@@ -432,6 +439,10 @@ func _on_multiball_sequence_updated(current_sequence: Array, required_sequence: 
 func _on_mission_timer_timeout():
 	if current_timed_mission:
 		var mission_id = current_timed_mission.id
+		
+		# Switch back to playlist track if lich mode failed
+		if mission_id == "lich_mode":
+			AudioCollection.switch_to_random_track()
 		
 		# Reset the timed mission - remove from active missions but don't mark as completed
 		active_missions.erase(mission_id)
