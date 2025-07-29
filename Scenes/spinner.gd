@@ -34,8 +34,8 @@ func _ready():
 	audio_player.stream = spinner_sound
 	add_child(audio_player)
 	
-	# Get reference to AudioCollection
-	audio_collection = get_node("/root/Table/AudioCollection")
+	# Get reference to AudioCollection autoload
+	audio_collection = AudioCollection
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

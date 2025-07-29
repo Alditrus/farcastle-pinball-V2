@@ -146,8 +146,6 @@ var current_timed_mission: Mission = null
 
 # Reference to mission lights controller
 var mission_lights_node: Node2D
-# Reference to audio collection for music changes
-var audio_collection: Node2D
 
 signal mission_started(mission: Mission)
 signal mission_phase_advanced(mission: Mission)
@@ -160,11 +158,6 @@ func _ready():
 	mission_lights_node = get_node("../mission_lights")
 	if not mission_lights_node:
 		push_error("Could not find mission_lights node")
-	
-	# Get reference to audio collection for music changes
-	audio_collection = get_node("../AudioCollection")
-	if not audio_collection:
-		push_error("Could not find AudioCollection node")
 	
 	# Connect to multiball activation signal
 	var multiball_node = get_node("../multiball")
@@ -246,13 +239,6 @@ func actually_start_mission(mission_id: String) -> bool:
 			mission_timer.wait_time = mission_data.time_limit
 			mission_timer.start()
 			current_timed_mission = mission
-		
-		# Change music when mission starts
-		if audio_collection:
-			if mission_id == "lich_mode":
-				audio_collection.start_lich_mode_music()
-			else:
-				audio_collection.change_to_random_music()
 		
 		mission_started.emit(mission)
 		return true
@@ -348,14 +334,13 @@ func complete_mission(mission: Mission):
 	
 	mission_completed.emit(mission)
 	
+	# Switch to a random track when mission is completed
+	AudioCollection.switch_to_random_track()
+	
 	# Stop timer if this was a timed mission
 	if current_timed_mission == mission:
 		mission_timer.stop()
 		current_timed_mission = null
-	
-	# Return to normal music if lich mode was completed
-	if mission.id == "lich_mode" and audio_collection:
-		audio_collection.end_lich_mode_music()
 	
 	# Automatically start the next mission in sequence
 	var mission_order = ["raise_the_dead", "communion_with_the_void", "wrath_of_baalhorn", "requiem_of_the_moon", "the_wardens_coffers", "the_stone_blacksmiths_apprentice", "lich_mode"]
@@ -447,10 +432,6 @@ func _on_multiball_sequence_updated(current_sequence: Array, required_sequence: 
 func _on_mission_timer_timeout():
 	if current_timed_mission:
 		var mission_id = current_timed_mission.id
-		
-		# Return to normal music if lich mode failed
-		if mission_id == "lich_mode" and audio_collection:
-			audio_collection.end_lich_mode_music()
 		
 		# Reset the timed mission - remove from active missions but don't mark as completed
 		active_missions.erase(mission_id)
