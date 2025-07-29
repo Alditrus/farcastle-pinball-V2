@@ -19,22 +19,27 @@ var voice_bus_index: int
 
 # Default volume levels (in dB)
 const DEFAULT_MASTER_VOLUME: float = 0.0
-const DEFAULT_MUSIC_VOLUME: float = -50.0
+const DEFAULT_MUSIC_VOLUME: float = -15.0
 const DEFAULT_SFX_VOLUME: float = -5.0
 const DEFAULT_VOICE_VOLUME: float = 0.0
 
-# Music tracks (excluding lich_mode.ogg for special use)
-var music_tracks: Array[AudioStream] = []
-var current_track_index: int = -1
-var lich_mode_track: AudioStream
-var is_lich_mode_playing: bool = false
+# Music tracks array (excluding lich_mode)
+var music_tracks: Array[String] = [
+	"res://Assets/music/Imperator Praetor Spiritus Sanctus.ogg",
+	"res://Assets/music/Legibus Antiquis Honoris.ogg",
+	"res://Assets/music/Sanctum.ogg"
+]
+
+# Current track for table scene (randomly selected)
+var current_track: String
 
 func _ready():
 	setup_audio_buses()
 	setup_sfx_players()
-	setup_music_tracks()
+	setup_music_player()
 	set_default_volumes()
-	start_random_music()
+	select_random_track()
+	play_current_track()
 
 # Set up the audio bus structure: Master -> Music/SFX/Voice
 func setup_audio_buses():
@@ -74,56 +79,12 @@ func setup_sfx_players():
 		add_child(sfx_player)
 		sfx_players.append(sfx_player)
 
-# Set up music tracks array (excluding lich_mode.ogg)
-func setup_music_tracks():
-	music_tracks = [
-		preload("res://Assets/music/Legibus Antiquis Honoris.ogg"),
-		preload("res://Assets/music/Sanctum.ogg"),
-		preload("res://Assets/music/Imperator Praetor Spiritus Sanctus.ogg")
-	]
-	# Load lich mode track separately
-	lich_mode_track = preload("res://Assets/music/lich_mode.ogg")
-
-# Start playing a random music track
-func start_random_music():
-	if music_tracks.size() == 0:
-		return
-	
-	# Stop any currently playing music first
-	stop_music()
-	
-	# Pick a random track that's different from the current one
-	var new_index = current_track_index
-	if music_tracks.size() > 1:
-		while new_index == current_track_index:
-			new_index = randi() % music_tracks.size()
-	else:
-		new_index = 0
-	
-	current_track_index = new_index
-	is_lich_mode_playing = false
-	play_music(music_tracks[current_track_index], true)
-
-# Change to a new random music track (for mission changes)
-func change_to_random_music():
-	# Don't change music if lich mode is playing
-	if is_lich_mode_playing:
-		return
-	start_random_music()
-
-# Start playing lich mode music
-func start_lich_mode_music():
-	# Stop any currently playing music first
-	stop_music()
-	is_lich_mode_playing = true
-	play_music(lich_mode_track, true)
-
-# Return to normal music rotation from lich mode
-func end_lich_mode_music():
-	# Stop any currently playing music first
-	stop_music()
-	is_lich_mode_playing = false
-	start_random_music()
+# Set up music player to use Music bus
+func setup_music_player():
+	if music_player:
+		music_player.bus = "Music"
+	if voice_player:
+		voice_player.bus = "Voice"
 
 # Set default volume levels for all buses
 func set_default_volumes():
@@ -131,6 +92,24 @@ func set_default_volumes():
 	set_music_volume(DEFAULT_MUSIC_VOLUME)
 	set_sfx_volume(DEFAULT_SFX_VOLUME)
 	set_voice_volume(DEFAULT_VOICE_VOLUME)
+
+# Select a random track from the music_tracks array
+func select_random_track():
+	if music_tracks.size() > 0:
+		var random_index = randi() % music_tracks.size()
+		current_track = music_tracks[random_index]
+
+# Play the current selected track
+func play_current_track():
+	if current_track and current_track != "":
+		var audio_stream = load(current_track)
+		if audio_stream:
+			play_music(audio_stream, true)
+
+# Switch to a random track (called when mission is completed)
+func switch_to_random_track():
+	select_random_track()
+	play_current_track()
 
 # Volume control functions (volumes in dB)
 func set_master_volume(volume_db: float):
@@ -187,10 +166,6 @@ func is_voice_muted() -> bool:
 # Audio playback functions
 func play_music(audio_stream: AudioStream, loop: bool = true):
 	if music_player and audio_stream:
-		# Stop any currently playing music first
-		if music_player.playing:
-			music_player.stop()
-		
 		music_player.stream = audio_stream
 		if audio_stream is AudioStreamOggVorbis:
 			audio_stream.loop = loop

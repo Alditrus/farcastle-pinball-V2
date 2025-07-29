@@ -35,6 +35,7 @@ func _process(_delta):
 	if is_timed_mission and missions_node and missions_node.mission_timer and timer_label:
 		var time_left = missions_node.mission_timer.time_left
 		if time_left > 0:
+			@warning_ignore("integer_division")
 			var minutes = int(time_left) / 60
 			var seconds = int(time_left) % 60
 			timer_label.text = "Time: %02d:%02d" % [minutes, seconds]
