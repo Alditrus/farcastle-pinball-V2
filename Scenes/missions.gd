@@ -147,6 +147,9 @@ var current_timed_mission: Mission = null
 # Reference to mission lights controller
 var mission_lights_node: Node2D
 
+var gateway_open_sound = preload("res://Assets/sounds/gateway_open.wav")
+var mission_bell_sound = preload("res://Assets/sounds/mission_bell.wav")
+
 signal mission_started(mission: Mission)
 signal mission_phase_advanced(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
@@ -327,6 +330,8 @@ func complete_mission(mission: Mission):
 	mission.is_active = false
 	completed_missions[mission.id] = mission
 	active_missions.erase(mission.id)
+
+	mission_completed.emit(mission)
 	
 	# Clear last active mission since this one is completed
 	if last_active_mission.has("id") and last_active_mission.id == mission.id:
@@ -337,8 +342,6 @@ func complete_mission(mission: Mission):
 	if score_label:
 		score_label.score += mission.reward_points
 		score_label.update_score_text()
-	
-	mission_completed.emit(mission)
 	
 	# Switch back to playlist track if lich mode was completed
 	if mission.id == "lich_mode":
@@ -362,6 +365,13 @@ func complete_mission(mission: Mission):
 			completed_missions.clear()
 		
 		start_mission(next_mission_id)
+
+	AudioCollection.play_sfx(gateway_open_sound)
+	if completed_missions.size() < 7:
+		for i in completed_missions.size():
+			AudioCollection.play_sfx(mission_bell_sound)
+			if i < completed_missions.size() - 1:  # Don't wait after the last sound
+				await get_tree().create_timer(2.0).timeout
 
 func get_active_missions() -> Dictionary:
 	return active_missions

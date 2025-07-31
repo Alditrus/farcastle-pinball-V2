@@ -530,7 +530,7 @@ position = Vector2(428, 238)
 position = Vector2(838, 1287)
 
 [node name="testball" parent="." instance=ExtResource("46_wn66p")]
-position = Vector2(840, 930)
+position = Vector2(844, 1083)
 
 [node name="flaps1" parent="." instance=ExtResource("11_x0duj")]
 position = Vector2(61, 569)

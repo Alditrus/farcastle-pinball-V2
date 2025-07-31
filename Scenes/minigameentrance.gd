@@ -18,6 +18,7 @@ var is_entrance_active = false
 var current_jaw_progress = 0.0
 var jaw_tween: Tween
 
+
 # Called when the node enters the scene tree for the first time
 func _ready():
 	# Wait a frame to ensure all nodes are initialized
