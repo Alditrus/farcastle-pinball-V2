@@ -7,6 +7,7 @@ var end_x = 400    # Right position bound
 @export var move_speed = 100  # Pixels per second
 var direction = 1   # 1 for right, -1 for left
 var initial_position
+var minigame_complete_sound = preload("res://Assets/sounds/minigame_complete.wav")
 
 # Ball detection
 var jackpot_area: Area2D
@@ -75,6 +76,7 @@ func on_jackpot_hit(ball):
 				var minigame_entrance = get_node_or_null("/root/Table/minigameentrance")
 				if minigame_entrance and minigame_entrance.has_method("reset_entrance"):
 					minigame_entrance.reset_entrance()
+					AudioCollection.play_sfx(minigame_complete_sound)
 
 # Unfreeze all balls in the main table to resume their movement
 # Returns when the process is complete (allows awaiting)

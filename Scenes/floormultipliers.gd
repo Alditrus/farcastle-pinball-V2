@@ -10,6 +10,7 @@ var multipliers = {
 	"plier6": 3,
 	"plier7": 2
 }
+var minigame_complete_sound = preload("res://Assets/sounds/minigame_complete.wav")
 
 func _ready():
 	# Connect all multiplier areas to the score multiplier function
@@ -46,6 +47,7 @@ func _on_plier_body_entered(body, area_name):
 				var minigame_entrance = get_node_or_null("/root/Table/minigameentrance")
 				if minigame_entrance and minigame_entrance.has_method("reset_entrance"):
 					minigame_entrance.reset_entrance()
+					AudioCollection.play_sfx(minigame_complete_sound)
 
 # Unfreeze all balls in the main table to resume their movement
 # Returns when the process is complete (allows awaiting)
