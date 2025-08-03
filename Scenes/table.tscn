@@ -615,7 +615,7 @@ position = Vector2(437, 1027)
 scale = Vector2(0.53, 0.53)
 
 [node name="Moloch" type="Sprite2D" parent="."]
-position = Vector2(435, 853)
+position = Vector2(433, 853)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("59_etut1")
 script = ExtResource("60_273ef")
@@ -629,3 +629,9 @@ offset_left = 0.0
 offset_top = -1.0
 offset_right = 900.0
 offset_bottom = 1578.0
+
+[node name="left_tap" type="Sprite2D" parent="."]
+
+[node name="right_tap" type="Sprite2D" parent="."]
+
+[node name="swipe_down" type="Sprite2D" parent="."]
