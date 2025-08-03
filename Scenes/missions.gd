@@ -149,6 +149,8 @@ var mission_lights_node: Node2D
 
 var gateway_open_sound = preload("res://Assets/sounds/gateway_open.wav")
 var mission_bell_sound = preload("res://Assets/sounds/mission_bell.wav")
+var moloch_roar_sound = preload("res://Assets/sounds/moloch_roar.wav")
+var victory_sound = preload("res://Assets/sounds/victory.wav")
 
 signal mission_started(mission: Mission)
 signal mission_phase_advanced(mission: Mission)
@@ -246,6 +248,12 @@ func actually_start_mission(mission_id: String) -> bool:
 		# Switch track when mission is initiated
 		if mission.id == "lich_mode":
 			AudioCollection.switch_to_lich_mode_track()
+			# Add visual and sfx code here
+			AudioCollection.play_sfx(moloch_roar_sound)
+			# Trigger Moloch sprite animation
+			var moloch_sprite = get_node("../Moloch")
+			if moloch_sprite:
+				moloch_sprite.show_moloch_animation()
 		else:
 			AudioCollection.switch_to_random_track()
 		
@@ -345,6 +353,7 @@ func complete_mission(mission: Mission):
 	
 	# Switch back to playlist track if lich mode was completed
 	if mission.id == "lich_mode":
+		AudioCollection.play_sfx(victory_sound)
 		AudioCollection.switch_to_random_track()
 	
 	# Stop timer if this was a timed mission
