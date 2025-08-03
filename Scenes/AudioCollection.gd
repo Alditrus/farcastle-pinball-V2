@@ -27,7 +27,10 @@ const DEFAULT_VOICE_VOLUME: float = 0.0
 var music_tracks: Array[String] = [
 	"res://Assets/music/Imperator Praetor Spiritus Sanctus.ogg",
 	"res://Assets/music/Legibus Antiquis Honoris.ogg",
-	"res://Assets/music/Sanctum.ogg"
+	"res://Assets/music/Sanctum.ogg",
+	"res://Assets/music/Apostolikon.ogg",
+	"res://Assets/music/Kosmokrator.ogg",
+	"res://Assets/music/Mortis Liberatum Nihil.ogg"
 ]
 
 # Lich mode track

@@ -8,6 +8,8 @@ var max_x_position = 0
 var drag_area: Area2D
 var has_been_dragged = false  # Track if the goathead has been dragged at least once
 
+var eject_sound = preload("res://Assets/sounds/eject.wav")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Make sure this node always processes even when the tree is paused
@@ -68,6 +70,8 @@ func _on_drag_area_input_event(_viewport, event, _shape_idx):
 					var spawn_area = $SpawnArea
 					
 					if ball and spawn_area:
+
+						AudioCollection.play_sfx(eject_sound)
 						
 						# Make ball visible and position it at spawn point
 						ball.visible = true

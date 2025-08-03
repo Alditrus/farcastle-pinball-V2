@@ -5,6 +5,8 @@ var original_position: Vector2
 var is_active: bool = false
 var active_sprite: Sprite2D
 
+var peg_sound = preload("res://Assets/sounds/peg.wav")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	bumper_body = $peg
@@ -47,6 +49,7 @@ func _on_body_exited(body):
 func activate_bumper():
 	active_sprite.visible = true
 	is_active = true
+	AudioCollection.play_sfx(peg_sound)
 
 # Deactivate the bumper (show normal sprite, hide active sprite)
 func deactivate_bumper():

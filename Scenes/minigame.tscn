@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cp0gjau2fwd22"]
+[gd_scene load_steps=22 format=3 uid="uid://cp0gjau2fwd22"]
 
 [ext_resource type="Texture2D" uid="uid://bdoxd8w36h30n" path="res://Assets/minigame/walltexture.png" id="1_s7wve"]
 [ext_resource type="PackedScene" uid="uid://pkimpgnflfu1" path="res://Scenes/minigameball.tscn" id="2_5bepb"]
@@ -11,6 +11,10 @@
 [ext_resource type="PackedScene" uid="uid://bfdc3b7u1g0lr" path="res://Scenes/scythes.tscn" id="7_yx24v"]
 [ext_resource type="PackedScene" uid="uid://bobjprwyvdr1i" path="res://Scenes/jackpot.tscn" id="8_255i5"]
 [ext_resource type="Script" uid="uid://dyfw8txfpqlsx" path="res://Scenes/floormultipliers.gd" id="10_hr1fu"]
+[ext_resource type="AudioStream" uid="uid://5tvtl3nvyhre" path="res://Assets/sounds/scythe.ogg" id="12_eicgb"]
+[ext_resource type="AudioStream" uid="uid://bgilhpa6v4tn8" path="res://Assets/sounds/cauldron.ogg" id="14_pg0ql"]
+[ext_resource type="Script" uid="uid://b18ho7upki7gc" path="res://Scenes/scythe_sfx.gd" id="15_scythe"]
+[ext_resource type="Script" uid="uid://dy1nod73510te" path="res://Scenes/cauldron_sfx.gd" id="16_cauldron"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yx24v"]
 size = Vector2(32, 4793)
@@ -97,6 +101,7 @@ remote_path = NodePath("../../ballcam")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="gameboundary"]
 position = Vector2(450, 1695)
 shape = SubResource("RectangleShape2D_5bepb")
+debug_color = Color(1.44392e-07, 0.641183, 0.33837, 0.42)
 
 [node name="pachinkorow" parent="." instance=ExtResource("6_id8w1")]
 position = Vector2(60, 815)
@@ -253,3 +258,21 @@ debug_color = Color(0, 0.6, 0, 0.419608)
 position = Vector2(834.75, 3286)
 shape = SubResource("RectangleShape2D_vnlq7")
 debug_color = Color(0, 0.6, 0, 0.419608)
+
+[node name="scythe_sfx" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(445, 1487)
+stream = ExtResource("12_eicgb")
+autoplay = true
+max_distance = 600.0
+attenuation = 1.56917
+parameters/looping = true
+script = ExtResource("15_scythe")
+
+[node name="cauldron_sfx" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(458, 2360)
+stream = ExtResource("14_pg0ql")
+autoplay = true
+max_distance = 600.0
+attenuation = 1.56917
+parameters/looping = true
+script = ExtResource("16_cauldron")
