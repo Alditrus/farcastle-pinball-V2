@@ -6,6 +6,7 @@ extends RigidBody2D
 var is_active = true
 
 func _ready():
+
 	# Make sure this node always processes even when the tree is paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	

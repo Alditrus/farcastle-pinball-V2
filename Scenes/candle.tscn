@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bworr8h1prbs1"]
+[gd_scene load_steps=6 format=3 uid="uid://bworr8h1prbs1"]
 
 [ext_resource type="Script" uid="uid://dr4frklupvpkf" path="res://Scenes/candle.gd" id="1_45ia7"]
 [ext_resource type="Texture2D" uid="uid://bimpqb81q4ynr" path="res://Assets/table/flameparticle.png" id="1_xsvjb"]
 [ext_resource type="Texture2D" uid="uid://dfuq062nls8l8" path="res://Assets/table/candle.png" id="2_45ia7"]
-[ext_resource type="PackedScene" uid="uid://cw0wbdd8qiics" path="res://Scenes/carrot_light.tscn" id="4_oi8ik"]
 
 [sub_resource type="Curve" id="Curve_oi8ik"]
 _data = [Vector2(0.0165746, 1), 0.0, -0.107037, 0, 0, Vector2(1, 0), -3.23307, 0.0, 0, 0]
@@ -14,10 +13,6 @@ size = Vector2(20, 34)
 
 [node name="candle" type="Node2D"]
 script = ExtResource("1_45ia7")
-
-[node name="carrot_light" parent="." instance=ExtResource("4_oi8ik")]
-position = Vector2(0, -87)
-rotation = -3.14159
 
 [node name="normalflame" type="CPUParticles2D" parent="."]
 position = Vector2(0, -29)

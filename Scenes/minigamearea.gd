@@ -23,6 +23,10 @@ var cooldown_active = false
 var cooldown_duration = 3.0  # seconds
 var cooldown_timer = null
 
+var minigame_enter_sound = preload("res://Assets/sounds/minigame_enter.wav")
+var eject_sound = preload("res://Assets/sounds/eject.wav")
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Add to a group for easy reference
@@ -120,6 +124,8 @@ func _physics_process(_delta):
 			if ball_sprite:
 				ball_sprite.visible = true
 				ball_sprite.modulate = Color(1, 1, 1, 1)  # Full opacity
+
+			AudioCollection.play_sfx(minigame_enter_sound)
 			
 			# Start the fade animation with timer instead of physics process
 			is_fading = true
@@ -244,6 +250,8 @@ func _restore_ball_appearance_impl(ball):
 		# IMPORTANT: First check if this is the captured ball
 		var was_captured = ball.has_meta("original_position")
 		
+		AudioCollection.play_sfx(eject_sound)
+
 		# Restore visual appearance
 		var ball_sprite = ball.get_node_or_null("BallSprite")
 		if ball_sprite:
