@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=83 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -58,7 +58,9 @@
 [ext_resource type="PackedScene" uid="uid://c8qrcy8mrr5ki" path="res://Scenes/sigil.tscn" id="56_hvgsx"]
 [ext_resource type="PackedScene" uid="uid://heosbhq3pf4p" path="res://Scenes/game_over_ui.tscn" id="57_bnbux"]
 [ext_resource type="Script" uid="uid://w8x2bnylgq8h" path="res://Scenes/light_control.gd" id="58_6umbq"]
+[ext_resource type="Texture2D" uid="uid://3qm4ghbydf0h" path="res://Assets/table/moloch.png" id="59_etut1"]
 [ext_resource type="Script" uid="uid://coes8bi8xfhst" path="res://Scenes/multiball.gd" id="59_multiball"]
+[ext_resource type="Script" uid="uid://bieb5srpotku3" path="res://Scenes/moloch.gd" id="60_273ef"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -611,6 +613,12 @@ rotation = 0.514872
 [node name="Sigil" parent="." instance=ExtResource("56_hvgsx")]
 position = Vector2(437, 1027)
 scale = Vector2(0.53, 0.53)
+
+[node name="Moloch" type="Sprite2D" parent="."]
+position = Vector2(435, 853)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("59_etut1")
+script = ExtResource("60_273ef")
 
 [node name="GameOverUI" parent="." instance=ExtResource("57_bnbux")]
 visible = false
