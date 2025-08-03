@@ -138,6 +138,8 @@ func set_level(level: int):
 	if level >= 1 and level <= 6:
 		current_level = level
 		update_sprites()
+	print("level: " + str(level))
+	print("current level: " + str(current_level))
 		
 # Update the bumper sprites based on current level
 func update_sprites():

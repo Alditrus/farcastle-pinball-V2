@@ -1,10 +1,12 @@
-[gd_scene load_steps=22 format=3 uid="uid://cp0gjau2fwd22"]
+[gd_scene load_steps=25 format=3 uid="uid://cp0gjau2fwd22"]
 
 [ext_resource type="Texture2D" uid="uid://bdoxd8w36h30n" path="res://Assets/minigame/walltexture.png" id="1_s7wve"]
 [ext_resource type="PackedScene" uid="uid://pkimpgnflfu1" path="res://Scenes/minigameball.tscn" id="2_5bepb"]
+[ext_resource type="Texture2D" uid="uid://bvkqt6vvsda7y" path="res://Assets/table/drag_left.svg" id="2_lx35w"]
 [ext_resource type="Texture2D" uid="uid://2yn6eyk2pbnh" path="res://Assets/minigame/multiplier gargoyle.png" id="2_xcq3l"]
 [ext_resource type="Script" uid="uid://byfxsxvk88h3o" path="res://Scenes/ballcam.gd" id="2_xt64r"]
 [ext_resource type="Script" uid="uid://e8uyxq0molk7" path="res://Scenes/goathead.gd" id="3_iqey4"]
+[ext_resource type="Texture2D" uid="uid://jvkj2kuwqiti" path="res://Assets/table/drag_right.svg" id="3_r5mjw"]
 [ext_resource type="Texture2D" uid="uid://bvp5xbqe6ertg" path="res://Assets/minigame/goathead.png" id="3_xt64r"]
 [ext_resource type="PackedScene" uid="uid://dnlfixqskd0tt" path="res://Scenes/pachinkorow.tscn" id="6_id8w1"]
 [ext_resource type="Script" uid="uid://c1jqrkiliri6x" path="res://Scenes/minigameball.gd" id="6_vnlq7"]
@@ -15,6 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://bgilhpa6v4tn8" path="res://Assets/sounds/cauldron.ogg" id="14_pg0ql"]
 [ext_resource type="Script" uid="uid://b18ho7upki7gc" path="res://Scenes/scythe_sfx.gd" id="15_scythe"]
 [ext_resource type="Script" uid="uid://dy1nod73510te" path="res://Scenes/cauldron_sfx.gd" id="16_cauldron"]
+[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="18_r5mjw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yx24v"]
 size = Vector2(32, 4793)
@@ -45,6 +48,16 @@ texture = ExtResource("1_s7wve")
 position = Vector2(451, 3595)
 scale = Vector2(0.670134, 0.670134)
 texture = ExtResource("1_s7wve")
+
+[node name="left" type="Sprite2D" parent="."]
+position = Vector2(134, 370)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_lx35w")
+
+[node name="right" type="Sprite2D" parent="."]
+position = Vector2(774, 370)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_r5mjw")
 
 [node name="wall1" type="StaticBody2D" parent="."]
 
@@ -276,3 +289,80 @@ max_distance = 600.0
 attenuation = 1.56917
 parameters/looping = true
 script = ExtResource("16_cauldron")
+
+[node name="5x" type="Label" parent="."]
+offset_left = 424.0
+offset_top = 3327.0
+offset_right = 478.0
+offset_bottom = 3390.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "5x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="4x" type="Label" parent="."]
+offset_left = 295.0
+offset_top = 3327.0
+offset_right = 349.0
+offset_bottom = 3390.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "4x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="4x2" type="Label" parent="."]
+offset_left = 551.0
+offset_top = 3326.0
+offset_right = 605.0
+offset_bottom = 3389.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "4x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="3x" type="Label" parent="."]
+offset_left = 168.0
+offset_top = 3328.0
+offset_right = 222.0
+offset_bottom = 3391.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "3x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="2x" type="Label" parent="."]
+offset_left = 39.0
+offset_top = 3325.0
+offset_right = 93.0
+offset_bottom = 3388.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "2x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="2x2" type="Label" parent="."]
+offset_left = 808.0
+offset_top = 3325.0
+offset_right = 862.0
+offset_bottom = 3388.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "2x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="3x2" type="Label" parent="."]
+offset_left = 683.0
+offset_top = 3327.0
+offset_right = 737.0
+offset_bottom = 3390.0
+theme_override_fonts/font = ExtResource("18_r5mjw")
+theme_override_font_sizes/font_size = 45
+text = "3x"
+horizontal_alignment = 1
+vertical_alignment = 1
