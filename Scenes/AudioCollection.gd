@@ -40,6 +40,9 @@ var lich_mode_track: String = "res://Assets/music/lich_mode.ogg"
 var current_track: String
 
 func _ready():
+	# Set process mode to always run so music keeps playing during pause
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	setup_audio_buses()
 	setup_sfx_players()
 	setup_music_player()
@@ -82,6 +85,8 @@ func setup_sfx_players():
 		var sfx_player = AudioStreamPlayer.new()
 		sfx_player.name = "SFXPlayer" + str(i)
 		sfx_player.bus = "SFX"
+		# SFX should continue playing even when game is paused
+		sfx_player.process_mode = Node.PROCESS_MODE_ALWAYS
 		add_child(sfx_player)
 		sfx_players.append(sfx_player)
 
@@ -89,8 +94,12 @@ func setup_sfx_players():
 func setup_music_player():
 	if music_player:
 		music_player.bus = "Music"
+		# Ensure music continues playing when game is paused
+		music_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	if voice_player:
 		voice_player.bus = "Voice"
+		# Voice should also continue when paused
+		voice_player.process_mode = Node.PROCESS_MODE_ALWAYS
 
 # Set default volume levels for all buses
 func set_default_volumes():

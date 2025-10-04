@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=88 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -52,7 +52,6 @@
 [ext_resource type="PackedScene" uid="uid://cv6bgtmjvcx4j" path="res://Scenes/rollover.tscn" id="48_oc5ru"]
 [ext_resource type="PackedScene" uid="uid://c1m58a70gtp65" path="res://Scenes/arrow_light.tscn" id="48_pkrpy"]
 [ext_resource type="Script" uid="uid://blgrfad20o14y" path="res://Scenes/missions.gd" id="51_pkrpy"]
-[ext_resource type="PackedScene" uid="uid://bxc8h4x5n0k2l" path="res://Scenes/mission_ui.tscn" id="52_mission_ui"]
 [ext_resource type="Script" uid="uid://b5jqove5tm4e3" path="res://Scenes/left_sinkhole_area.gd" id="52_p1j83"]
 [ext_resource type="Script" uid="uid://xstmx3kxotp2" path="res://Scenes/mission_lights.gd" id="55_7077j"]
 [ext_resource type="PackedScene" uid="uid://c8qrcy8mrr5ki" path="res://Scenes/sigil.tscn" id="56_hvgsx"]
@@ -61,6 +60,9 @@
 [ext_resource type="Texture2D" uid="uid://3qm4ghbydf0h" path="res://Assets/table/moloch.png" id="59_etut1"]
 [ext_resource type="Script" uid="uid://coes8bi8xfhst" path="res://Scenes/multiball.gd" id="59_multiball"]
 [ext_resource type="Script" uid="uid://bieb5srpotku3" path="res://Scenes/moloch.gd" id="60_273ef"]
+[ext_resource type="Script" uid="uid://b4amj3g885pu2" path="res://Scenes/pause_menu.gd" id="61_pause_menu"]
+[ext_resource type="Texture2D" uid="uid://4w7qxm4g8lva" path="res://Assets/table/hamburger.svg" id="62_hamburger"]
+[ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="63_divider"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -124,6 +126,20 @@ radius = 5.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wjnp8"]
 size = Vector2(86, 12.25)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rounded"]
+bg_color = Color(0.0627451, 0, 0.0705882, 1)
+corner_radius_top_left = 27
+corner_radius_top_right = 27
+corner_radius_bottom_right = 27
+corner_radius_bottom_left = 27
+
+[sub_resource type="SystemFont" id="SystemFont_273ef"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+
+[sub_resource type="SystemFont" id="SystemFont_b2xxt"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
@@ -453,11 +469,15 @@ theme_override_font_sizes/font_size = 0
 text = "2 Balls"
 horizontal_alignment = 2
 
-[node name="MissionUI" parent="." instance=ExtResource("52_mission_ui")]
-offset_left = 989.0
-offset_top = 691.0
-offset_right = 1369.0
-offset_bottom = 821.0
+[node name="HamburgerMenuButton" type="TextureButton" parent="ScoreboardUI"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 27.0
+offset_right = 98.0
+offset_bottom = 77.0
+texture_normal = ExtResource("62_hamburger")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
 visible = false
@@ -532,7 +552,7 @@ position = Vector2(428, 238)
 position = Vector2(838, 1287)
 
 [node name="testball" parent="." instance=ExtResource("46_wn66p")]
-position = Vector2(844, 1038)
+position = Vector2(1053, 977)
 
 [node name="flaps1" parent="." instance=ExtResource("11_x0duj")]
 position = Vector2(61, 569)
@@ -629,6 +649,127 @@ offset_left = 0.0
 offset_top = -1.0
 offset_right = 900.0
 offset_bottom = 1578.0
+
+[node name="PauseMenuUI" type="Control" parent="."]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 900.0
+offset_bottom = 1578.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("61_pause_menu")
+
+[node name="Background" type="ColorRect" parent="PauseMenuUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Background2" type="Panel" parent="PauseMenuUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 364.0
+offset_right = -169.0
+offset_bottom = -343.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/CenterContainer"]
+layout_mode = 2
+
+[node name="PauseLabel" type="Label" parent="PauseMenuUI/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("35_6umbq")
+theme_override_font_sizes/font_size = 80
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+texture = ExtResource("63_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="ResumeButton" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_font_sizes/font_size = 50
+text = "Resume"
+flat = true
+
+[node name="OptionsButton" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Restart"
+flat = true
+
+[node name="MainMenuButton" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Controls"
+flat = true
+
+[node name="MainMenuButton2" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Settings"
+flat = true
+
+[node name="MainMenuButton3" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Leaderboard"
+flat = true
+
+[node name="MainMenuButton4" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Challenges"
+flat = true
+
+[node name="MainMenuButton5" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Exit"
+flat = true
 
 [node name="left_tap" type="Sprite2D" parent="."]
 

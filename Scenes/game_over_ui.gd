@@ -18,10 +18,15 @@ extends Control
 # High scores array (will be loaded from file later)
 var high_scores: Array[int] = [0, 0, 0, 0, 0, 0]
 
+
+
 func _ready():
+	# Set process mode to always so UI works when game is paused
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	# Hide the UI initially
 	visible = false
-	
+
 	# Connect button signals (functionality will be added later)
 	play_again_button.pressed.connect(_on_play_again_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
@@ -29,18 +34,18 @@ func _ready():
 # Show the game over UI
 func show_game_over(final_score: int = 0):
 	visible = true
-	
+
 	# Set initial transparency for fade-in effect
 	modulate = Color(1, 1, 1, 0)
-	
+
 	update_final_score_display(final_score)
 	update_high_scores_display()
-	
+
 	# Create fade-in animation that works when paused
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)  # Continue even when paused
 	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 1.0)
-	
+
 	# Pause the game
 	get_tree().paused = true
 
@@ -98,10 +103,15 @@ func check_and_update_high_score(current_score: int) -> bool:
 	
 	return is_high_score
 
-# Button signal handlers (to be implemented later)
+# Button signal handlers
 func _on_play_again_pressed():
-	# Functionality will be added later
-	print("Play Again button pressed")
+	# Unpause the game before reloading
+	get_tree().paused = false
+	# Restart the music
+	AudioCollection.select_random_track()
+	AudioCollection.play_current_track()
+	# Reload the current scene to restart the game
+	get_tree().reload_current_scene()
 
 func _on_exit_pressed():
 	# Functionality will be added later  

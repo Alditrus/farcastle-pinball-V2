@@ -28,6 +28,9 @@ var bumper_level_points = {
 	6: 10000
 }
 
+# Game over sound effect
+var game_over_sound = preload("res://Assets/sounds/game_over.ogg")
+
 # Called when the node enters the scene tree for the first time
 func _ready():
 	update_score_text()
@@ -214,6 +217,11 @@ func check_game_over():
 
 # Trigger game over - freeze game and show game over UI
 func trigger_game_over():
+
+	# Stop music and play game over sfx
+	AudioCollection.stop_music()
+	AudioCollection.play_sfx(game_over_sound)
+
 	# Hide the plunger so it doesn't appear on top of game over UI
 	var plunger = get_node_or_null("../../plunger")
 	if plunger:
@@ -222,7 +230,7 @@ func trigger_game_over():
 	# Check if current score is a high score and update
 	if game_over_ui and game_over_ui.has_method("check_and_update_high_score"):
 		game_over_ui.check_and_update_high_score(score)
-	
+
 	# Show the game over UI with the final score (this will also pause the game)
 	if game_over_ui and game_over_ui.has_method("show_game_over"):
 		game_over_ui.show_game_over(score)
