@@ -30,6 +30,8 @@ var TILT_sound = preload("res://Assets/sounds/TILT.wav")
 
 # References
 @onready var camera = get_viewport().get_camera_2d()
+@onready var hamburger_menu_button = get_node("ScoreboardUI/HamburgerMenuButton")
+@onready var pause_menu_ui = get_node("PauseMenuUI")
 
 # Signal to notify when tilt state changes
 signal tilt_state_changed(is_tilted)
@@ -44,6 +46,10 @@ enum NudgeDirection {
 func _ready():
 	# Add to group so flippers can find it
 	add_to_group("nudge_system")
+
+	# Connect hamburger menu button
+	if hamburger_menu_button:
+		hamburger_menu_button.pressed.connect(_on_hamburger_menu_pressed)
 
 func _process(delta):
 	# Update cooldown timer
@@ -216,3 +222,8 @@ func reset_tilt():
 # This function should be connected to the ball respawn event
 func on_ball_respawned():
 	reset_tilt()
+
+# Handle hamburger menu button press
+func _on_hamburger_menu_pressed():
+	if pause_menu_ui and not get_tree().paused:
+		pause_menu_ui.show_pause_menu()

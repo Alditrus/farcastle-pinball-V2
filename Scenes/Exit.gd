@@ -244,21 +244,6 @@ func reset_table():
 	
 	# Reset ball save conditions when table resets
 	reset_ball_save_conditions()
-	
-	# Reset all bumpers to level 1
-	reset_bumpers_to_level_1()
-
-# Function to reset all bumpers to level 1
-func reset_bumpers_to_level_1():
-	var bumpers = get_tree().get_nodes_in_group("bumpers")
-	for bumper in bumpers:
-		if bumper.has_method("set_level"):
-			bumper.set_level(1)
-	
-	# Reset current_bumper_level in score_label.gd
-	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
-	if score_label and "current_bumper_level" in score_label:
-		score_label.current_bumper_level = 1
 
 # Ball save system functions
 func start_ball_save_timer():
