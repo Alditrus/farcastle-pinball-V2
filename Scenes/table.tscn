@@ -771,6 +771,83 @@ theme_override_font_sizes/font_size = 50
 text = "Exit"
 flat = true
 
+[node name="ConfirmationOverlay" type="Control" parent="PauseMenuUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="PauseMenuUI/ConfirmationOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Background2" type="Panel" parent="PauseMenuUI/ConfirmationOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 364.0
+offset_right = -169.0
+offset_bottom = -343.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/ConfirmationOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="ConfirmLabel" type="Label" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("35_6umbq")
+theme_override_font_sizes/font_size = 80
+text = "Are you sure?"
+horizontal_alignment = 1
+
+[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+texture = ExtResource("63_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="YesButton" type="Button" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_font_sizes/font_size = 50
+text = "Yes"
+flat = true
+
+[node name="NoButton" type="Button" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "No"
+flat = true
+
 [node name="left_tap" type="Sprite2D" parent="."]
 
 [node name="right_tap" type="Sprite2D" parent="."]
