@@ -25,6 +25,10 @@ var nudge_cooldown = 0.0
 var tilt_count = 0
 var tilt_decay_timer = 0.0
 var is_tilted = false
+var nudge_enabled = true:  # Can be toggled from settings
+	set(value):
+		nudge_enabled = value
+		print("Nudge.gd: nudge_enabled changed to ", value)
 
 var TILT_sound = preload("res://Assets/sounds/TILT.wav")
 
@@ -63,13 +67,17 @@ func _process(delta):
 			tilt_decay_timer = 0
 			tilt_count -= 1
 	
-	# Handle input if not currently nudging, not tilted, and cooldown has expired
+	# Handle input if not currently nudging, not tilted, nudge is enabled, and cooldown has expired
 	if !is_nudging and !is_tilted and nudge_cooldown <= 0:
+		# Check if nudge is enabled before processing input
+		if not nudge_enabled:
+			return  # Exit early if nudge is disabled
+
 		# Check left arrow key for left nudge
 		if Input.is_physical_key_pressed(KEY_LEFT):
 			apply_nudge(NudgeDirection.LEFT)  # Nudge left
 		# Check right arrow key for right nudge
-		elif Input.is_physical_key_pressed(KEY_RIGHT): 
+		elif Input.is_physical_key_pressed(KEY_RIGHT):
 			apply_nudge(NudgeDirection.RIGHT)  # Nudge right
 		# Check up arrow key for up nudge
 		elif Input.is_physical_key_pressed(KEY_UP):

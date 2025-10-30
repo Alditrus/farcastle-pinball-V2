@@ -4,11 +4,18 @@ extends Control
 @onready var resume_button = $CenterContainer/VBoxContainer/ButtonsContainer/ResumeButton
 @onready var restart_button = $CenterContainer/VBoxContainer/ButtonsContainer/OptionsButton
 @onready var main_menu_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton
+@onready var settings_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton2
 
 # References to confirmation overlay
 @onready var confirmation_overlay = $ConfirmationOverlay
 @onready var yes_button = $ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer/YesButton
 @onready var no_button = $ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer/NoButton
+
+# Reference to settings overlay
+@onready var settings_overlay = $SettingsOverlay
+
+# Reference to control overlay
+@onready var control_overlay = $ControlOverlay
 
 func _ready():
 	# Set process mode to always so UI works when game is paused
@@ -18,6 +25,7 @@ func _ready():
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
+	settings_button.pressed.connect(_on_settings_pressed)
 
 	# Connect confirmation overlay buttons
 	yes_button.pressed.connect(_on_restart_confirmed)
@@ -25,6 +33,12 @@ func _ready():
 
 	# Hide confirmation overlay initially
 	confirmation_overlay.visible = false
+
+	# Hide settings overlay initially
+	settings_overlay.visible = false
+
+	# Hide control overlay initially
+	control_overlay.visible = false
 
 # Show the pause menu
 func show_pause_menu():
@@ -104,7 +118,12 @@ func _on_restart_cancelled():
 	await tween.finished
 	confirmation_overlay.visible = false
 
-# Main menu button handler (placeholder)
+# Controls button handler - shows control overlay
 func _on_main_menu_pressed():
-	print("Main Menu button pressed - to be implemented")
-	# TODO: Implement return to main menu functionality
+	if control_overlay:
+		control_overlay.show_control_overlay()
+
+# Settings button handler - shows settings overlay
+func _on_settings_pressed():
+	if settings_overlay:
+		settings_overlay.show_settings_menu()

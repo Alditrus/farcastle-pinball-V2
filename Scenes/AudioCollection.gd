@@ -20,7 +20,7 @@ var voice_bus_index: int
 # Default volume levels (in dB)
 const DEFAULT_MASTER_VOLUME: float = 0.0
 const DEFAULT_MUSIC_VOLUME: float = -15.0
-const DEFAULT_SFX_VOLUME: float = -5.0
+const DEFAULT_SFX_VOLUME: float = -15.0
 const DEFAULT_VOICE_VOLUME: float = 0.0
 
 # Music tracks array (excluding lich_mode)
