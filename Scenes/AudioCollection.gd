@@ -48,7 +48,7 @@ func _ready():
 	setup_music_player()
 	set_default_volumes()
 	select_random_track()
-	play_current_track()
+	# Don't auto-play - let scenes control music playback
 
 # Set up the audio bus structure: Master -> Music/SFX/Voice
 func setup_audio_buses():

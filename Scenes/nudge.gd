@@ -55,6 +55,10 @@ func _ready():
 	nudge_enabled = GameSettings.nudge_enabled
 	print("Nudge system initialized - nudge enabled: ", nudge_enabled)
 
+	# Play table music when scene starts
+	AudioCollection.select_random_track()
+	AudioCollection.play_current_track()
+
 	# Connect hamburger menu button
 	if hamburger_menu_button:
 		hamburger_menu_button.pressed.connect(_on_hamburger_menu_pressed)
