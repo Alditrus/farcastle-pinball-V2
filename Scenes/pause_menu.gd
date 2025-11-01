@@ -5,6 +5,8 @@ extends Control
 @onready var restart_button = $CenterContainer/VBoxContainer/ButtonsContainer/OptionsButton
 @onready var main_menu_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton
 @onready var settings_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton2
+@onready var leaderboard_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton3
+@onready var exit_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton5
 
 # References to confirmation overlay
 @onready var confirmation_overlay = $ConfirmationOverlay
@@ -17,6 +19,13 @@ extends Control
 # Reference to control overlay
 @onready var control_overlay = $ControlOverlay
 
+# Reference to leaderboard overlay
+@onready var leaderboard_overlay = $LeaderboardOverlay
+
+# Track what action we're confirming
+enum ConfirmAction { RESTART, EXIT }
+var current_confirm_action = ConfirmAction.RESTART
+
 func _ready():
 	# Set process mode to always so UI works when game is paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -26,6 +35,8 @@ func _ready():
 	restart_button.pressed.connect(_on_restart_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
+	leaderboard_button.pressed.connect(_on_leaderboard_pressed)
+	exit_button.pressed.connect(_on_exit_pressed)
 
 	# Connect confirmation overlay buttons
 	yes_button.pressed.connect(_on_restart_confirmed)
@@ -39,6 +50,9 @@ func _ready():
 
 	# Hide control overlay initially
 	control_overlay.visible = false
+
+	# Hide leaderboard overlay initially
+	leaderboard_overlay.visible = false
 
 # Show the pause menu
 func show_pause_menu():
@@ -90,6 +104,7 @@ func _on_resume_pressed():
 
 # Restart button handler - shows confirmation overlay
 func _on_restart_pressed():
+	current_confirm_action = ConfirmAction.RESTART
 	confirmation_overlay.visible = true
 	confirmation_overlay.modulate = Color(1, 1, 1, 0)
 
@@ -102,11 +117,16 @@ func _on_restart_pressed():
 func _on_restart_confirmed():
 	# Unpause the game
 	get_tree().paused = false
-	# Restart the music
-	AudioCollection.select_random_track()
-	AudioCollection.play_current_track()
-	# Reload the scene
-	get_tree().reload_current_scene()
+
+	if current_confirm_action == ConfirmAction.RESTART:
+		# Restart the music
+		AudioCollection.select_random_track()
+		AudioCollection.play_current_track()
+		# Reload the scene
+		get_tree().reload_current_scene()
+	elif current_confirm_action == ConfirmAction.EXIT:
+		# Return to main menu
+		get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
 
 # Confirmation No button handler
 func _on_restart_cancelled():
@@ -127,3 +147,19 @@ func _on_main_menu_pressed():
 func _on_settings_pressed():
 	if settings_overlay:
 		settings_overlay.show_settings_menu()
+
+# Leaderboard button handler - shows leaderboard overlay
+func _on_leaderboard_pressed():
+	if leaderboard_overlay:
+		leaderboard_overlay.show_leaderboard()
+
+# Exit button handler - shows confirmation overlay
+func _on_exit_pressed():
+	current_confirm_action = ConfirmAction.EXIT
+	confirmation_overlay.visible = true
+	confirmation_overlay.modulate = Color(1, 1, 1, 0)
+
+	# Fade in the confirmation overlay
+	var tween = create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.tween_property(confirmation_overlay, "modulate", Color(1, 1, 1, 1), 0.3)
