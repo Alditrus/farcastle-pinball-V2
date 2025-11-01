@@ -31,20 +31,15 @@ func _ready():
 
 	if nudge_system:
 		print("Nudge system found! Current state: ", nudge_system.nudge_enabled)
-	else:
-		print("WARNING: Nudge system not found!")
 
 	# Initialize slider values from current audio settings
 	if AudioCollection:
 		music_slider.value = AudioCollection.get_music_volume_linear()
 		sound_slider.value = AudioCollection.get_sfx_volume_linear()
 
-	# Initialize nudge toggle from current nudge system state
-	if nudge_system:
-		nudge_toggle.button_pressed = nudge_system.nudge_enabled
-		print("Checkbox initialized to: ", nudge_toggle.button_pressed)
-	else:
-		nudge_toggle.button_pressed = true  # Default to enabled if system not found
+	# Initialize nudge toggle from global settings
+	nudge_toggle.button_pressed = GameSettings.nudge_enabled
+	print("Checkbox initialized to: ", nudge_toggle.button_pressed)
 
 # Show the settings menu
 func show_settings_menu():
@@ -55,8 +50,8 @@ func show_settings_menu():
 		music_slider.value = AudioCollection.get_music_volume_linear()
 		sound_slider.value = AudioCollection.get_sfx_volume_linear()
 
-	if nudge_system:
-		nudge_toggle.button_pressed = nudge_system.nudge_enabled
+	# Update nudge toggle from global settings
+	nudge_toggle.button_pressed = GameSettings.nudge_enabled
 
 	# Set initial transparency for fade-in effect
 	modulate = Color(1, 1, 1, 0)
@@ -93,13 +88,15 @@ func _on_sound_volume_changed(value: float):
 func _on_nudge_toggled(toggled_on: bool):
 	print("Toggle changed! New value: ", toggled_on)
 
-	# Re-get the nudge system reference if we don't have it
+	# Update global settings
+	GameSettings.nudge_enabled = toggled_on
+	GameSettings.save_settings()
+	print("Global settings updated - nudge enabled: ", GameSettings.nudge_enabled)
+
+	# Also update the nudge system if it exists (for immediate effect in table scene)
 	if not nudge_system:
 		nudge_system = get_tree().get_first_node_in_group("nudge_system")
 
 	if nudge_system:
-		# Update the nudge system's enabled state
 		nudge_system.nudge_enabled = toggled_on
 		print("Nudge system updated - enabled: ", nudge_system.nudge_enabled)
-	else:
-		print("ERROR: Nudge system not found, cannot update!")

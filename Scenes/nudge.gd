@@ -51,6 +51,10 @@ func _ready():
 	# Add to group so flippers can find it
 	add_to_group("nudge_system")
 
+	# Initialize nudge_enabled from global settings
+	nudge_enabled = GameSettings.nudge_enabled
+	print("Nudge system initialized - nudge enabled: ", nudge_enabled)
+
 	# Connect hamburger menu button
 	if hamburger_menu_button:
 		hamburger_menu_button.pressed.connect(_on_hamburger_menu_pressed)

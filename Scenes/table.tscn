@@ -1,4 +1,4 @@
-[gd_scene load_steps=105 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=106 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -61,6 +61,7 @@
 [ext_resource type="Script" uid="uid://coes8bi8xfhst" path="res://Scenes/multiball.gd" id="59_multiball"]
 [ext_resource type="Script" uid="uid://bieb5srpotku3" path="res://Scenes/moloch.gd" id="60_273ef"]
 [ext_resource type="Script" uid="uid://cwcga7b76nrpr" path="res://Scenes/control_overlay.gd" id="61_control_overlay"]
+[ext_resource type="Script" uid="uid://bkuos8ff7hwbc" path="res://Scenes/leaderboard_overlay.gd" id="61_leaderboard_overlay"]
 [ext_resource type="Script" uid="uid://b4amj3g885pu2" path="res://Scenes/pause_menu.gd" id="61_pause_menu"]
 [ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="61_settings_menu"]
 [ext_resource type="Texture2D" uid="uid://4w7qxm4g8lva" path="res://Assets/table/hamburger.svg" id="62_hamburger"]
@@ -150,6 +151,7 @@ corner_radius_bottom_left = 27
 
 [sub_resource type="SystemFont" id="SystemFont_273ef"]
 font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_b2xxt"]
 font_names = PackedStringArray("IM FELL Great Primer SC")
@@ -687,6 +689,7 @@ offset_bottom = 1578.0
 
 [node name="PauseMenuUI" type="Control" parent="."]
 process_mode = 3
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -789,14 +792,6 @@ theme_override_font_sizes/font_size = 50
 text = "Leaderboard"
 flat = true
 
-[node name="MainMenuButton4" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
-theme_override_font_sizes/font_size = 50
-text = "Challenges"
-flat = true
-
 [node name="MainMenuButton5" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -874,6 +869,7 @@ text = "No"
 flat = true
 
 [node name="ControlOverlay" type="Control" parent="PauseMenuUI"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1158,6 +1154,80 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="BackButton" type="Button" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_font_sizes/font_size = 50
+text = "Back"
+flat = true
+
+[node name="LeaderboardOverlay" type="Control" parent="PauseMenuUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("61_leaderboard_overlay")
+
+[node name="Background2" type="Panel" parent="PauseMenuUI/LeaderboardOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 364.0
+offset_right = -169.0
+offset_bottom = -343.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/LeaderboardOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -235.0
+offset_right = -6.12
+offset_bottom = 240.265
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="LeaderboardLabel" type="Label" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("35_6umbq")
+theme_override_font_sizes/font_size = 80
+text = "Leaderboard"
+horizontal_alignment = 1
+
+[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+texture = ExtResource("63_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LeaderboardContainer" type="VBoxContainer" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("SystemFont_273ef")

@@ -1,0 +1,356 @@
+[gd_scene load_steps=20 format=3 uid="uid://wbjw5qbnvs02"]
+
+[ext_resource type="Script" uid="uid://bohmb3of6u542" path="res://Scenes/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="2_settings_menu"]
+[ext_resource type="Texture2D" uid="uid://bqp2ymstva7mr" path="res://Assets/UI/coinslot.png" id="2_trj04"]
+[ext_resource type="Script" uid="uid://bkuos8ff7hwbc" path="res://Scenes/leaderboard_overlay.gd" id="3_leaderboard_overlay"]
+[ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="4_font"]
+[ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="5_divider"]
+[ext_resource type="Texture2D" uid="uid://b6x3pvgrpy3wu" path="res://Assets/UI/slider.svg" id="6_slider"]
+[ext_resource type="Texture2D" uid="uid://33b1fdxh0i5x" path="res://Assets/UI/check_off.svg" id="7_check_off"]
+[ext_resource type="Texture2D" uid="uid://3ynyjl5bqmjp" path="res://Assets/UI/check_on.svg" id="8_check_on"]
+
+[sub_resource type="SystemFont" id="SystemFont_16hvj"]
+font_names = PackedStringArray("Blackwood Castle")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_purple_button"]
+bg_color = Color(0.305882, 0, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_16hvj"]
+bg_color = Color(0.0627451, 0, 0.0705882, 1)
+corner_radius_top_left = 27
+corner_radius_top_right = 27
+corner_radius_bottom_right = 27
+corner_radius_bottom_left = 27
+
+[sub_resource type="SystemFont" id="SystemFont_vr1f0"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1dhk"]
+bg_color = Color(0.564706, 0.286275, 0.807843, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5egv6"]
+bg_color = Color(0.564706, 0.286275, 0.807843, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtepg"]
+bg_color = Color(0.564706, 0.286275, 0.807843, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="SystemFont" id="SystemFont_8dnnj"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rounded"]
+bg_color = Color(0.0627451, 0, 0.0705882, 1)
+corner_radius_top_left = 27
+corner_radius_top_right = 27
+corner_radius_bottom_right = 27
+corner_radius_bottom_left = 27
+
+[sub_resource type="SystemFont" id="SystemFont_title"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
+subpixel_positioning = 0
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main_menu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(450, 898)
+scale = Vector2(2.27469, 2.27469)
+texture = ExtResource("2_trj04")
+
+[node name="Play" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 164.0
+offset_top = 94.0
+offset_right = 727.0
+offset_bottom = 795.0
+metadata/_edit_lock_ = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 815.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_constants/separation = 75
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_16hvj")
+theme_override_font_sizes/font_size = 70
+theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
+text = "Settings"
+
+[node name="LeaderboardButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_16hvj")
+theme_override_font_sizes/font_size = 70
+theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
+text = "Leaderboard"
+
+[node name="Credits" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_16hvj")
+theme_override_font_sizes/font_size = 70
+theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
+text = "Credits"
+
+[node name="SettingsOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_settings_menu")
+
+[node name="Background2" type="Panel" parent="SettingsOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 364.0
+offset_right = -169.0
+offset_bottom = -343.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_16hvj")
+
+[node name="CenterContainer" type="CenterContainer" parent="SettingsOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="SettingsLabel" type="Label" parent="SettingsOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 80
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="DividerTexture" type="TextureRect" parent="SettingsOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+texture = ExtResource("5_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SettingsContainer" type="VBoxContainer" parent="SettingsOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="MusicContainer" type="VBoxContainer" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_vr1f0")
+theme_override_font_sizes/font_size = 40
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("6_slider")
+theme_override_icons/grabber_highlight = ExtResource("6_slider")
+theme_override_icons/grabber_disabled = ExtResource("6_slider")
+theme_override_icons/tick = ExtResource("6_slider")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_t1dhk")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_t1dhk")
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="Spacer1" type="Control" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="SoundContainer" type="VBoxContainer" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="SoundLabel" type="Label" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_vr1f0")
+theme_override_font_sizes/font_size = 40
+text = "Sound Volume"
+
+[node name="SoundSlider" type="HSlider" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("6_slider")
+theme_override_icons/grabber_highlight = ExtResource("6_slider")
+theme_override_icons/grabber_disabled = ExtResource("6_slider")
+theme_override_icons/tick = ExtResource("6_slider")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_5egv6")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_vtepg")
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="Spacer2" type="Control" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="NudgeContainer" type="HBoxContainer" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="NudgeLabel" type="Label" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/NudgeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_vr1f0")
+theme_override_font_sizes/font_size = 40
+text = "Nudge Enabled"
+
+[node name="NudgeToggle" type="CheckBox" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/NudgeContainer"]
+custom_minimum_size = Vector2(50.02, 100)
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/icon_max_width = 40
+theme_override_constants/check_v_offset = 0
+theme_override_icons/checked = ExtResource("8_check_on")
+theme_override_icons/unchecked = ExtResource("7_check_off")
+icon_alignment = 1
+expand_icon = true
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="SettingsOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_8dnnj")
+theme_override_font_sizes/font_size = 50
+text = "Back"
+flat = true
+
+[node name="LeaderboardOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_leaderboard_overlay")
+
+[node name="Background2" type="Panel" parent="LeaderboardOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 364.0
+offset_right = -169.0
+offset_bottom = -343.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
+
+[node name="CenterContainer" type="CenterContainer" parent="LeaderboardOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -235.0
+offset_right = -6.12
+offset_bottom = 240.265
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="LeaderboardLabel" type="Label" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 80
+text = "Leaderboard"
+horizontal_alignment = 1
+
+[node name="DividerTexture" type="TextureRect" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+texture = ExtResource("5_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LeaderboardContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_title")
+theme_override_font_sizes/font_size = 50
+text = "Back"
+flat = true
