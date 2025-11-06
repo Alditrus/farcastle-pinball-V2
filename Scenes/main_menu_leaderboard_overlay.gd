@@ -3,11 +3,12 @@ extends Control
 # References to UI elements
 @onready var back_arrow = $BackButton
 @onready var leaderboard_parent = $CenterContainer
-@onready var leaderboard_container = $CenterContainer/VBoxContainer/LeaderboardContainer
-@onready var highscores_container = $CenterContainer/VBoxContainer/HighScoresContainer
+@onready var leaderboard_container = $CenterContainer/LeaderboardContainer
+@onready var highscores_container = $CenterContainer/HighScoresContainer
 @onready var global_button = $CenterContainer3/HBoxContainer/Global
 @onready var high_scores_button = $"CenterContainer3/HBoxContainer/High Scores"
 var scroll_container: ScrollContainer = null
+var highscores_scroll_container: ScrollContainer = null
 var active_button: Button = null  # Track currently active button
 var showing_global: bool = true  # Track which leaderboard is shown
 
@@ -25,7 +26,7 @@ var placeholder_scores = [
 ]
 
 # Placeholder high scores (individual player scores)
-var placeholder_highscores = [5000000, 3500000, 2800000, 2100000, 1750000]
+var placeholder_highscores = [5000000, 3500000, 2800000, 2100000, 1750000, 1200000, 1100000, 1000000, 900000, 800000]
 
 func _ready():
 	# Set process mode to always so UI works when game is paused
@@ -133,6 +134,25 @@ func _input(event):
 	if not visible:
 		return
 
+	# Handle mouse wheel scrolling
+	if event is InputEventMouseButton:
+		var scroll_speed = 50  # Adjust this value to change scroll speed
+
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+			if showing_global and scroll_container:
+				scroll_container.scroll_vertical -= scroll_speed
+			elif not showing_global and highscores_scroll_container:
+				highscores_scroll_container.scroll_vertical -= scroll_speed
+			get_viewport().set_input_as_handled()
+			return
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+			if showing_global and scroll_container:
+				scroll_container.scroll_vertical += scroll_speed
+			elif not showing_global and highscores_scroll_container:
+				highscores_scroll_container.scroll_vertical += scroll_speed
+			get_viewport().set_input_as_handled()
+			return
+
 	# Check for mouse click or touch
 	var click_pos = Vector2.ZERO
 	var is_click = false
@@ -183,7 +203,7 @@ func hide_leaderboard():
 # Populate the leaderboard with placeholder scores
 func populate_leaderboard():
 	# Check if we need scrolling (more than 9 entries)
-	var needs_scrolling = placeholder_scores.size() > 8
+	var needs_scrolling = placeholder_scores.size() > 7
 
 	if needs_scrolling and scroll_container == null:
 		# Create scroll container
@@ -191,6 +211,14 @@ func populate_leaderboard():
 		scroll_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		scroll_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		scroll_container.custom_minimum_size = Vector2(735, 900)  # Set max height
+
+		# Enable vertical scrolling
+		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		scroll_container.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+
+		# Enable mouse filter to allow scroll events
+		scroll_container.mouse_filter = Control.MOUSE_FILTER_PASS
+		scroll_container.follow_focus = true
 
 		# Remove leaderboard_container from parent
 		leaderboard_parent.remove_child(leaderboard_container)
@@ -205,6 +233,7 @@ func populate_leaderboard():
 	leaderboard_container.custom_minimum_size.x = 735
 	leaderboard_container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	leaderboard_container.alignment = BoxContainer.ALIGNMENT_BEGIN
+	leaderboard_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	# Clear existing entries (if any)
 	for child in leaderboard_container.get_children():
@@ -218,12 +247,57 @@ func populate_leaderboard():
 		# Create horizontal container for left/right alignment
 		var entry_container = HBoxContainer.new()
 		entry_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		# Set consistent minimum height for all entries to match first place graphic
+		entry_container.custom_minimum_size = Vector2(0, 120)
+		entry_container.alignment = BoxContainer.ALIGNMENT_CENTER
 
-		# Create rank and name label (left-aligned)
+		# Create left side container for rank/icon and name
+		var left_container = HBoxContainer.new()
+		left_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		left_container.alignment = BoxContainer.ALIGNMENT_CENTER
+
+		# For ranks 1-4, use graphics instead of numbers
+		if entry["rank"] <= 4:
+			var rank_icon = TextureRect.new()
+			rank_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+			rank_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+			rank_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+			# First place is larger than the others
+			if entry["rank"] == 1:
+				rank_icon.custom_minimum_size = Vector2(120, 120)
+			else:
+				rank_icon.custom_minimum_size = Vector2(80, 80)
+
+			# Load the appropriate rank graphic
+			var icon_path = ""
+			match entry["rank"]:
+				1: icon_path = "res://Assets/UI/first_place.png"
+				2: icon_path = "res://Assets/UI/second_place.png"
+				3: icon_path = "res://Assets/UI/third_place.png"
+				4: icon_path = "res://Assets/UI/fourth_place.png"
+
+			rank_icon.texture = load(icon_path)
+			left_container.add_child(rank_icon)
+
+			# Add spacer between icon and name
+			var icon_spacer = Control.new()
+			icon_spacer.custom_minimum_size = Vector2(10, 0)
+			left_container.add_child(icon_spacer)
+
+		# Create name label
 		var name_label = Label.new()
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		name_label.text = "%d.  %s" % [entry["rank"], entry["name"]]
+		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+
+		# For ranks 1-4, only show name. For ranks 5+, show rank number and name
+		if entry["rank"] <= 4:
+			name_label.text = entry["name"]
+		else:
+			name_label.text = "%d.  %s" % [entry["rank"], entry["name"]]
+
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
 		# Set font properties for name label
 		name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
@@ -232,11 +306,15 @@ func populate_leaderboard():
 		name_label.add_theme_font_override("font", font1)
 		name_label.add_theme_font_size_override("font_size", 40)
 
+		left_container.add_child(name_label)
+
 		# Create score label (right-aligned)
 		var score_label = Label.new()
 		score_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		score_label.text = formatted_score
 		score_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		score_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
 		# Set font properties for score label
 		score_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
@@ -245,14 +323,14 @@ func populate_leaderboard():
 		score_label.add_theme_font_override("font", font2)
 		score_label.add_theme_font_size_override("font_size", 40)
 
-		# Add labels to container
-		entry_container.add_child(name_label)
+		# Add containers to entry container
+		entry_container.add_child(left_container)
 		entry_container.add_child(score_label)
 
 		# Add spacing between entries
 		if entry["rank"] > 1:
 			var spacer = Control.new()
-			spacer.custom_minimum_size = Vector2(0, 60)
+			spacer.custom_minimum_size = Vector2(0, 20)
 			leaderboard_container.add_child(spacer)
 
 		leaderboard_container.add_child(entry_container)
@@ -278,12 +356,45 @@ func populate_highscores():
 	if not highscores_container:
 		return
 
+	# Use placeholder scores
+	var scores = placeholder_highscores.duplicate()
+
+	# Check if we need scrolling (more than 8 entries)
+	var needs_scrolling = scores.size() > 7
+
+	if needs_scrolling and highscores_scroll_container == null:
+		# Create scroll container
+		highscores_scroll_container = ScrollContainer.new()
+		highscores_scroll_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		highscores_scroll_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		highscores_scroll_container.custom_minimum_size = Vector2(735, 900)  # Set max height
+
+		# Enable vertical scrolling
+		highscores_scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		highscores_scroll_container.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+
+		# Enable mouse filter to allow scroll events
+		highscores_scroll_container.mouse_filter = Control.MOUSE_FILTER_PASS
+		highscores_scroll_container.follow_focus = true
+
+		# Remove highscores_container from parent
+		leaderboard_parent.remove_child(highscores_container)
+
+		# Add scroll container to parent
+		leaderboard_parent.add_child(highscores_scroll_container)
+
+		# Add highscores_container to scroll container
+		highscores_scroll_container.add_child(highscores_container)
+
+	# Set container width and vertical alignment
+	highscores_container.custom_minimum_size.x = 735
+	highscores_container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	highscores_container.alignment = BoxContainer.ALIGNMENT_BEGIN
+	highscores_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 	# Clear existing entries (if any)
 	for child in highscores_container.get_children():
 		child.queue_free()
-
-	# Use placeholder scores
-	var scores = placeholder_highscores.duplicate()
 
 	# Create a label for each score entry
 	for i in range(scores.size()):
