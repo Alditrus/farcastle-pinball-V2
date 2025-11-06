@@ -1,4 +1,4 @@
-[gd_scene load_steps=106 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=108 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -65,6 +65,7 @@
 [ext_resource type="Script" uid="uid://b4amj3g885pu2" path="res://Scenes/pause_menu.gd" id="61_pause_menu"]
 [ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="61_settings_menu"]
 [ext_resource type="Texture2D" uid="uid://4w7qxm4g8lva" path="res://Assets/table/hamburger.svg" id="62_hamburger"]
+[ext_resource type="Script" uid="uid://uendwolvueeu" path="res://Scenes/highscores_overlay.gd" id="62_highscores_overlay"]
 [ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="63_divider"]
 [ext_resource type="Texture2D" uid="uid://33b1fdxh0i5x" path="res://Assets/UI/check_off.svg" id="64_check_off"]
 [ext_resource type="Texture2D" uid="uid://dyr7usb2oj3mp" path="res://Assets/UI/plunger_icon.svg" id="64_lpxmt"]
@@ -156,6 +157,9 @@ subpixel_positioning = 0
 [sub_resource type="SystemFont" id="SystemFont_b2xxt"]
 font_names = PackedStringArray("IM FELL Great Primer SC")
 subpixel_positioning = 0
+
+[sub_resource type="SystemFont" id="SystemFont_6rfe0"]
+font_names = PackedStringArray("IM FELL Great Primer SC")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_grabber"]
 bg_color = Color(0.564706, 0.286275, 0.807843, 1)
@@ -689,7 +693,6 @@ offset_bottom = 1578.0
 
 [node name="PauseMenuUI" type="Control" parent="."]
 process_mode = 3
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -752,7 +755,7 @@ stretch_mode = 5
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="ResumeButton" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Resume" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("SystemFont_273ef")
@@ -760,7 +763,7 @@ theme_override_font_sizes/font_size = 50
 text = "Resume"
 flat = true
 
-[node name="OptionsButton" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Restart" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("SystemFont_b2xxt")
@@ -768,23 +771,7 @@ theme_override_font_sizes/font_size = 50
 text = "Restart"
 flat = true
 
-[node name="MainMenuButton" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
-theme_override_font_sizes/font_size = 50
-text = "Controls"
-flat = true
-
-[node name="MainMenuButton2" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
-theme_override_font_sizes/font_size = 50
-text = "Settings"
-flat = true
-
-[node name="MainMenuButton3" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Leaderboard" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("SystemFont_b2xxt")
@@ -792,7 +779,31 @@ theme_override_font_sizes/font_size = 50
 text = "Leaderboard"
 flat = true
 
-[node name="MainMenuButton5" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="HighScores" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_6rfe0")
+theme_override_font_sizes/font_size = 50
+text = "High Scores"
+flat = true
+
+[node name="Controls" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Controls"
+flat = true
+
+[node name="Settings" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_font_sizes/font_size = 50
+text = "Settings"
+flat = true
+
+[node name="Exit" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("SystemFont_b2xxt")
@@ -1228,6 +1239,80 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="BackButton" type="Button" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_font_sizes/font_size = 50
+text = "Back"
+flat = true
+
+[node name="HighscoresOverlay" type="Control" parent="PauseMenuUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("62_highscores_overlay")
+
+[node name="Background2" type="Panel" parent="PauseMenuUI/HighscoresOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 364.0
+offset_right = -169.0
+offset_bottom = -343.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/HighscoresOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -235.0
+offset_right = -6.12
+offset_bottom = 240.265
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/HighscoresOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="LeaderboardLabel" type="Label" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("35_6umbq")
+theme_override_font_sizes/font_size = 80
+text = "High Scores"
+horizontal_alignment = 1
+
+[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+texture = ExtResource("63_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LeaderboardContainer" type="VBoxContainer" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = SubResource("SystemFont_273ef")

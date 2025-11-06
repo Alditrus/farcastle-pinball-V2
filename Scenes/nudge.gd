@@ -30,6 +30,13 @@ var nudge_enabled = true:  # Can be toggled from settings
 		nudge_enabled = value
 		print("Nudge.gd: nudge_enabled changed to ", value)
 
+# Touch gesture tracking for two-finger drags
+var active_touches: Dictionary = {}  # Maps touch index to position
+var gesture_start_positions: Dictionary = {}  # Starting positions of the gesture
+var gesture_active: bool = false
+var gesture_applied: bool = false  # Prevent multiple nudges per gesture
+var min_drag_distance: float = 50.0  # Minimum drag distance to trigger nudge
+
 var TILT_sound = preload("res://Assets/sounds/TILT.wav")
 
 # References
@@ -67,14 +74,18 @@ func _process(delta):
 	# Update cooldown timer
 	if nudge_cooldown > 0:
 		nudge_cooldown -= delta
-	
+
 	# Decay tilt count over time (if not already tilted)
 	if !is_tilted and tilt_count > 0:
 		tilt_decay_timer += delta
 		if tilt_decay_timer >= tilt_decay_time:
 			tilt_decay_timer = 0
 			tilt_count -= 1
-	
+
+	# Process two-finger gesture if active
+	if gesture_active and active_touches.size() == 2 and not gesture_applied:
+		check_gesture_direction()
+
 	# Handle input if not currently nudging, not tilted, nudge is enabled, and cooldown has expired
 	if !is_nudging and !is_tilted and nudge_cooldown <= 0:
 		# Check if nudge is enabled before processing input
@@ -90,6 +101,82 @@ func _process(delta):
 		# Check up arrow key for up nudge
 		elif Input.is_physical_key_pressed(KEY_UP):
 			apply_nudge(NudgeDirection.UP)  # Nudge up
+
+# Handle touch input for two-finger gestures
+func _input(event):
+	if not nudge_enabled:
+		return
+
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			# Touch started
+			active_touches[event.index] = event.position
+
+			# If exactly 2 touches are active, start gesture tracking
+			if active_touches.size() == 2:
+				gesture_start_positions = active_touches.duplicate()
+				gesture_active = true
+				gesture_applied = false
+		else:
+			# Touch ended
+			active_touches.erase(event.index)
+
+			# If we no longer have 2 touches, end gesture
+			if active_touches.size() != 2:
+				gesture_active = false
+				gesture_applied = false
+				gesture_start_positions.clear()
+
+	elif event is InputEventScreenDrag:
+		# Update touch position during drag
+		if event.index in active_touches:
+			active_touches[event.index] = event.position
+
+# Check if the two-finger gesture has moved far enough in a direction
+func check_gesture_direction():
+	if not gesture_active or gesture_applied or is_nudging or is_tilted or nudge_cooldown > 0:
+		return
+
+	# Calculate average movement from start positions
+	var total_movement = Vector2.ZERO
+	var touch_count = 0
+
+	for index in active_touches.keys():
+		if index in gesture_start_positions:
+			var start_pos = gesture_start_positions[index]
+			var current_pos = active_touches[index]
+			total_movement += current_pos - start_pos
+			touch_count += 1
+
+	if touch_count == 0:
+		return
+
+	var avg_movement = total_movement / touch_count
+
+	# Check if movement exceeds minimum threshold
+	if avg_movement.length() < min_drag_distance:
+		return
+
+	# Determine direction based on the dominant axis
+	var abs_x = abs(avg_movement.x)
+	var abs_y = abs(avg_movement.y)
+
+	# Check for horizontal drag (left or right)
+	if abs_x > abs_y:
+		if avg_movement.x < 0:
+			# Drag left
+			apply_nudge(NudgeDirection.LEFT)
+			gesture_applied = true
+		else:
+			# Drag right
+			apply_nudge(NudgeDirection.RIGHT)
+			gesture_applied = true
+	else:
+		# Vertical drag - only trigger on upward drag
+		if avg_movement.y < 0:
+			# Drag up
+			apply_nudge(NudgeDirection.UP)
+			gesture_applied = true
 
 # Apply physics nudge to all balls
 func apply_nudge(direction):

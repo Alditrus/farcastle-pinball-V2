@@ -10,6 +10,8 @@ var min_force_multiplier: float = 0.5  # Minimum force multiplier to prevent exc
 var resetting_position: bool = false  # Flag to track when we're resetting position
 var reset_timer: Timer  # Timer for handling position reset safely
 var return_tween: Tween  # Tween for smoothly animating plunger return
+var touch_index: int = -1  # Track which finger is dragging the plunger
+var touch_position: Vector2 = Vector2.ZERO  # Current position of the touch
 
 # Sound effects
 var launch_pin_sound = preload("res://Assets/sounds/launch_pin.wav")
@@ -46,18 +48,25 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if is_dragging:
-		var mouse_pos = get_global_mouse_position()
-		var local_mouse_pos = to_local(mouse_pos)
-		var pull_vector = Vector2(0, local_mouse_pos.y - original_position.y)
-		
+		var drag_pos: Vector2
+
+		# Use touch position if touch is active, otherwise use mouse
+		if touch_index >= 0:
+			drag_pos = touch_position
+		else:
+			drag_pos = get_global_mouse_position()
+
+		var local_drag_pos = to_local(drag_pos)
+		var pull_vector = Vector2(0, local_drag_pos.y - original_position.y)
+
 		# Only allow vertical downward movement
 		if pull_vector.y < 0:
 			pull_vector.y = 0
-		
+
 		# Limit maximum pull distance
 		if pull_vector.y > max_pull_distance:
 			pull_vector.y = max_pull_distance
-		
+
 		plunger_body.position = original_position + pull_vector
 	else:
 		# Spring back to original position when not dragging and not frozen
@@ -72,40 +81,103 @@ func _physics_process(_delta):
 		plunger_body.position.x = original_position.x
 
 func _input(event):
-	if event is InputEventMouseButton:
+	# Handle touch screen input
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			# Touch started - check if it's over the plunger
+			var touch_pos = event.position
+			var plunger_rect = get_plunger_rect()
+
+			if plunger_rect.has_point(to_local(touch_pos)) and touch_index == -1:
+				is_dragging = true
+				touch_index = event.index
+				touch_position = touch_pos
+				# Keep the physics from interfering while dragging
+				plunger_body.freeze = true
+
+				# Cancel any existing tween
+				if return_tween:
+					return_tween.kill()
+					return_tween = null
+		else:
+			# Touch released - launch the ball if this was the dragging finger
+			if is_dragging and event.index == touch_index:
+				is_dragging = false
+				touch_index = -1
+				var pull_distance = plunger_body.position.y - original_position.y
+
+				# Find the ball in the scene - try different methods
+				launch_ball(pull_distance)
+
+				# Ensure we cancel any previous reset sequence
+				if reset_timer.is_stopped() == false:
+					reset_timer.stop()
+
+				# For strong pulls, use direct animation instead of physics
+				if pull_distance > max_pull_distance * 0.1:
+					# Disable physics and use tweening for smoother return
+					plunger_body.freeze = true
+
+					# Create a new tween for smooth animation
+					return_tween = create_tween()
+					return_tween.tween_property(plunger_body, "position", original_position, 0.1)
+					return_tween.tween_callback(reset_plunger)
+				else:
+					# For gentler pulls, use a mild physics-based return
+					var adjusted_pull = min(pull_distance, max_pull_distance * 0.5)
+					var force_percent = adjusted_pull / max_pull_distance
+					var force_multiplier = lerp(0.3, 0.5, force_percent)  # Reduced force multiplier
+					var plunger_force = Vector2(0, -adjusted_pull * launch_force * 0.15 * force_multiplier)
+
+					# Apply very gentle physics return for lower pulls
+					resetting_position = true
+					plunger_body.freeze = false
+					plunger_body.linear_velocity = Vector2.ZERO
+					plunger_body.apply_central_impulse(plunger_force)
+
+					# Start a short timer for the reset sequence
+					reset_timer.start(0.3)
+
+	elif event is InputEventScreenDrag:
+		# Update touch position during drag
+		if is_dragging and event.index == touch_index:
+			touch_position = event.position
+
+	# Handle mouse input (for desktop testing)
+	elif event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				# Check if mouse is over plunger
 				var mouse_pos = get_global_mouse_position()
 				var plunger_rect = get_plunger_rect()
-				
-				if plunger_rect.has_point(to_local(mouse_pos)):
+
+				if plunger_rect.has_point(to_local(mouse_pos)) and touch_index == -1:
 					is_dragging = true
 					# Keep the physics from interfering while dragging
 					plunger_body.freeze = true
-					
+
 					# Cancel any existing tween
 					if return_tween:
 						return_tween.kill()
 						return_tween = null
 			else:
 				# Release plunger and apply force to the ball based on pull distance
-				if is_dragging:
+				if is_dragging and touch_index == -1:
 					is_dragging = false
 					var pull_distance = plunger_body.position.y - original_position.y
-					
+
 					# Find the ball in the scene - try different methods
 					launch_ball(pull_distance)
-					
+
 					# Ensure we cancel any previous reset sequence
 					if reset_timer.is_stopped() == false:
 						reset_timer.stop()
-					
+
 					# For strong pulls, use direct animation instead of physics
 					if pull_distance > max_pull_distance * 0.1:
 						# Disable physics and use tweening for smoother return
 						plunger_body.freeze = true
-						
+
 						# Create a new tween for smooth animation
 						return_tween = create_tween()
 						return_tween.tween_property(plunger_body, "position", original_position, 0.1)
@@ -116,13 +188,13 @@ func _input(event):
 						var force_percent = adjusted_pull / max_pull_distance
 						var force_multiplier = lerp(0.3, 0.5, force_percent)  # Reduced force multiplier
 						var plunger_force = Vector2(0, -adjusted_pull * launch_force * 0.15 * force_multiplier)
-						
+
 						# Apply very gentle physics return for lower pulls
 						resetting_position = true
 						plunger_body.freeze = false
 						plunger_body.linear_velocity = Vector2.ZERO
 						plunger_body.apply_central_impulse(plunger_force)
-						
+
 						# Start a short timer for the reset sequence
 						reset_timer.start(0.3)
 
@@ -136,15 +208,17 @@ func reset_plunger():
 	plunger_body.freeze = true
 	plunger_body.linear_velocity = Vector2.ZERO
 	plunger_body.position = original_position
-	
+
 	# Clear flags
 	resetting_position = false
 	is_dragging = false
-	
+	touch_index = -1
+	touch_position = Vector2.ZERO
+
 	# Clear tween reference if it exists
 	if return_tween:
 		return_tween = null
-	
+
 	# Ensure collision is working by explicitly setting collision layers
 	plunger_body.collision_layer = 1
 	plunger_body.collision_mask = 1

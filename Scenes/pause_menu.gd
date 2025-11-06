@@ -1,12 +1,13 @@
 extends Control
 
 # References to UI elements
-@onready var resume_button = $CenterContainer/VBoxContainer/ButtonsContainer/ResumeButton
-@onready var restart_button = $CenterContainer/VBoxContainer/ButtonsContainer/OptionsButton
-@onready var main_menu_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton
-@onready var settings_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton2
-@onready var leaderboard_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton3
-@onready var exit_button = $CenterContainer/VBoxContainer/ButtonsContainer/MainMenuButton5
+@onready var resume_button = $CenterContainer/VBoxContainer/ButtonsContainer/Resume
+@onready var restart_button = $CenterContainer/VBoxContainer/ButtonsContainer/Restart
+@onready var main_menu_button = $CenterContainer/VBoxContainer/ButtonsContainer/Controls
+@onready var settings_button = $CenterContainer/VBoxContainer/ButtonsContainer/Settings
+@onready var leaderboard_button = $CenterContainer/VBoxContainer/ButtonsContainer/Leaderboard
+@onready var highscores_button = $CenterContainer/VBoxContainer/ButtonsContainer/HighScores
+@onready var exit_button = $CenterContainer/VBoxContainer/ButtonsContainer/Exit
 
 # References to confirmation overlay
 @onready var confirmation_overlay = $ConfirmationOverlay
@@ -22,6 +23,9 @@ extends Control
 # Reference to leaderboard overlay
 @onready var leaderboard_overlay = $LeaderboardOverlay
 
+# Reference to highscores overlay
+@onready var highscores_overlay = $HighscoresOverlay
+
 # Track what action we're confirming
 enum ConfirmAction { RESTART, EXIT }
 var current_confirm_action = ConfirmAction.RESTART
@@ -36,6 +40,7 @@ func _ready():
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	leaderboard_button.pressed.connect(_on_leaderboard_pressed)
+	highscores_button.pressed.connect(_on_highscores_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
 
 	# Connect confirmation overlay buttons
@@ -53,6 +58,9 @@ func _ready():
 
 	# Hide leaderboard overlay initially
 	leaderboard_overlay.visible = false
+
+	# Hide highscores overlay initially
+	highscores_overlay.visible = false
 
 # Show the pause menu
 func show_pause_menu():
@@ -152,6 +160,11 @@ func _on_settings_pressed():
 func _on_leaderboard_pressed():
 	if leaderboard_overlay:
 		leaderboard_overlay.show_leaderboard()
+
+# Highscores button handler - shows highscores overlay
+func _on_highscores_pressed():
+	if highscores_overlay:
+		highscores_overlay.show_highscores()
 
 # Exit button handler - shows confirmation overlay
 func _on_exit_pressed():

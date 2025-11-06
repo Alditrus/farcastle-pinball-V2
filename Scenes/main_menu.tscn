@@ -1,14 +1,18 @@
-[gd_scene load_steps=20 format=3 uid="uid://wbjw5qbnvs02"]
+[gd_scene load_steps=27 format=3 uid="uid://wbjw5qbnvs02"]
 
 [ext_resource type="Script" uid="uid://bohmb3of6u542" path="res://Scenes/main_menu.gd" id="1_main_menu"]
 [ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="2_settings_menu"]
 [ext_resource type="Texture2D" uid="uid://bqp2ymstva7mr" path="res://Assets/UI/coinslot.png" id="2_trj04"]
-[ext_resource type="Script" uid="uid://bkuos8ff7hwbc" path="res://Scenes/leaderboard_overlay.gd" id="3_leaderboard_overlay"]
+[ext_resource type="Script" uid="uid://d2vwg6j2i2k5w" path="res://Scenes/credits_overlay.gd" id="3_credits_overlay"]
+[ext_resource type="Script" uid="uid://bfwjaj8l62ctj" path="res://Scenes/main_menu_leaderboard_overlay.gd" id="3_main_menu_leaderboard"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="4_font"]
 [ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="5_divider"]
 [ext_resource type="Texture2D" uid="uid://b6x3pvgrpy3wu" path="res://Assets/UI/slider.svg" id="6_slider"]
 [ext_resource type="Texture2D" uid="uid://33b1fdxh0i5x" path="res://Assets/UI/check_off.svg" id="7_check_off"]
 [ext_resource type="Texture2D" uid="uid://3ynyjl5bqmjp" path="res://Assets/UI/check_on.svg" id="8_check_on"]
+[ext_resource type="Texture2D" uid="uid://cumbnnl871cd8" path="res://Assets/UI/leaderboard_pic.png" id="10_5egv6"]
+[ext_resource type="Texture2D" uid="uid://nw6cnb4tcspl" path="res://Assets/UI/credits_pic.png" id="10_16hvj"]
+[ext_resource type="Texture2D" uid="uid://hfuyio4i82nf" path="res://Assets/UI/back_arrow.svg" id="11_vr1f0"]
 
 [sub_resource type="SystemFont" id="SystemFont_16hvj"]
 font_names = PackedStringArray("Blackwood Castle")
@@ -56,16 +60,22 @@ corner_radius_bottom_left = 4
 font_names = PackedStringArray("IM FELL Great Primer SC")
 subpixel_positioning = 0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rounded"]
-bg_color = Color(0.0627451, 0, 0.0705882, 1)
-corner_radius_top_left = 27
-corner_radius_top_right = 27
-corner_radius_bottom_right = 27
-corner_radius_bottom_left = 27
+[sub_resource type="SystemFont" id="SystemFont_m3bi6"]
+font_names = PackedStringArray("IM FELL French Canon SC")
 
-[sub_resource type="SystemFont" id="SystemFont_title"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
+[sub_resource type="SystemFont" id="SystemFont_wyh8j"]
+font_names = PackedStringArray("IM FELL French Canon SC")
+
+[sub_resource type="SystemFont" id="SystemFont_t1dhk"]
+font_names = PackedStringArray("Blackwood Castle")
+
+[sub_resource type="SystemFont" id="SystemFont_5egv6"]
+font_names = PackedStringArray("IM FELL French Canon SC")
+font_weight = 100
+generate_mipmaps = true
+
+[sub_resource type="SystemFont" id="SystemFont_vtepg"]
+font_names = PackedStringArray("IM FELL DW Pica")
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -282,75 +292,251 @@ text = "Back"
 flat = true
 
 [node name="LeaderboardOverlay" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_leaderboard_overlay")
+script = ExtResource("3_main_menu_leaderboard")
 
-[node name="Background2" type="Panel" parent="LeaderboardOverlay"]
+[node name="Background2" type="ColorRect" parent="LeaderboardOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 167.0
-offset_top = 364.0
-offset_right = -169.0
-offset_bottom = -343.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
+color = Color(0.0627451, 0, 0.0705882, 1)
+
+[node name="header image" type="Sprite2D" parent="LeaderboardOverlay"]
+position = Vector2(450, 151)
+scale = Vector2(0.292969, 0.292969)
+texture = ExtResource("10_5egv6")
+
+[node name="BackButton" type="Sprite2D" parent="LeaderboardOverlay"]
+position = Vector2(69, 65)
+texture = ExtResource("11_vr1f0")
+
+[node name="CenterContainer2" type="CenterContainer" parent="LeaderboardOverlay"]
+layout_mode = 0
+offset_top = 304.0
+offset_right = 900.0
+offset_bottom = 434.0
+
+[node name="LeaderboardLabel" type="Label" parent="LeaderboardOverlay/CenterContainer2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 90
+text = "Leaderboard"
+horizontal_alignment = 1
+
+[node name="CenterContainer3" type="CenterContainer" parent="LeaderboardOverlay"]
+layout_mode = 0
+offset_top = 439.0
+offset_right = 900.0
+offset_bottom = 569.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LeaderboardOverlay/CenterContainer3"]
+layout_mode = 2
+
+[node name="Global" type="Button" parent="LeaderboardOverlay/CenterContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_m3bi6")
+theme_override_font_sizes/font_size = 50
+text = "Global"
+
+[node name="spacer" type="Control" parent="LeaderboardOverlay/CenterContainer3/HBoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+
+[node name="High Scores" type="Button" parent="LeaderboardOverlay/CenterContainer3/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_wyh8j")
+theme_override_font_sizes/font_size = 50
+text = "High Scores"
 
 [node name="CenterContainer" type="CenterContainer" parent="LeaderboardOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -7.0
-offset_top = -235.0
-offset_right = -6.12
-offset_bottom = 240.265
+offset_top = 547.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="LeaderboardLabel" type="Label" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("4_font")
-theme_override_font_sizes/font_size = 80
-text = "Leaderboard"
-horizontal_alignment = 1
-
-[node name="DividerTexture" type="TextureRect" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 70)
-layout_mode = 2
-texture = ExtResource("5_divider")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="LeaderboardContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(500, 300)
+custom_minimum_size = Vector2(735, 300)
 layout_mode = 2
 alignment = 1
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+[node name="HighScoresContainer" type="VBoxContainer" parent="LeaderboardOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(735, 300)
+layout_mode = 2
+alignment = 1
+
+[node name="Credits" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_credits_overlay")
+
+[node name="ColorRect" type="ColorRect" parent="Credits"]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 1579.0
+color = Color(0.0627451, 0, 0.0705882, 1)
+
+[node name="header image" type="Sprite2D" parent="Credits"]
+position = Vector2(450.333, 193)
+scale = Vector2(0.268056, 0.268056)
+texture = ExtResource("10_16hvj")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Credits"]
+position = Vector2(69, 65)
+texture = ExtResource("11_vr1f0")
+
+[node name="CenterContainer" type="CenterContainer" parent="Credits"]
+layout_mode = 0
+offset_top = 312.0
+offset_right = 900.0
+offset_bottom = 1422.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Credits/CenterContainer"]
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Credit" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_t1dhk")
+theme_override_font_sizes/font_size = 90
+text = "Credits"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Music" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_title")
-theme_override_font_sizes/font_size = 50
-text = "Back"
-flat = true
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 55
+text = "Music:"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="Metatron Omega" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 35
+text = "Metatron Omega"
+horizontal_alignment = 1
+
+[node name="list1" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_font_sizes/normal_font_size = 20
+text = "\"Apostolikon\"
+\"Kosmokrator\"
+\"Sanctum\""
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Monasterium Imperi" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 35
+text = "Monasterium Imperi"
+horizontal_alignment = 1
+
+[node name="list2" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_font_sizes/normal_font_size = 20
+text = "\"Imperator Praetor Spiritus Sanctus\"
+\"Legibus Antiquis Honoris\"
+\"Mortis Liberatum Nihil\""
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Midnight Syndicate" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 35
+text = "Midnight Syndicate"
+horizontal_alignment = 1
+
+[node name="list3" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_font_sizes/normal_font_size = 20
+text = "\"Darkened Shores\""
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Two Steps From Hell" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 35
+text = "Two Steps From Hell"
+horizontal_alignment = 1
+
+[node name="list4" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_font_sizes/normal_font_size = 20
+text = "\"He Who Brings the Night\""
+fit_content = true
+horizontal_alignment = 1
+
+[node name="Spacer3" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="SFX" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 55
+text = "SFX:"
+horizontal_alignment = 1
+
+[node name="Spacer4" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="SFX credits" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 35
+text = "YouTube, www.soundsnap.com - Misc. Artists"
+horizontal_alignment = 1
+
+[node name="Spacer5" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="Tools Used" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 55
+text = "Tools Used:"
+horizontal_alignment = 1
+
+[node name="Spacer6" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="SFX credits2" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_font_sizes/font_size = 35
+text = "Audacity, Godot, Inkscape, Midjourney, 
+Claude Code"
+horizontal_alignment = 1
