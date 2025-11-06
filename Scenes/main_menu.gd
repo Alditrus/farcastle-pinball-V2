@@ -4,12 +4,16 @@ extends Control
 @onready var play_button = $Play
 @onready var settings_button = $CenterContainer/VBoxContainer/ButtonsContainer/SettingsButton
 @onready var leaderboard_button = $CenterContainer/VBoxContainer/ButtonsContainer/LeaderboardButton
+@onready var credits_button = $CenterContainer/VBoxContainer/ButtonsContainer/Credits
 
 # Reference to settings overlay
 @onready var settings_overlay = $SettingsOverlay
 
 # Reference to leaderboard overlay
 @onready var leaderboard_overlay = $LeaderboardOverlay
+
+# Reference to credits overlay
+@onready var credits_overlay = $Credits
 
 var coinslot = preload("res://Assets/sounds/coinslot.ogg")
 
@@ -23,10 +27,12 @@ func _ready():
 	play_button.pressed.connect(_on_play_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	leaderboard_button.pressed.connect(_on_leaderboard_pressed)
+	credits_button.pressed.connect(_on_credits_pressed)
 
 	# Hide overlays initially
 	settings_overlay.visible = false
 	leaderboard_overlay.visible = false
+	credits_overlay.visible = false
 
 # Play button handler - loads the table scene
 func _on_play_pressed():
@@ -43,3 +49,8 @@ func _on_settings_pressed():
 func _on_leaderboard_pressed():
 	if leaderboard_overlay:
 		leaderboard_overlay.show_leaderboard()
+
+# Credits button handler - shows credits overlay
+func _on_credits_pressed():
+	if credits_overlay:
+		credits_overlay.show_credits()
