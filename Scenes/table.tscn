@@ -693,6 +693,7 @@ offset_bottom = 1578.0
 
 [node name="PauseMenuUI" type="Control" parent="."]
 process_mode = 3
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

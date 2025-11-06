@@ -114,8 +114,10 @@ func _on_play_again_pressed():
 	get_tree().reload_current_scene()
 
 func _on_exit_pressed():
-	# Functionality will be added later  
-	print("Exit button pressed")
+	# Unpause the game before changing scenes
+	get_tree().paused = false
+	# Return to main menu
+	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
 
 # Load high scores from file (to be implemented later)
 func load_high_scores():
