@@ -1,4 +1,4 @@
-[gd_scene load_steps=108 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=105 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -48,7 +48,6 @@
 [ext_resource type="Script" uid="uid://bwy0ovk7wo7hs" path="res://Scenes/minigamewindow.gd" id="43_2rdwm"]
 [ext_resource type="Script" uid="uid://hjecv2g386am" path="res://Scenes/guardarea_1.gd" id="43_fick8"]
 [ext_resource type="Script" uid="uid://006sb4ild22j" path="res://Scenes/guardarea_2.gd" id="44_fick8"]
-[ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="46_wn66p"]
 [ext_resource type="PackedScene" uid="uid://cv6bgtmjvcx4j" path="res://Scenes/rollover.tscn" id="48_oc5ru"]
 [ext_resource type="PackedScene" uid="uid://c1m58a70gtp65" path="res://Scenes/arrow_light.tscn" id="48_pkrpy"]
 [ext_resource type="Script" uid="uid://blgrfad20o14y" path="res://Scenes/missions.gd" id="51_pkrpy"]
@@ -67,6 +66,7 @@
 [ext_resource type="Texture2D" uid="uid://4w7qxm4g8lva" path="res://Assets/table/hamburger.svg" id="62_hamburger"]
 [ext_resource type="Script" uid="uid://uendwolvueeu" path="res://Scenes/highscores_overlay.gd" id="62_highscores_overlay"]
 [ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="63_divider"]
+[ext_resource type="FontFile" uid="uid://b2svbb2t4ctbg" path="res://Assets/fonts/IMFellGreatPrimerSC-Regular.ttf" id="63_wqavi"]
 [ext_resource type="Texture2D" uid="uid://33b1fdxh0i5x" path="res://Assets/UI/check_off.svg" id="64_check_off"]
 [ext_resource type="Texture2D" uid="uid://dyr7usb2oj3mp" path="res://Assets/UI/plunger_icon.svg" id="64_lpxmt"]
 [ext_resource type="Texture2D" uid="uid://3ynyjl5bqmjp" path="res://Assets/UI/check_on.svg" id="65_check_on"]
@@ -149,17 +149,6 @@ corner_radius_top_left = 27
 corner_radius_top_right = 27
 corner_radius_bottom_right = 27
 corner_radius_bottom_left = 27
-
-[sub_resource type="SystemFont" id="SystemFont_273ef"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_b2xxt"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_6rfe0"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_grabber"]
 bg_color = Color(0.564706, 0.286275, 0.807843, 1)
@@ -592,9 +581,6 @@ position = Vector2(428, 238)
 [node name="ball" parent="." instance=ExtResource("3_r4jc3")]
 position = Vector2(838, 1287)
 
-[node name="testball" parent="." instance=ExtResource("46_wn66p")]
-position = Vector2(1053, 977)
-
 [node name="flaps1" parent="." instance=ExtResource("11_x0duj")]
 position = Vector2(61, 569)
 rotation = -0.198968
@@ -759,7 +745,7 @@ layout_mode = 2
 [node name="Resume" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Resume"
 flat = true
@@ -767,7 +753,7 @@ flat = true
 [node name="Restart" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Restart"
 flat = true
@@ -775,7 +761,7 @@ flat = true
 [node name="Leaderboard" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Leaderboard"
 flat = true
@@ -783,7 +769,7 @@ flat = true
 [node name="HighScores" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_6rfe0")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "High Scores"
 flat = true
@@ -791,7 +777,7 @@ flat = true
 [node name="Controls" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Controls"
 flat = true
@@ -799,7 +785,7 @@ flat = true
 [node name="Settings" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Settings"
 flat = true
@@ -807,7 +793,7 @@ flat = true
 [node name="Exit" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Exit"
 flat = true
@@ -867,7 +853,7 @@ layout_mode = 2
 [node name="YesButton" type="Button" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Yes"
 flat = true
@@ -875,7 +861,7 @@ flat = true
 [node name="NoButton" type="Button" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "No"
 flat = true
@@ -943,7 +929,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 35
 text = "Desktop"
 flat = true
@@ -952,7 +938,7 @@ flat = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 35
 text = "Mobile"
 flat = true
@@ -968,7 +954,7 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
@@ -1087,7 +1073,7 @@ layout_mode = 2
 [node name="MusicLabel" type="Label" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 40
 text = "Music Volume"
 
@@ -1114,7 +1100,7 @@ layout_mode = 2
 [node name="SoundLabel" type="Label" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 40
 text = "Sound Volume"
 
@@ -1142,7 +1128,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_b2xxt")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 40
 text = "Nudge Enabled"
 
@@ -1168,7 +1154,7 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
@@ -1242,7 +1228,7 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
@@ -1316,7 +1302,7 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_273ef")
+theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true

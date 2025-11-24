@@ -1,42 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://heosbhq3pf4p"]
+[gd_scene load_steps=8 format=3 uid="uid://heosbhq3pf4p"]
 
 [ext_resource type="Script" uid="uid://4xui40ddex3" path="res://Scenes/game_over_ui.gd" id="1_game_over_ui"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="3_qqn7r"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="4_vec04"]
 [ext_resource type="Texture2D" uid="uid://padekhdc527a" path="res://Assets/table/gameover_divider.svg" id="4_xy24n"]
 [ext_resource type="Texture2D" uid="uid://bwdyfvuaa2rc2" path="res://Assets/table/sharebutton.svg" id="6_1xoaq"]
-
-[sub_resource type="SystemFont" id="SystemFont_xy24n"]
-font_names = PackedStringArray("Almendra SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_1xoaq"]
-font_names = PackedStringArray("Almendra SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_qkxqm"]
-font_names = PackedStringArray("Almendra SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_xtdma"]
-font_names = PackedStringArray("Almendra SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_63167"]
-font_names = PackedStringArray("Almendra SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_pu4f3"]
-font_names = PackedStringArray("Almendra SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_vec04"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_v1ufb"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
+[ext_resource type="FontFile" uid="uid://7e16mly8ntec" path="res://Assets/fonts/AlmendraSC-Regular.ttf" id="6_qkxqm"]
+[ext_resource type="FontFile" uid="uid://b2svbb2t4ctbg" path="res://Assets/fonts/IMFellGreatPrimerSC-Regular.ttf" id="7_xtdma"]
 
 [node name="GameOverUI" type="Control"]
 layout_mode = 3
@@ -152,7 +122,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
-theme_override_fonts/font = SubResource("SystemFont_xy24n")
+theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "500,000"
 horizontal_alignment = 1
@@ -162,7 +132,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
-theme_override_fonts/font = SubResource("SystemFont_1xoaq")
+theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "400,000"
 horizontal_alignment = 1
@@ -172,7 +142,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
-theme_override_fonts/font = SubResource("SystemFont_qkxqm")
+theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "300,000"
 horizontal_alignment = 1
@@ -182,7 +152,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
-theme_override_fonts/font = SubResource("SystemFont_xtdma")
+theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "200,000"
 horizontal_alignment = 1
@@ -192,7 +162,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
-theme_override_fonts/font = SubResource("SystemFont_63167")
+theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "100,000"
 horizontal_alignment = 1
@@ -202,7 +172,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
-theme_override_fonts/font = SubResource("SystemFont_pu4f3")
+theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "90,000"
 horizontal_alignment = 1
@@ -223,7 +193,7 @@ theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_vec04")
+theme_override_fonts/font = ExtResource("7_xtdma")
 theme_override_font_sizes/font_size = 75
 text = "Play again"
 flat = true
@@ -236,7 +206,7 @@ theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_v1ufb")
+theme_override_fonts/font = ExtResource("7_xtdma")
 theme_override_font_sizes/font_size = 75
 text = "Exit"
 flat = true

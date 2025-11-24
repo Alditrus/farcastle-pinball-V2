@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://wbjw5qbnvs02"]
+[gd_scene load_steps=22 format=3 uid="uid://wbjw5qbnvs02"]
 
 [ext_resource type="Script" uid="uid://bohmb3of6u542" path="res://Scenes/main_menu.gd" id="1_main_menu"]
 [ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="2_settings_menu"]
@@ -7,15 +7,15 @@
 [ext_resource type="Script" uid="uid://bfwjaj8l62ctj" path="res://Scenes/main_menu_leaderboard_overlay.gd" id="3_main_menu_leaderboard"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="4_font"]
 [ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="5_divider"]
+[ext_resource type="FontFile" uid="uid://b2svbb2t4ctbg" path="res://Assets/fonts/IMFellGreatPrimerSC-Regular.ttf" id="6_m3bi6"]
 [ext_resource type="Texture2D" uid="uid://b6x3pvgrpy3wu" path="res://Assets/UI/slider.svg" id="6_slider"]
 [ext_resource type="Texture2D" uid="uid://33b1fdxh0i5x" path="res://Assets/UI/check_off.svg" id="7_check_off"]
 [ext_resource type="Texture2D" uid="uid://3ynyjl5bqmjp" path="res://Assets/UI/check_on.svg" id="8_check_on"]
 [ext_resource type="Texture2D" uid="uid://cumbnnl871cd8" path="res://Assets/UI/leaderboard_pic.png" id="10_5egv6"]
 [ext_resource type="Texture2D" uid="uid://nw6cnb4tcspl" path="res://Assets/UI/credits_pic.png" id="10_16hvj"]
 [ext_resource type="Texture2D" uid="uid://hfuyio4i82nf" path="res://Assets/UI/back_arrow.svg" id="11_vr1f0"]
-
-[sub_resource type="SystemFont" id="SystemFont_16hvj"]
-font_names = PackedStringArray("Blackwood Castle")
+[ext_resource type="FontFile" uid="uid://jvamkyln7iv" path="res://Assets/fonts/IMFellFrenchCanonSC-Regular.ttf" id="15_wyh8j"]
+[ext_resource type="FontFile" uid="uid://byw0x68xksmxg" path="res://Assets/fonts/IMFellDWPica-Regular.ttf" id="16_ujyyl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_purple_button"]
 bg_color = Color(0.305882, 0, 0.345098, 1)
@@ -30,10 +30,6 @@ corner_radius_top_left = 27
 corner_radius_top_right = 27
 corner_radius_bottom_right = 27
 corner_radius_bottom_left = 27
-
-[sub_resource type="SystemFont" id="SystemFont_vr1f0"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1dhk"]
 bg_color = Color(0.564706, 0.286275, 0.807843, 1)
@@ -55,27 +51,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-
-[sub_resource type="SystemFont" id="SystemFont_8dnnj"]
-font_names = PackedStringArray("IM FELL Great Primer SC")
-subpixel_positioning = 0
-
-[sub_resource type="SystemFont" id="SystemFont_m3bi6"]
-font_names = PackedStringArray("IM FELL French Canon SC")
-
-[sub_resource type="SystemFont" id="SystemFont_wyh8j"]
-font_names = PackedStringArray("IM FELL French Canon SC")
-
-[sub_resource type="SystemFont" id="SystemFont_t1dhk"]
-font_names = PackedStringArray("Blackwood Castle")
-
-[sub_resource type="SystemFont" id="SystemFont_5egv6"]
-font_names = PackedStringArray("IM FELL French Canon SC")
-font_weight = 100
-generate_mipmaps = true
-
-[sub_resource type="SystemFont" id="SystemFont_vtepg"]
-font_names = PackedStringArray("IM FELL DW Pica")
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -119,7 +94,7 @@ theme_override_constants/separation = 75
 [node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_16hvj")
+theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 70
 theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
@@ -129,7 +104,7 @@ text = "Settings"
 [node name="LeaderboardButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_16hvj")
+theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 70
 theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
@@ -139,7 +114,7 @@ text = "Leaderboard"
 [node name="Credits" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_16hvj")
+theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 70
 theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
@@ -205,7 +180,7 @@ layout_mode = 2
 [node name="MusicLabel" type="Label" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_vr1f0")
+theme_override_fonts/font = ExtResource("6_m3bi6")
 theme_override_font_sizes/font_size = 40
 text = "Music Volume"
 
@@ -232,7 +207,7 @@ layout_mode = 2
 [node name="SoundLabel" type="Label" parent="SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_vr1f0")
+theme_override_fonts/font = ExtResource("6_m3bi6")
 theme_override_font_sizes/font_size = 40
 text = "Sound Volume"
 
@@ -260,7 +235,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_vr1f0")
+theme_override_fonts/font = ExtResource("6_m3bi6")
 theme_override_font_sizes/font_size = 40
 text = "Nudge Enabled"
 
@@ -286,12 +261,13 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_8dnnj")
+theme_override_fonts/font = ExtResource("6_m3bi6")
 theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
 
 [node name="LeaderboardOverlay" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -343,7 +319,7 @@ layout_mode = 2
 
 [node name="Global" type="Button" parent="LeaderboardOverlay/CenterContainer3/HBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_m3bi6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 50
 text = "Global"
 
@@ -353,7 +329,7 @@ layout_mode = 2
 
 [node name="High Scores" type="Button" parent="LeaderboardOverlay/CenterContainer3/HBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_wyh8j")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 50
 text = "High Scores"
 
@@ -409,7 +385,7 @@ layout_mode = 2
 
 [node name="Credit" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_t1dhk")
+theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 90
 text = "Credits"
 horizontal_alignment = 1
@@ -420,7 +396,7 @@ layout_mode = 2
 
 [node name="Music" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 55
 text = "Music:"
 horizontal_alignment = 1
@@ -431,14 +407,14 @@ layout_mode = 2
 
 [node name="Metatron Omega" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Metatron Omega"
 horizontal_alignment = 1
 
 [node name="list1" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
 text = "\"Apostolikon\"
 \"Kosmokrator\"
@@ -448,14 +424,14 @@ horizontal_alignment = 1
 
 [node name="Monasterium Imperi" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Monasterium Imperi"
 horizontal_alignment = 1
 
 [node name="list2" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
 text = "\"Imperator Praetor Spiritus Sanctus\"
 \"Legibus Antiquis Honoris\"
@@ -465,14 +441,14 @@ horizontal_alignment = 1
 
 [node name="Midnight Syndicate" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Midnight Syndicate"
 horizontal_alignment = 1
 
 [node name="list3" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
 text = "\"Darkened Shores\""
 fit_content = true
@@ -480,14 +456,14 @@ horizontal_alignment = 1
 
 [node name="Two Steps From Hell" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Two Steps From Hell"
 horizontal_alignment = 1
 
 [node name="list4" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("SystemFont_vtepg")
+theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
 text = "\"He Who Brings the Night\""
 fit_content = true
@@ -499,7 +475,7 @@ layout_mode = 2
 
 [node name="SFX" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 55
 text = "SFX:"
 horizontal_alignment = 1
@@ -510,7 +486,7 @@ layout_mode = 2
 
 [node name="SFX credits" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "YouTube, www.soundsnap.com - Misc. Artists"
 horizontal_alignment = 1
@@ -521,7 +497,7 @@ layout_mode = 2
 
 [node name="Tools Used" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 55
 text = "Tools Used:"
 horizontal_alignment = 1
@@ -532,7 +508,7 @@ layout_mode = 2
 
 [node name="SFX credits2" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("SystemFont_5egv6")
+theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Audacity, Godot, Inkscape, Midjourney, 
 Claude Code"
