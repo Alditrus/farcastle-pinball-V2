@@ -40,7 +40,7 @@
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="35_6umbq"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
-[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/table/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
+[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
 [ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
 [ext_resource type="Script" uid="uid://b0fxxcofry6ws" path="res://Scenes/rollover_1.gd" id="41_bnbux"]
 [ext_resource type="Script" uid="uid://1hv3n66ti5yp" path="res://Scenes/score_label.gd" id="41_ecrf2"]
@@ -547,6 +547,7 @@ shape = SubResource("RectangleShape2D_wn66p")
 
 [node name="leftflipperarea" type="Area2D" parent="."]
 visible = false
+input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="leftflipperarea"]
 position = Vector2(214.5, 1127.5)
@@ -555,6 +556,7 @@ debug_color = Color(0.694749, 0.282514, 1, 0.42)
 
 [node name="rightflipperarea" type="Area2D" parent="."]
 visible = false
+input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="rightflipperarea"]
 position = Vector2(618.75, 1127.75)
