@@ -546,7 +546,7 @@ rotation = -1.37881
 shape = SubResource("RectangleShape2D_wn66p")
 
 [node name="leftflipperarea" type="Area2D" parent="."]
-visible = false
+modulate = Color(1, 1, 1, 0)
 input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="leftflipperarea"]
@@ -555,7 +555,7 @@ shape = SubResource("RectangleShape2D_wb73q")
 debug_color = Color(0.694749, 0.282514, 1, 0.42)
 
 [node name="rightflipperarea" type="Area2D" parent="."]
-visible = false
+modulate = Color(1, 1, 1, 0)
 input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="rightflipperarea"]
