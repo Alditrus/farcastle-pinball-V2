@@ -547,7 +547,6 @@ shape = SubResource("RectangleShape2D_wn66p")
 
 [node name="leftflipperarea" type="Area2D" parent="."]
 visible = false
-input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="leftflipperarea"]
 position = Vector2(214.5, 1127.5)
@@ -556,7 +555,6 @@ debug_color = Color(0.694749, 0.282514, 1, 0.42)
 
 [node name="rightflipperarea" type="Area2D" parent="."]
 visible = false
-input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="rightflipperarea"]
 position = Vector2(618.75, 1127.75)
