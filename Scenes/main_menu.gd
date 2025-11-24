@@ -22,6 +22,7 @@ func _ready():
 	var menu_music = load("res://Assets/music/darkened_shores.ogg")
 	if menu_music:
 		AudioCollection.play_music(menu_music, true)
+
 	# Connect button signals
 	play_button.pressed.connect(_on_play_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
@@ -35,26 +36,21 @@ func _ready():
 
 # Play button handler - loads the table scene
 func _on_play_pressed():
-	_on_any_button_interaction()
 	AudioCollection.play_sfx(coinslot)
 	# Load the table scene
 	get_tree().change_scene_to_file("res://Scenes/table.tscn")
 
 # Settings button handler - shows settings overlay
 func _on_settings_pressed():
-	_on_any_button_interaction()
 	if settings_overlay:
 		settings_overlay.show_settings_menu()
 
-# Leaderboard button handler - shows high scores overlay
+# Leaderboard button handler - shows leaderboard overlay
 func _on_leaderboard_pressed():
-	_on_any_button_interaction()
 	if leaderboard_overlay:
-		leaderboard_overlay.show_highscores()
+		leaderboard_overlay.show_leaderboard()
 
 # Credits button handler - shows credits overlay
 func _on_credits_pressed():
-	_on_any_button_interaction()
 	if credits_overlay:
-	
-# ur mom
+		credits_overlay.show_credits()
