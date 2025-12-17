@@ -1,4 +1,4 @@
-[gd_scene load_steps=105 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=107 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -79,6 +79,8 @@
 [ext_resource type="Texture2D" uid="uid://b26ikef1kjyep" path="res://Assets/UI/mobile_ctrl1.svg" id="70_y0lvm"]
 [ext_resource type="Texture2D" uid="uid://bf4v2re83ccab" path="res://Assets/UI/mobile_ctrl2.svg" id="71_unjd0"]
 [ext_resource type="Texture2D" uid="uid://7lqdhc5q5c7s" path="res://Assets/UI/mobile_ctrl3.svg" id="72_6rfe0"]
+[ext_resource type="FontFile" uid="uid://7e16mly8ntec" path="res://Assets/fonts/AlmendraSC-Regular.ttf" id="80_00dx6"]
+[ext_resource type="Script" uid="uid://bkygxpk3nnhff" path="res://Scenes/ball_saved_label.gd" id="81_ball_saved"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -547,7 +549,6 @@ shape = SubResource("RectangleShape2D_wn66p")
 
 [node name="leftflipperarea" type="Area2D" parent="."]
 modulate = Color(1, 1, 1, 0)
-input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="leftflipperarea"]
 position = Vector2(214.5, 1127.5)
@@ -556,7 +557,6 @@ debug_color = Color(0.694749, 0.282514, 1, 0.42)
 
 [node name="rightflipperarea" type="Area2D" parent="."]
 modulate = Color(1, 1, 1, 0)
-input_pickable = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="rightflipperarea"]
 position = Vector2(618.75, 1127.75)
@@ -1309,8 +1309,16 @@ theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
 
-[node name="left_tap" type="Sprite2D" parent="."]
-
-[node name="right_tap" type="Sprite2D" parent="."]
-
-[node name="swipe_down" type="Sprite2D" parent="."]
+[node name="Ball-Saved" type="RichTextLabel" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_left = 759.0
+offset_top = 1161.0
+offset_right = 920.0
+offset_bottom = 1264.0
+theme_override_fonts/normal_font = ExtResource("80_00dx6")
+theme_override_font_sizes/normal_font_size = 40
+text = "Ball
+Saved"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("81_ball_saved")

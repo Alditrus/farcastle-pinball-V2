@@ -201,11 +201,11 @@ func play_sfx(audio_stream: AudioStream):
 			if not player.playing:
 				available_player = player
 				break
-		
+
 		# If no available player, use the first one (oldest sound gets cut)
 		if not available_player:
 			available_player = sfx_players[0]
-		
+
 		# Play the sound
 		available_player.stream = audio_stream
 		available_player.play()

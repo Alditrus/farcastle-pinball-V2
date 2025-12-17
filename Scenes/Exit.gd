@@ -80,6 +80,12 @@ func _physics_process(_delta):
 			if check_ball_save_conditions():
 				# Ball save triggered - spawn new ball without reducing ball count
 				print("BALL SAVE ACTIVATED!")
+
+				# Trigger the ball saved animation
+				var ball_saved_label = get_node_or_null("../Ball-Saved")
+				if ball_saved_label and ball_saved_label.has_method("play_ball_saved_animation"):
+					ball_saved_label.play_ball_saved_animation()
+
 				spawn_ball_save()
 				return
 			
