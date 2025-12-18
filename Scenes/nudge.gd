@@ -42,7 +42,7 @@ var TILT_sound = preload("res://Assets/sounds/TILT.wav")
 # References
 @onready var camera = get_viewport().get_camera_2d()
 @onready var hamburger_menu_button = get_node("ScoreboardUI/HamburgerMenuButton")
-@onready var pause_menu_ui = get_node("PauseMenuUI")
+@onready var pause_menu_ui = get_node("UILayer/PauseMenuUI")
 
 # Signal to notify when tilt state changes
 signal tilt_state_changed(is_tilted)

@@ -5,7 +5,7 @@ var score = 0
 # Reference to ball count label
 @onready var ball_count_label = get_node("../BallCountLabel")
 # Reference to game over UI
-@onready var game_over_ui = get_node("../../GameOverUI")
+@onready var game_over_ui = get_node("../../UILayer/GameOverUI")
 
 # Spinner variables
 var spinner_active = false
