@@ -181,6 +181,9 @@ position = Vector2(450, 789)
 texture = ExtResource("1_ix8et")
 metadata/_edit_lock_ = true
 
+[node name="plunger" parent="." instance=ExtResource("2_4ppvu")]
+position = Vector2(839, 1470)
+
 [node name="Walls" type="Node2D" parent="."]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Walls"]
@@ -232,9 +235,6 @@ shape = SubResource("RectangleShape2D_usajj")
 position = Vector2(647.346, 1397.48)
 rotation = -0.628319
 shape = SubResource("RectangleShape2D_o4lkm")
-
-[node name="plunger" parent="." instance=ExtResource("2_4ppvu")]
-position = Vector2(839, 1470)
 
 [node name="bumper1" parent="." instance=ExtResource("17_k47uh")]
 position = Vector2(408, 546)
@@ -669,30 +669,33 @@ scale = Vector2(0.25, 0.25)
 texture = ExtResource("59_etut1")
 script = ExtResource("60_273ef")
 
-[node name="GameOverUI" parent="." instance=ExtResource("57_bnbux")]
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="GameOverUI" parent="UILayer" instance=ExtResource("57_bnbux")]
 visible = false
+anchors_preset = 15
 anchor_left = 0.0
 anchor_top = 0.0
-anchor_bottom = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 0.0
-offset_top = -1.0
-offset_right = 900.0
-offset_bottom = 1578.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 
-[node name="PauseMenuUI" type="Control" parent="."]
+[node name="PauseMenuUI" type="Control" parent="UILayer"]
 process_mode = 3
 visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 900.0
-offset_bottom = 1578.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("61_pause_menu")
 
-[node name="Background" type="ColorRect" parent="PauseMenuUI"]
+[node name="Background" type="ColorRect" parent="UILayer/PauseMenuUI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -701,7 +704,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.7)
 
-[node name="Background2" type="Panel" parent="PauseMenuUI"]
+[node name="Background2" type="Panel" parent="UILayer/PauseMenuUI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -714,7 +717,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI"]
+[node name="CenterContainer" type="CenterContainer" parent="UILayer/PauseMenuUI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -722,10 +725,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/CenterContainer"]
 layout_mode = 2
 
-[node name="PauseLabel" type="Label" parent="PauseMenuUI/CenterContainer/VBoxContainer"]
+[node name="PauseLabel" type="Label" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("35_6umbq")
@@ -733,18 +736,18 @@ theme_override_font_sizes/font_size = 80
 text = "Paused"
 horizontal_alignment = 1
 
-[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/CenterContainer/VBoxContainer"]
+[node name="DividerTexture" type="TextureRect" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 70)
 layout_mode = 2
 texture = ExtResource("63_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Resume" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Resume" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -752,7 +755,7 @@ theme_override_font_sizes/font_size = 50
 text = "Resume"
 flat = true
 
-[node name="Restart" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Restart" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -760,7 +763,7 @@ theme_override_font_sizes/font_size = 50
 text = "Restart"
 flat = true
 
-[node name="Leaderboard" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Leaderboard" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -768,7 +771,7 @@ theme_override_font_sizes/font_size = 50
 text = "Leaderboard"
 flat = true
 
-[node name="HighScores" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="HighScores" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -776,7 +779,7 @@ theme_override_font_sizes/font_size = 50
 text = "High Scores"
 flat = true
 
-[node name="Controls" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Controls" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -784,7 +787,7 @@ theme_override_font_sizes/font_size = 50
 text = "Controls"
 flat = true
 
-[node name="Settings" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Settings" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -792,7 +795,7 @@ theme_override_font_sizes/font_size = 50
 text = "Settings"
 flat = true
 
-[node name="Exit" type="Button" parent="PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Exit" type="Button" parent="UILayer/PauseMenuUI/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -800,7 +803,7 @@ theme_override_font_sizes/font_size = 50
 text = "Exit"
 flat = true
 
-[node name="ConfirmationOverlay" type="Control" parent="PauseMenuUI"]
+[node name="ConfirmationOverlay" type="Control" parent="UILayer/PauseMenuUI"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -809,7 +812,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background2" type="Panel" parent="PauseMenuUI/ConfirmationOverlay"]
+[node name="Background2" type="Panel" parent="UILayer/PauseMenuUI/ConfirmationOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -822,7 +825,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/ConfirmationOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="UILayer/PauseMenuUI/ConfirmationOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -830,10 +833,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/ConfirmationOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="ConfirmLabel" type="Label" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
+[node name="ConfirmLabel" type="Label" parent="UILayer/PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("35_6umbq")
@@ -841,18 +844,18 @@ theme_override_font_sizes/font_size = 80
 text = "Are you sure?"
 horizontal_alignment = 1
 
-[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
+[node name="DividerTexture" type="TextureRect" parent="UILayer/PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 70)
 layout_mode = 2
 texture = ExtResource("63_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="YesButton" type="Button" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="YesButton" type="Button" parent="UILayer/PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -860,7 +863,7 @@ theme_override_font_sizes/font_size = 50
 text = "Yes"
 flat = true
 
-[node name="NoButton" type="Button" parent="PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="NoButton" type="Button" parent="UILayer/PauseMenuUI/ConfirmationOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -868,7 +871,7 @@ theme_override_font_sizes/font_size = 50
 text = "No"
 flat = true
 
-[node name="ControlOverlay" type="Control" parent="PauseMenuUI"]
+[node name="ControlOverlay" type="Control" parent="UILayer/PauseMenuUI"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -878,7 +881,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("61_control_overlay")
 
-[node name="Background2" type="Panel" parent="PauseMenuUI/ControlOverlay"]
+[node name="Background2" type="Panel" parent="UILayer/PauseMenuUI/ControlOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -891,7 +894,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/ControlOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="UILayer/PauseMenuUI/ControlOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -903,10 +906,10 @@ offset_bottom = 240.265
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/ControlOverlay/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="ConfirmLabel" type="Label" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
+[node name="ConfirmLabel" type="Label" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("35_6umbq")
@@ -914,20 +917,20 @@ theme_override_font_sizes/font_size = 80
 text = "Controls"
 horizontal_alignment = 1
 
-[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
+[node name="DividerTexture" type="TextureRect" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 70)
 layout_mode = 2
 texture = ExtResource("63_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ButtonsContainer" type="HBoxContainer" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer" type="HBoxContainer" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 theme_override_constants/separation = 60
 alignment = 1
 
-[node name="Desktop" type="Button" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Desktop" type="Button" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
@@ -936,7 +939,7 @@ theme_override_font_sizes/font_size = 35
 text = "Desktop"
 flat = true
 
-[node name="Mobile" type="Button" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Mobile" type="Button" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
@@ -945,15 +948,15 @@ theme_override_font_sizes/font_size = 35
 text = "Mobile"
 flat = true
 
-[node name="ButtonsContainer2" type="VBoxContainer" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer2" type="VBoxContainer" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer2"]
+[node name="Spacer" type="Control" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer2"]
 custom_minimum_size = Vector2(0, 433.195)
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer2"]
+[node name="BackButton" type="Button" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/VBoxContainer/ButtonsContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -961,62 +964,62 @@ theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
 
-[node name="Desktop_ctrls" type="GridContainer" parent="PauseMenuUI/ControlOverlay/CenterContainer"]
+[node name="Desktop_ctrls" type="GridContainer" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer"]
 visible = false
 layout_mode = 2
 
-[node name="plunger" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
+[node name="plunger" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
 position = Vector2(-146, -44)
 texture = ExtResource("64_lpxmt")
 
-[node name="paddle" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
+[node name="paddle" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
 position = Vector2(-142, 82)
 texture = ExtResource("65_qcvqi")
 
-[node name="tilt" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
+[node name="tilt" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
 position = Vector2(-142, 205)
 texture = ExtResource("66_rrede")
 
-[node name="ctrl1" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
+[node name="ctrl1" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
 position = Vector2(140, -44)
 texture = ExtResource("67_y0lvm")
 
-[node name="ctrl2" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
+[node name="ctrl2" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
 position = Vector2(139, 81)
 texture = ExtResource("68_unjd0")
 
-[node name="ctrl3" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
+[node name="ctrl3" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Desktop_ctrls"]
 position = Vector2(139, 203)
 texture = ExtResource("69_6rfe0")
 
-[node name="Mobile_ctrls" type="GridContainer" parent="PauseMenuUI/ControlOverlay/CenterContainer"]
+[node name="Mobile_ctrls" type="GridContainer" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="plunger" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
+[node name="plunger" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
 position = Vector2(-146, -43)
 texture = ExtResource("64_lpxmt")
 
-[node name="paddle" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
+[node name="paddle" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
 position = Vector2(-142, 82.5)
 texture = ExtResource("65_qcvqi")
 
-[node name="tilt" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
+[node name="tilt" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
 position = Vector2(-142, 205)
 texture = ExtResource("66_rrede")
 
-[node name="ctrl1" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
+[node name="ctrl1" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
 position = Vector2(140, -43)
 texture = ExtResource("70_y0lvm")
 
-[node name="ctrl2" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
+[node name="ctrl2" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
 position = Vector2(139, 78.5)
 texture = ExtResource("71_unjd0")
 
-[node name="ctrl3" type="Sprite2D" parent="PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
+[node name="ctrl3" type="Sprite2D" parent="UILayer/PauseMenuUI/ControlOverlay/CenterContainer/Mobile_ctrls"]
 position = Vector2(123, 204)
 texture = ExtResource("72_6rfe0")
 
-[node name="SettingsOverlay" type="Control" parent="PauseMenuUI"]
+[node name="SettingsOverlay" type="Control" parent="UILayer/PauseMenuUI"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -1026,7 +1029,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("61_settings_menu")
 
-[node name="Background2" type="Panel" parent="PauseMenuUI/SettingsOverlay"]
+[node name="Background2" type="Panel" parent="UILayer/PauseMenuUI/SettingsOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1039,7 +1042,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/SettingsOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="UILayer/PauseMenuUI/SettingsOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1047,10 +1050,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/SettingsOverlay/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="SettingsLabel" type="Label" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
+[node name="SettingsLabel" type="Label" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("35_6umbq")
@@ -1058,28 +1061,28 @@ theme_override_font_sizes/font_size = 80
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
+[node name="DividerTexture" type="TextureRect" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 70)
 layout_mode = 2
 texture = ExtResource("63_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SettingsContainer" type="VBoxContainer" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
+[node name="SettingsContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 
-[node name="MusicContainer" type="VBoxContainer" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+[node name="MusicContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="MusicLabel" type="Label" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
+[node name="MusicLabel" type="Label" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 40
 text = "Music Volume"
 
-[node name="MusicSlider" type="HSlider" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
+[node name="MusicSlider" type="HSlider" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/MusicContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_icons/grabber = ExtResource("65_ulhma")
@@ -1092,21 +1095,21 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="Spacer1" type="Control" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+[node name="Spacer1" type="Control" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="SoundContainer" type="VBoxContainer" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+[node name="SoundContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="SoundLabel" type="Label" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
+[node name="SoundLabel" type="Label" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 40
 text = "Sound Volume"
 
-[node name="SoundSlider" type="HSlider" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
+[node name="SoundSlider" type="HSlider" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/SoundContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_icons/grabber = ExtResource("65_ulhma")
@@ -1119,14 +1122,14 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="Spacer2" type="Control" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+[node name="Spacer2" type="Control" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="NudgeContainer" type="HBoxContainer" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
+[node name="NudgeContainer" type="HBoxContainer" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer"]
 layout_mode = 2
 
-[node name="NudgeLabel" type="Label" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/NudgeContainer"]
+[node name="NudgeLabel" type="Label" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/NudgeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -1134,7 +1137,7 @@ theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 40
 text = "Nudge Enabled"
 
-[node name="NudgeToggle" type="CheckBox" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/NudgeContainer"]
+[node name="NudgeToggle" type="CheckBox" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/SettingsContainer/NudgeContainer"]
 custom_minimum_size = Vector2(50.02, 100)
 layout_mode = 2
 theme_override_constants/h_separation = 20
@@ -1145,15 +1148,15 @@ theme_override_icons/unchecked = ExtResource("64_check_off")
 icon_alignment = 1
 expand_icon = true
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Spacer" type="Control" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="BackButton" type="Button" parent="UILayer/PauseMenuUI/SettingsOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -1161,7 +1164,7 @@ theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
 
-[node name="LeaderboardOverlay" type="Control" parent="PauseMenuUI"]
+[node name="LeaderboardOverlay" type="Control" parent="UILayer/PauseMenuUI"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -1171,7 +1174,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("61_leaderboard_overlay")
 
-[node name="Background2" type="Panel" parent="PauseMenuUI/LeaderboardOverlay"]
+[node name="Background2" type="Panel" parent="UILayer/PauseMenuUI/LeaderboardOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1184,7 +1187,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/LeaderboardOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="UILayer/PauseMenuUI/LeaderboardOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1196,10 +1199,10 @@ offset_bottom = 240.265
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="LeaderboardLabel" type="Label" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+[node name="LeaderboardLabel" type="Label" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("35_6umbq")
@@ -1207,27 +1210,27 @@ theme_override_font_sizes/font_size = 80
 text = "Leaderboard"
 horizontal_alignment = 1
 
-[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+[node name="DividerTexture" type="TextureRect" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 70)
 layout_mode = 2
 texture = ExtResource("63_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LeaderboardContainer" type="VBoxContainer" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+[node name="LeaderboardContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(500, 300)
 layout_mode = 2
 alignment = 1
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Spacer" type="Control" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="BackButton" type="Button" parent="UILayer/PauseMenuUI/LeaderboardOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
@@ -1235,7 +1238,7 @@ theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
 
-[node name="HighscoresOverlay" type="Control" parent="PauseMenuUI"]
+[node name="HighscoresOverlay" type="Control" parent="UILayer/PauseMenuUI"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -1245,7 +1248,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("62_highscores_overlay")
 
-[node name="Background2" type="Panel" parent="PauseMenuUI/HighscoresOverlay"]
+[node name="Background2" type="Panel" parent="UILayer/PauseMenuUI/HighscoresOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1258,7 +1261,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseMenuUI/HighscoresOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="UILayer/PauseMenuUI/HighscoresOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1270,10 +1273,10 @@ offset_bottom = 240.265
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenuUI/HighscoresOverlay/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer"]
 layout_mode = 2
 
-[node name="LeaderboardLabel" type="Label" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+[node name="LeaderboardLabel" type="Label" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("35_6umbq")
@@ -1281,27 +1284,27 @@ theme_override_font_sizes/font_size = 80
 text = "High Scores"
 horizontal_alignment = 1
 
-[node name="DividerTexture" type="TextureRect" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+[node name="DividerTexture" type="TextureRect" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 70)
 layout_mode = 2
 texture = ExtResource("63_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LeaderboardContainer" type="VBoxContainer" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+[node name="LeaderboardContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(500, 300)
 layout_mode = 2
 alignment = 1
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
+[node name="ButtonsContainer" type="VBoxContainer" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="Spacer" type="Control" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="BackButton" type="Button" parent="UILayer/PauseMenuUI/HighscoresOverlay/CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("63_wqavi")
