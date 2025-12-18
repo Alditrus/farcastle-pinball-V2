@@ -10,6 +10,11 @@ var active_sprite: Sprite2D
 var current_level: int = 1
 var bumper_sound = preload("res://Assets/sounds/bumper.wav")
 
+# Level reset timer (2 minutes = 120 seconds)
+var level_reset_timer: float = 0.0
+var level_reset_duration: float = 120.0
+var level_reset_active: bool = false
+
 # Sprite textures for different levels
 var level_textures = {
 	1: {
@@ -81,10 +86,18 @@ func _process(delta):
 	# If the bumper is active, count down the timer
 	if is_active:
 		active_timer -= delta
-		
+
 		# If the timer has expired, deactivate the bumper
 		if active_timer <= 0:
 			deactivate_bumper()
+
+	# Handle level reset timer
+	if level_reset_active:
+		level_reset_timer -= delta
+
+		# If the timer has expired, reset to level 1
+		if level_reset_timer <= 0:
+			reset_to_level_one()
 
 # Called when a body enters the detection area
 func _on_body_entered(body):
@@ -138,6 +151,14 @@ func set_level(level: int):
 	if level >= 1 and level <= 6:
 		current_level = level
 		update_sprites()
+
+		# Start the level reset timer if level is above 1
+		if level > 1:
+			level_reset_timer = level_reset_duration
+			level_reset_active = true
+		else:
+			# Stop the timer if level is 1
+			level_reset_active = false
 	print("level: " + str(level))
 	print("current level: " + str(current_level))
 		
@@ -146,3 +167,8 @@ func update_sprites():
 	if level_textures.has(current_level):
 		normal_sprite.texture = level_textures[current_level]["normal"]
 		active_sprite.texture = level_textures[current_level]["active"]
+
+# Reset bumper back to level 1
+func reset_to_level_one():
+	set_level(1)
+	level_reset_active = false

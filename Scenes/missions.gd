@@ -156,7 +156,6 @@ signal mission_started(mission: Mission)
 signal mission_phase_advanced(mission: Mission)
 signal mission_progress_updated(mission: Mission, collision_type: CollisionType, current_count: int, required_count: int)
 signal mission_completed(mission: Mission)
-signal mission_failed(mission: Mission)
 
 func _ready():
 	# Get reference to mission lights controller
@@ -438,7 +437,7 @@ func _on_multiball_activated():
 	record_collision(CollisionType.MULTIBALL)
 
 # Handle multiball sequence updates
-func _on_multiball_sequence_updated(current_sequence: Array, required_sequence: Array):
+func _on_multiball_sequence_updated():
 	# Only update lights if we have an active lich mode mission in the multiball phase
 	if not active_missions.has("lich_mode"):
 		return
