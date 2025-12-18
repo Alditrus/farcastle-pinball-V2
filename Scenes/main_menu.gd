@@ -4,7 +4,9 @@ extends Control
 @onready var play_button = $Play
 @onready var settings_button = $CenterContainer/VBoxContainer/ButtonsContainer/SettingsButton
 @onready var leaderboard_button = $CenterContainer/VBoxContainer/ButtonsContainer/LeaderboardButton
-@onready var credits_button = $CenterContainer/VBoxContainer/ButtonsContainer/Credits
+@onready var quests_button = $CenterContainer/VBoxContainer/ButtonsContainer/QuestsButton
+@onready var token_button = $CenterContainer/VBoxContainer/ButtonsContainer/TokenButton
+@onready var credits_button = $CenterContainer/VBoxContainer/ButtonsContainer/CreditsButton
 
 # Reference to settings overlay
 @onready var settings_overlay = $SettingsOverlay
@@ -12,8 +14,14 @@ extends Control
 # Reference to leaderboard overlay
 @onready var leaderboard_overlay = $LeaderboardOverlay
 
+# Reference to leaderboard overlay
+@onready var quests_overlay = $QuestsOverlay
+
+# Reference to leaderboard overlay
+@onready var token_overlay = $TokenOverlay
+
 # Reference to credits overlay
-@onready var credits_overlay = $Credits
+@onready var credits_overlay = $CreditsOverlay
 
 var coinslot = preload("res://Assets/sounds/coinslot.ogg")
 
@@ -27,11 +35,15 @@ func _ready():
 	play_button.pressed.connect(_on_play_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	leaderboard_button.pressed.connect(_on_leaderboard_pressed)
+	quests_button.pressed.connect(_on_quests_pressed)
+	token_button.pressed.connect(_on_token_pressed)
 	credits_button.pressed.connect(_on_credits_pressed)
 
 	# Hide overlays initially
 	settings_overlay.visible = false
 	leaderboard_overlay.visible = false
+	quests_overlay.visible = false
+	token_overlay.visible = false
 	credits_overlay.visible = false
 
 # Play button handler - loads the table scene
@@ -49,6 +61,16 @@ func _on_settings_pressed():
 func _on_leaderboard_pressed():
 	if leaderboard_overlay:
 		leaderboard_overlay.show_leaderboard()
+		
+		# Leaderboard button handler - shows leaderboard overlay
+func _on_quests_pressed():
+	if quests_overlay:
+		quests_overlay.show_credits()
+		
+# Leaderboard button handler - shows leaderboard overlay
+func _on_token_pressed():
+	if token_overlay:
+		token_overlay.show_credits()
 
 # Credits button handler - shows credits overlay
 func _on_credits_pressed():

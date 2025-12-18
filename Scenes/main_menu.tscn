@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://wbjw5qbnvs02"]
+[gd_scene load_steps=24 format=3 uid="uid://wbjw5qbnvs02"]
 
 [ext_resource type="Script" uid="uid://bohmb3of6u542" path="res://Scenes/main_menu.gd" id="1_main_menu"]
 [ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="2_settings_menu"]
@@ -14,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://cumbnnl871cd8" path="res://Assets/UI/leaderboard_pic.png" id="10_5egv6"]
 [ext_resource type="Texture2D" uid="uid://nw6cnb4tcspl" path="res://Assets/UI/credits_pic.png" id="10_16hvj"]
 [ext_resource type="Texture2D" uid="uid://hfuyio4i82nf" path="res://Assets/UI/back_arrow.svg" id="11_vr1f0"]
+[ext_resource type="Texture2D" uid="uid://dbcfe8fsnewj" path="res://Assets/UI/quests_pic.png" id="14_ujyyl"]
+[ext_resource type="Texture2D" uid="uid://cjbn7oe6cmjt1" path="res://Assets/UI/token_pic.png" id="15_mkpwh"]
 [ext_resource type="FontFile" uid="uid://jvamkyln7iv" path="res://Assets/fonts/IMFellFrenchCanonSC-Regular.ttf" id="15_wyh8j"]
 [ext_resource type="FontFile" uid="uid://byw0x68xksmxg" path="res://Assets/fonts/IMFellDWPica-Regular.ttf" id="16_ujyyl"]
 
@@ -87,9 +89,9 @@ grow_vertical = 2
 layout_mode = 2
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
-theme_override_constants/separation = 75
+theme_override_constants/separation = 45
 
 [node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
@@ -111,7 +113,27 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
 theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
 text = "Leaderboard"
 
-[node name="Credits" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+[node name="QuestsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 70
+theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
+text = "Daily Quests"
+
+[node name="TokenButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 70
+theme_override_styles/hover = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_purple_button")
+theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
+text = "Token"
+
+[node name="CreditsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("4_font")
@@ -122,7 +144,6 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_purple_button")
 text = "Credits"
 
 [node name="SettingsOverlay" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -352,67 +373,202 @@ custom_minimum_size = Vector2(735, 300)
 layout_mode = 2
 alignment = 1
 
-[node name="Credits" type="Control" parent="."]
+[node name="QuestsOverlay" type="Control" parent="."]
 visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("3_credits_overlay")
 
-[node name="ColorRect" type="ColorRect" parent="Credits"]
+[node name="ColorRect" type="ColorRect" parent="QuestsOverlay"]
+offset_right = 900.0
+offset_bottom = 1579.0
+color = Color(0.0627451, 0, 0.0705882, 1)
+
+[node name="header image" type="Sprite2D" parent="QuestsOverlay"]
+position = Vector2(450, 187)
+scale = Vector2(0.293208, 0.296788)
+texture = ExtResource("14_ujyyl")
+
+[node name="Sprite2D2" type="Sprite2D" parent="QuestsOverlay"]
+position = Vector2(69, 65)
+texture = ExtResource("11_vr1f0")
+
+[node name="Credit" type="Label" parent="QuestsOverlay"]
+layout_mode = 2
+offset_left = 172.0
+offset_top = 318.0
+offset_right = 728.0
+offset_bottom = 422.0
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 90
+text = "Quests"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="QuestsOverlay"]
+offset_top = 312.0
+offset_right = 900.0
+offset_bottom = 1422.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="QuestsOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="QuestsOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="Coming Soon" type="Label" parent="QuestsOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("15_wyh8j")
+theme_override_font_sizes/font_size = 55
+text = "Coming Soon!"
+horizontal_alignment = 1
+
+[node name="TokenOverlay" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_credits_overlay")
+
+[node name="ColorRect" type="ColorRect" parent="TokenOverlay"]
+offset_right = 900.0
+offset_bottom = 1579.0
+color = Color(0.0627451, 0, 0.0705882, 1)
+
+[node name="header image" type="Sprite2D" parent="TokenOverlay"]
+position = Vector2(449.633, 227.066)
+scale = Vector2(0.293208, 0.296788)
+texture = ExtResource("15_mkpwh")
+
+[node name="Sprite2D2" type="Sprite2D" parent="TokenOverlay"]
+position = Vector2(69, 65)
+texture = ExtResource("11_vr1f0")
+
+[node name="Credit" type="Label" parent="TokenOverlay"]
+layout_mode = 2
+offset_left = 172.0
+offset_top = 318.0
+offset_right = 728.0
+offset_bottom = 422.0
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 90
+text = "Token"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="TokenOverlay"]
+offset_top = 312.0
+offset_right = 900.0
+offset_bottom = 1422.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TokenOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="Music" type="Label" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("15_wyh8j")
+theme_override_font_sizes/font_size = 55
+text = "Thank you for playing 
+my mini-app!"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="paragraph1" type="Label" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("15_wyh8j")
+theme_override_font_sizes/font_size = 35
+text = "This mini-app currently uses USDC for payments. However, if this game hits 1,000 daily active players, I will officially launch a token."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer3" type="Control" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="paragraph2" type="Label" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("15_wyh8j")
+theme_override_font_sizes/font_size = 35
+text = "If this interests you, make sure to add this app and share with fellow caster. Again, thank you so much for your support!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer4" type="Control" parent="TokenOverlay/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 202.25)
+layout_mode = 2
+
+[node name="CreditsOverlay" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_credits_overlay")
+
+[node name="ColorRect" type="ColorRect" parent="CreditsOverlay"]
 layout_mode = 0
 offset_right = 900.0
 offset_bottom = 1579.0
 color = Color(0.0627451, 0, 0.0705882, 1)
 
-[node name="header image" type="Sprite2D" parent="Credits"]
+[node name="header image" type="Sprite2D" parent="CreditsOverlay"]
 position = Vector2(450.333, 193)
 scale = Vector2(0.268056, 0.268056)
 texture = ExtResource("10_16hvj")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Credits"]
+[node name="Sprite2D2" type="Sprite2D" parent="CreditsOverlay"]
 position = Vector2(69, 65)
 texture = ExtResource("11_vr1f0")
 
-[node name="CenterContainer" type="CenterContainer" parent="Credits"]
-layout_mode = 0
-offset_top = 312.0
-offset_right = 900.0
-offset_bottom = 1422.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Credits/CenterContainer"]
+[node name="Credit" type="Label" parent="CreditsOverlay"]
 layout_mode = 2
-
-[node name="Credit" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
-layout_mode = 2
+offset_left = 109.0
+offset_top = 318.0
+offset_right = 791.0
+offset_bottom = 422.0
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 90
 text = "Credits"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CreditsOverlay"]
+layout_mode = 0
+offset_top = 312.0
+offset_right = 900.0
+offset_bottom = 1422.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CreditsOverlay/CenterContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 
-[node name="Music" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Music" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 55
 text = "Music:"
 horizontal_alignment = 1
 
-[node name="Spacer2" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Spacer2" type="Control" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="Metatron Omega" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Metatron Omega" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Metatron Omega"
 horizontal_alignment = 1
 
-[node name="list1" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="list1" type="RichTextLabel" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
@@ -422,14 +578,14 @@ text = "\"Apostolikon\"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Monasterium Imperi" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Monasterium Imperi" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Monasterium Imperi"
 horizontal_alignment = 1
 
-[node name="list2" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="list2" type="RichTextLabel" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
@@ -439,14 +595,14 @@ text = "\"Imperator Praetor Spiritus Sanctus\"
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Midnight Syndicate" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Midnight Syndicate" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Midnight Syndicate"
 horizontal_alignment = 1
 
-[node name="list3" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="list3" type="RichTextLabel" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
@@ -454,14 +610,14 @@ text = "\"Darkened Shores\""
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Two Steps From Hell" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Two Steps From Hell" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "Two Steps From Hell"
 horizontal_alignment = 1
 
-[node name="list4" type="RichTextLabel" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="list4" type="RichTextLabel" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("16_ujyyl")
 theme_override_font_sizes/normal_font_size = 20
@@ -469,44 +625,44 @@ text = "\"He Who Brings the Night\""
 fit_content = true
 horizontal_alignment = 1
 
-[node name="Spacer3" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Spacer3" type="Control" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="SFX" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="SFX" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 55
 text = "SFX:"
 horizontal_alignment = 1
 
-[node name="Spacer4" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Spacer4" type="Control" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="SFX credits" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="SFX credits" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
 text = "YouTube, www.soundsnap.com - Misc. Artists"
 horizontal_alignment = 1
 
-[node name="Spacer5" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Spacer5" type="Control" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="Tools Used" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Tools Used" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 55
 text = "Tools Used:"
 horizontal_alignment = 1
 
-[node name="Spacer6" type="Control" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="Spacer6" type="Control" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="SFX credits2" type="Label" parent="Credits/CenterContainer/VBoxContainer"]
+[node name="SFX credits2" type="Label" parent="CreditsOverlay/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("15_wyh8j")
 theme_override_font_sizes/font_size = 35
