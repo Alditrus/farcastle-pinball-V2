@@ -1,4 +1,4 @@
-[gd_scene load_steps=107 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=108 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -39,6 +39,7 @@
 [ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://Scenes/pupil.tscn" id="34_r2pup"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="35_6umbq"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
+[ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="37_sc61s"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
 [ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
@@ -510,6 +511,9 @@ offset_bottom = 77.0
 texture_normal = ExtResource("62_hamburger")
 ignore_texture_size = true
 stretch_mode = 0
+
+[node name="Node2D" parent="ScoreboardUI" instance=ExtResource("37_sc61s")]
+position = Vector2(840, 1008)
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
 visible = false
@@ -1322,6 +1326,20 @@ theme_override_fonts/normal_font = ExtResource("80_00dx6")
 theme_override_font_sizes/normal_font_size = 40
 text = "Ball
 Saved"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("81_ball_saved")
+
+[node name="Multi-Ball" type="RichTextLabel" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_left = 759.0
+offset_top = 1161.0
+offset_right = 920.0
+offset_bottom = 1264.0
+theme_override_fonts/normal_font = ExtResource("80_00dx6")
+theme_override_font_sizes/normal_font_size = 40
+text = "Multi
+Ball!"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("81_ball_saved")

@@ -85,11 +85,13 @@ func _process(delta):
 # Function to increase score based on element type
 func increase_score(element_type: String):
 	var points = 0
+	var event_data = {}
 	
 	# Determine points based on element type
 	match element_type:
 		"bumper":
 			points = bumper_level_points[current_bumper_level]
+			event_data = {"level": current_bumper_level}
 		"alcove_bumper":
 			points = 5000
 		"slingshot":
@@ -102,14 +104,12 @@ func increase_score(element_type: String):
 			points = 7000
 		"candle_set_complete":
 			points = 80000
-			# Upgrade bumper level when candle set is completed
 			upgrade_bumper_level()
 		"rail_exit":
 			points = 200
 		"rollover":
 			points = 6000
 		"spinner":
-			# Start the spinner point calculation
 			start_spinner_points(1.0)
 			return
 		"sinkhole":
@@ -118,14 +118,14 @@ func increase_score(element_type: String):
 			points = 10000000
 		"minigame_win":
 			points = 500
-			update_score_text()
-			return
 		_:
-			# Default points if element type is not recognized
 			points = 10
 	
-	# Add points to score
+	# Add points to score (local display)
 	score += points
+	
+	# Record event for backend
+	GameEventTracker.record_event(element_type, event_data)
 	
 	# Update the displayed score
 	update_score_text()

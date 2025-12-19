@@ -89,11 +89,14 @@ func activate_multiball():
 	
 	# Spawn secondary ball
 	spawn_secondary_ball()
+
+	# Trigger the ball saved animation
+	var ball_saved_label = get_node_or_null("../Multi-Ball")
+	if ball_saved_label and ball_saved_label.has_method("play_ball_saved_animation"):
+		ball_saved_label.play_ball_saved_animation()
 	
 	# Emit signal
 	emit_signal("multiball_activated")
-	
-	print("MULTIBALL ACTIVATED!")
 
 # Spawn the secondary ball in the launch lane
 func spawn_secondary_ball():

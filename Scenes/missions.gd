@@ -344,6 +344,13 @@ func complete_mission(mission: Mission):
 	if last_active_mission.has("id") and last_active_mission.id == mission.id:
 		last_active_mission.clear()
 	
+	# Record mission completion event
+	GameEventTracker.record_event("mission_complete", {
+		"mission_id": mission.id,
+		"mission_name": mission.name,
+		"reward_points": mission.reward_points
+	})
+	
 	# Add mission reward points to score
 	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 	if score_label:
@@ -437,7 +444,7 @@ func _on_multiball_activated():
 	record_collision(CollisionType.MULTIBALL)
 
 # Handle multiball sequence updates
-func _on_multiball_sequence_updated():
+func _on_multiball_sequence_updated(current_sequence: Array, required_sequence: Array):
 	# Only update lights if we have an active lich mode mission in the multiball phase
 	if not active_missions.has("lich_mode"):
 		return

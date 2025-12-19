@@ -24,6 +24,7 @@ general/default_playback_type.web=0
 
 AudioCollection="*res://Scenes/AudioCollection.tscn"
 GameSettings="*res://Scenes/GameSettings.gd"
+GameEventTracker="*res://Scenes/game_event_tracker.gd"
 
 [display]
 
