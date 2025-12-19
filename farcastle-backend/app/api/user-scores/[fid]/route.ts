@@ -8,10 +8,13 @@ const supabase = createClient(
 
 export async function GET(
   request: Request,
-  { params }: { params: { fid: string } }
+  { params }: { params: Promise<{ fid: string }> }
 ) {
   try {
-    const fid = parseInt(params.fid);
+    // Await the params (Next.js 15 change)
+    const { fid: fidString } = await params;
+    const fid = parseInt(fidString);
+    
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');
 
