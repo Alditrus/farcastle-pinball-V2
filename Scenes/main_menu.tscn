@@ -381,6 +381,7 @@ offset_bottom = 40.0
 script = ExtResource("3_credits_overlay")
 
 [node name="ColorRect" type="ColorRect" parent="QuestsOverlay"]
+layout_mode = 0
 offset_right = 900.0
 offset_bottom = 1579.0
 color = Color(0.0627451, 0, 0.0705882, 1)
@@ -406,6 +407,7 @@ text = "Quests"
 horizontal_alignment = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="QuestsOverlay"]
+layout_mode = 0
 offset_top = 312.0
 offset_right = 900.0
 offset_bottom = 1422.0
@@ -432,6 +434,7 @@ offset_bottom = 40.0
 script = ExtResource("3_credits_overlay")
 
 [node name="ColorRect" type="ColorRect" parent="TokenOverlay"]
+layout_mode = 0
 offset_right = 900.0
 offset_bottom = 1579.0
 color = Color(0.0627451, 0, 0.0705882, 1)
@@ -457,6 +460,7 @@ text = "Token"
 horizontal_alignment = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="TokenOverlay"]
+layout_mode = 0
 offset_top = 312.0
 offset_right = 900.0
 offset_bottom = 1422.0

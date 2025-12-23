@@ -12,42 +12,13 @@
   <title>FarCastle Pinball</title>
   
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    #gameContainer {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
     
     #canvas {
       display: block;
       margin: 0;
-      color: white;
       outline: none;
-      image-rendering: optimizeSpeed;
-      image-rendering: -moz-crisp-edges;
-      image-rendering: -o-crisp-edges;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: optimize-contrast;
-      image-rendering: crisp-edges;
-      image-rendering: pixelated;
-      -ms-interpolation-mode: nearest-neighbor;
     }
     
     #loading {
@@ -60,15 +31,8 @@
       z-index: 1000;
     }
     
-    #loading h2 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    
-    #loading p {
-      font-size: 14px;
-      color: #999;
-    }
+    #loading h2 { font-size: 24px; margin-bottom: 10px; }
+    #loading p { font-size: 14px; color: #999; }
     
     .spinner {
       border: 4px solid #333;
@@ -100,82 +64,43 @@
       max-width: 400px;
       z-index: 1001;
     }
-    
-    #error h3 {
-      color: #ff5555;
-      margin-bottom: 10px;
-    }
-    
-    #error button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #ff0000;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    
-    #error button:hover {
-      background: #cc0000;
-    }
   </style>
 </head>
 <body>
-  <div id="gameContainer">
-    <div id="loading">
-      <h2>FarCastle Pinball</h2>
-      <div class="spinner"></div>
-      <p id="loadingStatus">Initializing...</p>
-    </div>
-    
-    <div id="error">
-      <h3>⚠️ Error</h3>
-      <p id="errorMessage"></p>
-      <button onclick="location.reload()">Retry</button>
-    </div>
-    
-    <canvas id="canvas"></canvas>
+  <div id="loading">
+    <h2>FarCastle Pinball</h2>
+    <div class="spinner"></div>
+    <p id="loadingStatus">Initializing...</p>
   </div>
   
-  <!-- Godot Engine Script - This must be loaded first -->
-  <script src="index.js"></script>
-  <script>
-    // Godot configuration - injected by Godot export
-    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":119241808,"index.wasm":1648449},"focusCanvas":true,"gdextensionLibs":[]};
-    const GODOT_THREADS_ENABLED = true;
-  </script>
+  <div id="error">
+    <h3>Error</h3>
+    <p id="errorMessage"></p>
+    <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; background: #ff0000; color: white; border: none; border-radius: 4px; cursor: pointer;">Retry</button>
+  </div>
   
-  <!-- Mini App SDK and Game Logic -->
+  <canvas id="canvas"></canvas>
+  
+  <!-- Godot will inject its script tag here with $GODOT_HEAD_INCLUDE -->
+  $GODOT_HEAD_INCLUDE
+  
   <script type="module">
     import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk@0.1.0';
     
-    // Configuration - auto-detect environment
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:3000'
-      : 'https://your-backend.vercel.app';  // UPDATE THIS for production
-    
+    const API_URL = 'http://localhost:3000';
     const DEBUG = true;
     
-    // State
     let currentSessionId = null;
     let currentUserFid = null;
     let gameInitialized = false;
-    let miniAppReady = false;
     
-    // Logging helper
     function log(message, data = null) {
-      if (DEBUG) {
-        console.log(`[FarCastle] ${message}`, data || '');
-      }
+      if (DEBUG) console.log(`[FarCastle] ${message}`, data || '');
     }
     
     function updateLoadingStatus(status) {
       const statusEl = document.getElementById('loadingStatus');
-      if (statusEl) {
-        statusEl.textContent = status;
-      }
+      if (statusEl) statusEl.textContent = status;
       log(status);
     }
     
@@ -192,35 +117,26 @@
       }
     }
     
-    // Initialize Mini App SDK
     async function initMiniApp() {
       try {
         updateLoadingStatus('Connecting to Farcaster...');
-        log('Initializing Mini App SDK');
-        log('API URL:', API_URL);
         
         await sdk.actions.ready();
-        miniAppReady = true;
         
         const userContext = sdk.context?.user || {};
         console.log('SDK user context:', userContext);
-
-        currentUserFid = 13437;
+        
+        currentUserFid = 12345;
         if (userContext.fid && typeof userContext.fid === 'number' && userContext.fid > 0) {
           currentUserFid = userContext.fid;
           console.log('Using real FID from Farcaster:', currentUserFid);
         } else {
-          console.warn('⚠️ Using test FID for local development:', currentUserFid);
+          console.warn('Using test FID for local development:', currentUserFid);
         }
-
+        
         const username = userContext.username || 'TestUser';
-        const displayName = userContext.displayName || username;
-
-        log('User authenticated', {
-          fid: currentUserFid,
-          username,
-          displayName
-        });
+        
+        log('User authenticated', { fid: currentUserFid, username });
         
         updateLoadingStatus('Starting game session...');
         
@@ -228,23 +144,14 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fid: Number(currentUserFid) })
-        }).catch(err => {
-          throw new Error(`Network error: ${err.message}. Is the backend running at ${API_URL}?`);
         });
         
         if (!response.ok) {
-          const errorText = await response.text();
           throw new Error(`Session start failed: ${response.status}`);
         }
         
         const data = await response.json();
-        
-        if (!data.sessionId) {
-          throw new Error('No session ID received from server');
-        }
-        
         currentSessionId = data.sessionId;
-        log('Game session created', { sessionId: currentSessionId });
         
         window.currentSessionId = currentSessionId;
         window.currentUserFid = currentUserFid;
@@ -253,64 +160,18 @@
         
         gameInitialized = true;
         
+        log('Game session created', { sessionId: currentSessionId });
         updateLoadingStatus('Loading game...');
         
-        startGodotGame();
+        // Godot will start automatically from its own script
         
       } catch (error) {
         showError(`Failed to initialize: ${error.message}`);
-        log('Initialization error', error);
       }
     }
     
-    // Start Godot Engine
-    function startGodotGame() {
-      log('Starting Godot engine...');
-      
-      try {
-        if (typeof Engine === 'undefined') {
-          throw new Error('Godot Engine not loaded');
-        }
-        
-        const engine = new Engine(GODOT_CONFIG);
-        
-        const missing = Engine.getMissingFeatures({
-          threads: GODOT_THREADS_ENABLED,
-        });
-        
-        if (missing.length !== 0) {
-          const missingMsg = 'Browser missing required features:\n' + missing.join('\n');
-          showError(missingMsg);
-          return;
-        }
-        
-        log('Starting game...');
-        engine.startGame({
-          'onProgress': function (current, total) {
-            if (current > 0 && total > 0) {
-              const percent = Math.round((current / total) * 100);
-              updateLoadingStatus(`Loading game assets... ${percent}%`);
-            }
-          },
-        }).then(() => {
-          log('Godot game started successfully');
-        }).catch((err) => {
-          console.error('Failed to start Godot game:', err);
-          showError(`Failed to start game: ${err.message}`);
-        });
-        
-      } catch (err) {
-        console.error('Error initializing Godot engine:', err);
-        showError(`Engine initialization failed: ${err.message}`);
-      }
-    }
-    
-    // API Functions
     window.sendGameEvent = async function(sessionId, eventType, eventData) {
-      if (!gameInitialized) {
-        log('Game not initialized, skipping event:', eventType);
-        return;
-      }
+      if (!gameInitialized) return;
       
       try {
         const parsedData = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
@@ -326,13 +187,11 @@
     };
     
     window.endGame = async function(sessionId) {
-      console.log('🎮 endGame called with sessionId:', sessionId);
-      
-      if (!gameInitialized || !sessionId) {
-        return { success: false };
-      }
+      if (!gameInitialized) return { success: false };
       
       try {
+        console.log('🎮 endGame called with sessionId:', sessionId);
+        
         const response = await fetch(`${API_URL}/api/game/end`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -344,15 +203,12 @@
         }
         
         const data = await response.json();
+        window.verifiedScore = data.score;
         
-        if (data.score !== undefined) {
-          window.verifiedScore = data.score;
-          console.log('✅ Server verified score:', window.verifiedScore);
-        }
-        
+        console.log('Server verified score:', data.score);
         return data;
       } catch (error) {
-        console.error('❌ Failed to end game:', error);
+        console.error('Failed to end game:', error);
         return { success: false, error: error.message };
       }
     };
@@ -360,7 +216,6 @@
     window.getLeaderboard = async function(limit = 10) {
       try {
         const response = await fetch(`${API_URL}/api/leaderboard?limit=${limit}`);
-        if (!response.ok) throw new Error(`Leaderboard fetch failed: ${response.status}`);
         return await response.json();
       } catch (error) {
         console.error('[FarCastle] Failed to fetch leaderboard:', error);
@@ -373,7 +228,6 @@
       
       try {
         const response = await fetch(`${API_URL}/api/user-scores/${currentUserFid}?limit=${limit}`);
-        if (!response.ok) throw new Error(`User scores fetch failed: ${response.status}`);
         return await response.json();
       } catch (error) {
         console.error('[FarCastle] Failed to fetch user scores:', error);
@@ -382,24 +236,17 @@
     };
     
     window.notifyGodotReady = function() {
-      console.log('✅ Godot ready, hiding loading screen');
+      console.log('Godot notified ready, hiding loading screen');
       const loadingDiv = document.getElementById('loading');
       if (loadingDiv) {
         loadingDiv.style.display = 'none';
       }
     };
     
-    // Fallback timeout
-    setTimeout(() => {
-      const loadingDiv = document.getElementById('loading');
-      if (loadingDiv && loadingDiv.style.display !== 'none') {
-        console.warn('⏰ Force-hiding loading screen');
-        loadingDiv.style.display = 'none';
-      }
-    }, 5000);
-    
-    // Initialize
     initMiniApp();
   </script>
+  
+  <!-- Godot's initialization will be inserted here -->
+  $GODOT_BODY_INCLUDE
 </body>
 </html>

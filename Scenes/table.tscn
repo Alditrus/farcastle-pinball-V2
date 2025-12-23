@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
 [ext_resource type="PackedScene" uid="uid://c5u3og1um2vkk" path="res://Scenes/plunger.tscn" id="2_4ppvu"]
+[ext_resource type="Script" uid="uid://cxjn4402w1orl" path="res://Scenes/game_session.gd" id="2_7fyop"]
 [ext_resource type="Texture2D" uid="uid://bwukrlo2ng1c6" path="res://Assets/table/bumperwall.png" id="3_hnw2n"]
 [ext_resource type="PackedScene" uid="uid://bt11wdoy6r0qm" path="res://Scenes/ball.tscn" id="3_r4jc3"]
 [ext_resource type="PackedScene" uid="uid://cutassm65em2d" path="res://Scenes/flipper.tscn" id="4_0xndo"]
@@ -39,7 +40,6 @@
 [ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://Scenes/pupil.tscn" id="34_r2pup"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="35_6umbq"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
-[ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="37_sc61s"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
 [ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
 [ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
@@ -176,6 +176,9 @@ corner_radius_bottom_left = 4
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_ktkv2")
+
+[node name="GameSession" type="Node2D" parent="."]
+script = ExtResource("2_7fyop")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(450, 789)
@@ -511,9 +514,6 @@ offset_bottom = 77.0
 texture_normal = ExtResource("62_hamburger")
 ignore_texture_size = true
 stretch_mode = 0
-
-[node name="Node2D" parent="ScoreboardUI" instance=ExtResource("37_sc61s")]
-position = Vector2(840, 1008)
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
 visible = false

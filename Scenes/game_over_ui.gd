@@ -18,7 +18,8 @@ extends Control
 # High scores array (will be loaded from file later)
 var high_scores: Array[int] = [0, 0, 0, 0, 0, 0]
 
-
+var verified_score: int = 0
+var is_waiting_for_verification: bool = false
 
 func _ready():
 	# Set process mode to always so UI works when game is paused
@@ -39,6 +40,33 @@ func show_game_over(final_score: int = 0):
 	modulate = Color(1, 1, 1, 0)
 
 	update_final_score_display(final_score)
+
+	# Wait for server verification if web build
+	if OS.has_feature("web"):
+		is_waiting_for_verification = true
+		# Show a small indicator that we're verifying
+		if final_score_label:
+			final_score_label.text = format_score_with_commas(final_score) + " (verifying...)"
+		
+		# Wait for server to verify score
+		await wait_for_server_verification()
+		
+		# Update with verified score
+		if verified_score > 0:
+			print("Displaying verified score: ", verified_score)
+			update_final_score_display(verified_score)
+			# Use verified score for high score check
+			check_and_update_high_score(verified_score)
+		else:
+			# If verification failed, use client score but mark it
+			print("Using client score (verification failed)")
+			if final_score_label:
+				final_score_label.text = format_score_with_commas(final_score) + " (unverified)"
+			check_and_update_high_score(final_score)
+	else:
+		# Not a web build, use client score directly
+		check_and_update_high_score(final_score)
+	
 	update_high_scores_display()
 
 	# Create fade-in animation that works when paused
@@ -49,9 +77,48 @@ func show_game_over(final_score: int = 0):
 	# Pause the game
 	get_tree().paused = true
 
+func _get_javascript_singleton():
+	if Engine.has_singleton("JavaScriptBridge"):
+		return Engine.get_singleton("JavaScriptBridge")
+	elif Engine.has_singleton("JavaScript"):
+		return Engine.get_singleton("JavaScript")
+	return null
+
+func wait_for_server_verification():
+	var js = _get_javascript_singleton()
+	if not js:
+		print("❌ No JavaScript singleton available")
+		return
+	
+	print("⏳ Waiting for server to verify score...")
+	
+	var max_attempts = 30
+	var attempts = 0
+	
+	while attempts < max_attempts:
+		var score_result = js.eval("window.verifiedScore || 0", true)
+		print("Attempt ", attempts + 1, ": verifiedScore = ", score_result)
+		
+		if score_result is int or score_result is float:
+			if score_result > 0:
+				verified_score = int(score_result)
+				is_waiting_for_verification = false
+				print("✅ Server verified score: ", verified_score)
+				return
+		
+		await get_tree().create_timer(0.1).timeout
+		attempts += 1
+	
+	is_waiting_for_verification = false
+	push_warning("⚠️ Score verification timed out")
+
 # Hide the game over UI
 func hide_game_over():
 	visible = false
+
+	# Reset verification state
+	verified_score = 0
+	is_waiting_for_verification = false
 	
 	# Unpause the game
 	get_tree().paused = false
@@ -105,6 +172,11 @@ func check_and_update_high_score(current_score: int) -> bool:
 
 # Button signal handlers
 func _on_play_again_pressed():
+	# Reset game over flag in score label
+	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+	if score_label and score_label.has_method("reset_game_over_flag"):
+		score_label.reset_game_over_flag()
+
 	# Unpause the game before reloading
 	get_tree().paused = false
 	# Restart the music

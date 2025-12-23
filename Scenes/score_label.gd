@@ -215,14 +215,49 @@ func check_game_over():
 	if ball_count <= -1:
 		trigger_game_over()
 
-# Trigger game over - freeze game and show game over UI
-func trigger_game_over():
+func _get_javascript_singleton():
+	if Engine.has_singleton("JavaScriptBridge"):
+		return Engine.get_singleton("JavaScriptBridge")
+	elif Engine.has_singleton("JavaScript"):
+		return Engine.get_singleton("JavaScript")
+	return null
 
+var game_over_triggered: bool = false
+
+func trigger_game_over():
+	# Prevent multiple calls
+	if game_over_triggered:
+		print("Game over already triggered, ignoring duplicate call")
+		return
+	
+	game_over_triggered = true
+	print("🎮 Triggering game over...")
+	
+	# Send game end event to backend
+	if OS.has_feature("web"):
+		var js = _get_javascript_singleton()
+		var current_session_id = GameEventTracker.get_session_id()
+		
+		if js and current_session_id != "":
+			print("🎮 Calling endGame with session: ", current_session_id)
+			var js_code = """
+				(async function() {
+					console.log('🎮 GDScript called endGame');
+					const result = await window.endGame('%s');
+					console.log('endGame result:', result);
+				})();
+			""" % [current_session_id]
+			
+			js.eval(js_code)
+			await get_tree().create_timer(1.5).timeout
+		else:
+			print("Cannot call endGame - js:", js != null, " session:", current_session_id)
+	
 	# Stop music and play game over sfx
 	AudioCollection.stop_music()
 	AudioCollection.play_sfx(game_over_sound)
 
-	# Hide the plunger so it doesn't appear on top of game over UI
+	# Hide the plunger
 	var plunger = get_node_or_null("../../plunger")
 	if plunger:
 		plunger.visible = false
@@ -231,6 +266,11 @@ func trigger_game_over():
 	if game_over_ui and game_over_ui.has_method("check_and_update_high_score"):
 		game_over_ui.check_and_update_high_score(score)
 
-	# Show the game over UI with the final score (this will also pause the game)
+	# Show the game over UI with the final score
 	if game_over_ui and game_over_ui.has_method("show_game_over"):
 		game_over_ui.show_game_over(score)
+
+# Add this function to reset the flag when restarting
+func reset_game_over_flag():
+	game_over_triggered = false
+	score = 0
