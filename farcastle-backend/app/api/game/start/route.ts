@@ -9,10 +9,17 @@ const supabase = createClient(
 
 export async function POST(request: Request) {
   try {
-    const { fid } = await request.json();
+    const body = await request.json();
+
+    // DEBUG LOGGING
+    console.log('Received body:', body);
+    console.log('FID value:', body.fid);
+    console.log('FID type:', typeof body.fid);
+
+    const fid = parseInt(body.fid);
     
-    if (!fid) {
-      return NextResponse.json({ error: 'FID required' }, { status: 400 });
+    if (!fid || isNaN(fid)) {
+      return NextResponse.json({ error: 'Valid FID required' }, { status: 400 });
     }
 
     // Create or update player

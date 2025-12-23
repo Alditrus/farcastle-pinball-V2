@@ -9,8 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@neynar/nodejs-sdk": "^3.111.0",
-    "@supabase/supabase-js": "^2.88.0",
+    "@neynar/nodejs-sdk": "^3.112.0",
+    "@supabase/supabase-js": "^2.89.0",
     "next": "16.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"

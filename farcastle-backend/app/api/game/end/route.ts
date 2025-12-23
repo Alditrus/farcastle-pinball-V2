@@ -123,13 +123,24 @@ function validateGameSession(gameState: any): { valid: boolean; reason?: string 
 
 export async function POST(request: Request) {
   try {
-    const { sessionId, fid } = await request.json();
-
-    if (!sessionId || !fid) {
+    const body = await request.json();
+    
+    console.log('=== GAME END REQUEST ===');
+    console.log('Body:', body);
+    
+    const fid = parseInt(body.fid);
+    const sessionId = body.sessionId;
+    
+    console.log('Parsed FID:', fid);
+    console.log('Session ID:', sessionId);
+    
+    if (!sessionId || !fid || isNaN(fid)) {
+      console.log('Validation failed');
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
     // Get session
+    console.log('Looking up session:', sessionId, 'for FID:', fid);
     const { data: session, error: sessionError } = await supabase
       .from('game_sessions')
       .select('*')
@@ -138,7 +149,10 @@ export async function POST(request: Request) {
       .eq('is_active', true)
       .single();
 
+    console.log('Session query result:', { session, error: sessionError });
+
     if (sessionError || !session) {
+      console.log('Session not found or inactive');
       return NextResponse.json({ error: 'Invalid session' }, { status: 404 });
     }
 
