@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   
   <!-- Mini App Embed Metadata -->
-  <meta name="fc:miniapp" content='{"version":"1","imageUrl":"https://farcastle-pinball-v2.vercel.app/preview.png","button":{"title":"🎮 Play FarCastle Pinball","action":{"type":"launch_miniapp","url":"https://farcastle-pinball-v2.vercel.app","name":"FarCastle Pinball","splashImageUrl":"https://farcastle-pinball-v2.vercel.app/splash.png","splashBackgroundColor":"#1a1a1a"}}}'>
+  <meta name="fc:miniapp" content='{"version":"1","imageUrl":"https://farcastle-pinball.vercel.app/preview.png","button":{"title":"🎮 Play FarCastle Pinball","action":{"type":"launch_miniapp","url":"https://farcastle-pinball.vercel.app","name":"FarCastle Pinball","splashImageUrl":"https://farcastle-pinball.vercel.app/splash.png","splashBackgroundColor":"#1a1a1a"}}}'>
   
   <title>FarCastle Pinball</title>
   
@@ -131,7 +131,7 @@
     </div>
     
     <div id="error">
-      <h3>⚠️ Error</h3>
+      <h3>Error</h3>
       <p id="errorMessage"></p>
       <button onclick="location.reload()">Retry</button>
     </div>
@@ -139,12 +139,16 @@
     <canvas id="canvas"></canvas>
   </div>
   
-  <!-- Godot Engine Script - This must be loaded first -->
+  <!-- CRITICAL: Load Godot Engine Script -->
   <script src="index.js"></script>
+  
   <script>
     // Godot configuration - injected by Godot export
     const GODOT_CONFIG = $GODOT_CONFIG;
     const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+    
+    console.log('Godot config loaded:', GODOT_CONFIG);
+    console.log('Threads enabled:', GODOT_THREADS_ENABLED);
   </script>
   
   <!-- Mini App SDK and Game Logic -->
@@ -154,17 +158,15 @@
     // Configuration - auto-detect environment
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:3000'
-      : 'https://farcastle-backend.vercel.app';  // UPDATE THIS for production
+      : 'https://farcastle-backend.vercel.app';
     
     const DEBUG = true;
     
-    // State
     let currentSessionId = null;
     let currentUserFid = null;
     let gameInitialized = false;
     let miniAppReady = false;
     
-    // Logging helper
     function log(message, data = null) {
       if (DEBUG) {
         console.log(`[FarCastle] ${message}`, data || '');
@@ -192,7 +194,6 @@
       }
     }
     
-    // Initialize Mini App SDK
     async function initMiniApp() {
       try {
         updateLoadingStatus('Connecting to Farcaster...');
@@ -203,58 +204,44 @@
         miniAppReady = true;
         
         const userContext = sdk.context?.user || {};
-        console.log('SDK user context:', userContext);
-
-        currentUserFid = 13437;
+        currentUserFid = 12345;
         if (userContext.fid && typeof userContext.fid === 'number' && userContext.fid > 0) {
           currentUserFid = userContext.fid;
-          console.log('Using real FID from Farcaster:', currentUserFid);
-        } else {
-          console.warn('⚠️ Using test FID for local development:', currentUserFid);
         }
-
-        const username = userContext.username || 'TestUser';
-        const displayName = userContext.displayName || username;
-
-        log('User authenticated', {
-          fid: currentUserFid,
-          username,
-          displayName
-        });
         
+        const username = userContext.username || 'TestUser';
+        
+        log('User authenticated', { fid: currentUserFid, username });
         updateLoadingStatus('Starting game session...');
         
         const response = await fetch(`${API_URL}/api/game/start`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fid: Number(currentUserFid) })
-        }).catch(err => {
-          throw new Error(`Network error: ${err.message}. Is the backend running at ${API_URL}?`);
         });
         
         if (!response.ok) {
-          const errorText = await response.text();
           throw new Error(`Session start failed: ${response.status}`);
         }
         
         const data = await response.json();
-        
         if (!data.sessionId) {
-          throw new Error('No session ID received from server');
+          throw new Error('No session ID received');
         }
         
         currentSessionId = data.sessionId;
-        log('Game session created', { sessionId: currentSessionId });
-        
         window.currentSessionId = currentSessionId;
         window.currentUserFid = currentUserFid;
         window.currentUsername = username;
         window.verifiedScore = 0;
         
         gameInitialized = true;
+        log('Session created', { sessionId: currentSessionId });
         
         updateLoadingStatus('Loading game...');
         
+        // Wait for Godot Engine to be available
+        await waitForGodotEngine();
         startGodotGame();
         
       } catch (error) {
@@ -263,7 +250,26 @@
       }
     }
     
-    // Start Godot Engine
+    function waitForGodotEngine() {
+      return new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 50;
+        
+        const checkEngine = setInterval(() => {
+          attempts++;
+          
+          if (typeof window.Engine !== 'undefined') {
+            console.log('✅ Godot Engine loaded');
+            clearInterval(checkEngine);
+            resolve();
+          } else if (attempts >= maxAttempts) {
+            clearInterval(checkEngine);
+            reject(new Error('Godot Engine failed to load after 5 seconds'));
+          }
+        }, 100);
+      });
+    }
+    
     function startGodotGame() {
       log('Starting Godot engine...');
       
@@ -279,8 +285,7 @@
         });
         
         if (missing.length !== 0) {
-          const missingMsg = 'Browser missing required features:\n' + missing.join('\n');
-          showError(missingMsg);
+          showError('Browser missing required features:\n' + missing.join('\n'));
           return;
         }
         
@@ -307,52 +312,34 @@
     
     // API Functions
     window.sendGameEvent = async function(sessionId, eventType, eventData) {
-      if (!gameInitialized) {
-        log('Game not initialized, skipping event:', eventType);
-        return;
-      }
-      
+      if (!gameInitialized) return;
       try {
         const parsedData = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
-        
         await fetch(`${API_URL}/api/game/event`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId, eventType, eventData: parsedData })
         });
       } catch (error) {
-        console.error('[FarCastle] Failed to send event:', error);
+        console.error('[FarCastle] Event error:', error);
       }
     };
     
     window.endGame = async function(sessionId) {
-      console.log('🎮 endGame called with sessionId:', sessionId);
-      
-      if (!gameInitialized || !sessionId) {
-        return { success: false };
-      }
-      
+      if (!gameInitialized || !sessionId) return { success: false };
       try {
         const response = await fetch(`${API_URL}/api/game/end`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId, fid: currentUserFid })
         });
-        
-        if (!response.ok) {
-          throw new Error(`Game end failed: ${response.status}`);
-        }
-        
         const data = await response.json();
-        
         if (data.score !== undefined) {
           window.verifiedScore = data.score;
           console.log('✅ Server verified score:', window.verifiedScore);
         }
-        
         return data;
       } catch (error) {
-        console.error('❌ Failed to end game:', error);
         return { success: false, error: error.message };
       }
     };
@@ -360,45 +347,38 @@
     window.getLeaderboard = async function(limit = 10) {
       try {
         const response = await fetch(`${API_URL}/api/leaderboard?limit=${limit}`);
-        if (!response.ok) throw new Error(`Leaderboard fetch failed: ${response.status}`);
         return await response.json();
       } catch (error) {
-        console.error('[FarCastle] Failed to fetch leaderboard:', error);
         return { leaderboard: [] };
       }
     };
     
     window.getUserScores = async function(limit = 10) {
       if (!currentUserFid) return { scores: [] };
-      
       try {
         const response = await fetch(`${API_URL}/api/user-scores/${currentUserFid}?limit=${limit}`);
-        if (!response.ok) throw new Error(`User scores fetch failed: ${response.status}`);
         return await response.json();
       } catch (error) {
-        console.error('[FarCastle] Failed to fetch user scores:', error);
         return { scores: [] };
       }
     };
     
     window.notifyGodotReady = function() {
-      console.log('✅ Godot ready, hiding loading screen');
+      console.log('Godot ready, hiding loading screen');
       const loadingDiv = document.getElementById('loading');
       if (loadingDiv) {
         loadingDiv.style.display = 'none';
       }
     };
     
-    // Fallback timeout
     setTimeout(() => {
       const loadingDiv = document.getElementById('loading');
       if (loadingDiv && loadingDiv.style.display !== 'none') {
-        console.warn('⏰ Force-hiding loading screen');
+        console.warn('Force-hiding loading screen');
         loadingDiv.style.display = 'none';
       }
     }, 5000);
     
-    // Initialize
     initMiniApp();
   </script>
 </body>
