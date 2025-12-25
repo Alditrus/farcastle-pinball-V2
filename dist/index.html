@@ -139,12 +139,22 @@
     <canvas id="canvas"></canvas>
   </div>
   
-  <!-- Godot Engine Script - This must be loaded first -->
-  <script src="index.js"></script>
   <script>
     // Godot configuration - injected by Godot export
-    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":96886848,"index.wasm":1648449},"focusCanvas":true,"gdextensionLibs":[]};
+    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":97313632,"index.wasm":1648449},"focusCanvas":true,"gdextensionLibs":[]};
     const GODOT_THREADS_ENABLED = true;
+    
+    // Manually add side.wasm for threading support
+    if (GODOT_THREADS_ENABLED && GODOT_CONFIG.fileSizes) {
+      // Check if side.wasm is missing from config
+      if (!GODOT_CONFIG.fileSizes['index.side.wasm']) {
+        console.warn('Adding missing index.side.wasm to GODOT_CONFIG');
+        // Add it with the correct file size (get this from your actual file)
+        GODOT_CONFIG.fileSizes['index.side.wasm'] = 54513657; // ⚠️ UPDATE THIS
+      }
+    }
+    
+    console.log('Final GODOT_CONFIG:', GODOT_CONFIG);
   </script>
   
   <!-- Mini App SDK and Game Logic -->
