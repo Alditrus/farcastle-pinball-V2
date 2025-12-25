@@ -1,385 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  
-  <!-- Mini App Embed Metadata -->
-  <meta name="fc:miniapp" content='{"version":"1","imageUrl":"https://farcastle-pinball.vercel.app/preview.png","button":{"title":"🎮 Play FarCastle Pinball","action":{"type":"launch_miniapp","url":"https://farcastle-pinball.vercel.app","name":"FarCastle Pinball","splashImageUrl":"https://farcastle-pinball.vercel.app/splash.png","splashBackgroundColor":"#1a1a1a"}}}'>
-  
-  <title>FarCastle Pinball</title>
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    #gameContainer {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    #canvas {
-      display: block;
-      margin: 0;
-      color: white;
-      outline: none;
-      image-rendering: optimizeSpeed;
-      image-rendering: -moz-crisp-edges;
-      image-rendering: -o-crisp-edges;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: optimize-contrast;
-      image-rendering: crisp-edges;
-      image-rendering: pixelated;
-      -ms-interpolation-mode: nearest-neighbor;
-    }
-    
-    #loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      text-align: center;
-      z-index: 1000;
-    }
-    
-    #loading h2 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    
-    #loading p {
-      font-size: 14px;
-      color: #999;
-    }
-    
-    .spinner {
-      border: 4px solid #333;
-      border-top: 4px solid #fff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    #error {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(255, 0, 0, 0.1);
-      border: 2px solid #ff0000;
-      border-radius: 8px;
-      padding: 20px;
-      color: white;
-      text-align: center;
-      max-width: 400px;
-      z-index: 1001;
-    }
-    
-    #error h3 {
-      color: #ff5555;
-      margin-bottom: 10px;
-    }
-    
-    #error button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #ff0000;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    
-    #error button:hover {
-      background: #cc0000;
-    }
-  </style>
-</head>
-<body>
-  <div id="gameContainer">
-    <div id="loading">
-      <h2>FarCastle Pinball</h2>
-      <div class="spinner"></div>
-      <p id="loadingStatus">Initializing...</p>
-    </div>
-    
-    <div id="error">
-      <h3>Error</h3>
-      <p id="errorMessage"></p>
-      <button onclick="location.reload()">Retry</button>
-    </div>
-    
-    <canvas id="canvas"></canvas>
-  </div>
-  
-  <!-- CRITICAL: Load Godot Engine Script -->
-  <script src="index.js"></script>
-  
-  <script>
-    // Godot configuration - injected by Godot export
-    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":96885936,"index.wasm":1626559},"focusCanvas":true,"gdextensionLibs":[]};
-    const GODOT_THREADS_ENABLED = false;
-    
-    console.log('Godot config loaded:', GODOT_CONFIG);
-    console.log('Threads enabled:', GODOT_THREADS_ENABLED);
-  </script>
-  
-  <!-- Mini App SDK and Game Logic -->
-  <script type="module">
-    import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk@0.1.0';
-    
-    // Configuration - auto-detect environment
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:3000'
-      : 'https://farcastle-backend.vercel.app';
-    
-    const DEBUG = true;
-    
-    let currentSessionId = null;
-    let currentUserFid = null;
-    let gameInitialized = false;
-    let miniAppReady = false;
-    
-    function log(message, data = null) {
-      if (DEBUG) {
-        console.log(`[FarCastle] ${message}`, data || '');
-      }
-    }
-    
-    function updateLoadingStatus(status) {
-      const statusEl = document.getElementById('loadingStatus');
-      if (statusEl) {
-        statusEl.textContent = status;
-      }
-      log(status);
-    }
-    
-    function showError(message) {
-      console.error('[FarCastle] Error:', message);
-      const errorDiv = document.getElementById('error');
-      const errorMsg = document.getElementById('errorMessage');
-      const loadingDiv = document.getElementById('loading');
-      
-      if (errorDiv && errorMsg) {
-        errorMsg.textContent = message;
-        errorDiv.style.display = 'block';
-        if (loadingDiv) loadingDiv.style.display = 'none';
-      }
-    }
-    
-    async function initMiniApp() {
-      try {
-        updateLoadingStatus('Connecting to Farcaster...');
-        log('Initializing Mini App SDK');
-        log('API URL:', API_URL);
-        
-        await sdk.actions.ready();
-        miniAppReady = true;
-        
-        const userContext = sdk.context?.user || {};
-        currentUserFid = 12345;
-        if (userContext.fid && typeof userContext.fid === 'number' && userContext.fid > 0) {
-          currentUserFid = userContext.fid;
-        }
-        
-        const username = userContext.username || 'TestUser';
-        
-        log('User authenticated', { fid: currentUserFid, username });
-        updateLoadingStatus('Starting game session...');
-        
-        const response = await fetch(`${API_URL}/api/game/start`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fid: Number(currentUserFid) })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Session start failed: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        if (!data.sessionId) {
-          throw new Error('No session ID received');
-        }
-        
-        currentSessionId = data.sessionId;
-        window.currentSessionId = currentSessionId;
-        window.currentUserFid = currentUserFid;
-        window.currentUsername = username;
-        window.verifiedScore = 0;
-        
-        gameInitialized = true;
-        log('Session created', { sessionId: currentSessionId });
-        
-        updateLoadingStatus('Loading game...');
-        
-        // Wait for Godot Engine to be available
-        await waitForGodotEngine();
-        startGodotGame();
-        
-      } catch (error) {
-        showError(`Failed to initialize: ${error.message}`);
-        log('Initialization error', error);
-      }
-    }
-    
-    function waitForGodotEngine() {
-      return new Promise((resolve, reject) => {
-        let attempts = 0;
-        const maxAttempts = 50;
-        
-        const checkEngine = setInterval(() => {
-          attempts++;
-          
-          if (typeof window.Engine !== 'undefined') {
-            console.log('✅ Godot Engine loaded');
-            clearInterval(checkEngine);
-            resolve();
-          } else if (attempts >= maxAttempts) {
-            clearInterval(checkEngine);
-            reject(new Error('Godot Engine failed to load after 5 seconds'));
-          }
-        }, 100);
-      });
-    }
-    
-    function startGodotGame() {
-      log('Starting Godot engine...');
-      
-      try {
-        if (typeof Engine === 'undefined') {
-          throw new Error('Godot Engine not loaded');
-        }
-        
-        const engine = new Engine(GODOT_CONFIG);
-        
-        const missing = Engine.getMissingFeatures({
-          threads: GODOT_THREADS_ENABLED,
-        });
-        
-        if (missing.length !== 0) {
-          showError('Browser missing required features:\n' + missing.join('\n'));
-          return;
-        }
-        
-        log('Starting game...');
-        engine.startGame({
-          'onProgress': function (current, total) {
-            if (current > 0 && total > 0) {
-              const percent = Math.round((current / total) * 100);
-              updateLoadingStatus(`Loading game assets... ${percent}%`);
-            }
-          },
-        }).then(() => {
-          log('Godot game started successfully');
-        }).catch((err) => {
-          console.error('Failed to start Godot game:', err);
-          showError(`Failed to start game: ${err.message}`);
-        });
-        
-      } catch (err) {
-        console.error('Error initializing Godot engine:', err);
-        showError(`Engine initialization failed: ${err.message}`);
-      }
-    }
-    
-    // API Functions
-    window.sendGameEvent = async function(sessionId, eventType, eventData) {
-      if (!gameInitialized) return;
-      try {
-        const parsedData = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
-        await fetch(`${API_URL}/api/game/event`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId, eventType, eventData: parsedData })
-        });
-      } catch (error) {
-        console.error('[FarCastle] Event error:', error);
-      }
-    };
-    
-    window.endGame = async function(sessionId) {
-      if (!gameInitialized || !sessionId) return { success: false };
-      try {
-        const response = await fetch(`${API_URL}/api/game/end`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId, fid: currentUserFid })
-        });
-        const data = await response.json();
-        if (data.score !== undefined) {
-          window.verifiedScore = data.score;
-          console.log('✅ Server verified score:', window.verifiedScore);
-        }
-        return data;
-      } catch (error) {
-        return { success: false, error: error.message };
-      }
-    };
-    
-    window.getLeaderboard = async function(limit = 10) {
-      try {
-        const response = await fetch(`${API_URL}/api/leaderboard?limit=${limit}`);
-        return await response.json();
-      } catch (error) {
-        return { leaderboard: [] };
-      }
-    };
-    
-    window.getUserScores = async function(limit = 10) {
-      if (!currentUserFid) return { scores: [] };
-      try {
-        const response = await fetch(`${API_URL}/api/user-scores/${currentUserFid}?limit=${limit}`);
-        return await response.json();
-      } catch (error) {
-        return { scores: [] };
-      }
-    };
-    
-    window.notifyGodotReady = function() {
-      console.log('Godot ready, hiding loading screen');
-      const loadingDiv = document.getElementById('loading');
-      if (loadingDiv) {
-        loadingDiv.style.display = 'none';
-      }
-    };
-    
-    setTimeout(() => {
-      const loadingDiv = document.getElementById('loading');
-      if (loadingDiv && loadingDiv.style.display !== 'none') {
-        console.warn('Force-hiding loading screen');
-        loadingDiv.style.display = 'none';
-      }
-    }, 5000);
-    
-    initMiniApp();
-  </script>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title></title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #000000;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<script src="index.js"></script>
+		<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":96455392,"index.wasm":1626559},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, `getRegistration()` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				// Reload if there was no error.
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			// Display the message as usual
+			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+			displayFailureNotice(missingMsg + missing.join('\n'));
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+	</body>
 </html>
+
