@@ -4,6 +4,8 @@ extends Node
 var session_id: String = ""
 var events: Array = []
 var is_web_build: bool = false
+var event_queue: Array = []
+var is_processing_queue: bool = false
 
 func _ready():
 	is_web_build = OS.has_feature("web")
@@ -42,7 +44,35 @@ func record_event(event_type: String, event_data: Dictionary = {}):
 	
 	# Send to backend if web build
 	if is_web_build and session_id != "":
-		send_event_to_backend(event_type, event_data)
+		queue_event(event_type, event_data)
+
+#Queue events to send in batches
+func queue_event(event_type: String, event_data: Dictionary):
+	event_queue.append({
+		"type": event_type,
+		"data": event_data
+	})
+	
+	# Start processing if not already running
+	if not is_processing_queue:
+		process_event_queue()
+
+# Process events with small delays to avoid blocking
+func process_event_queue():
+	if event_queue.is_empty():
+		is_processing_queue = false
+		return
+	
+	is_processing_queue = true
+	
+	var event = event_queue.pop_front()
+	send_event_to_backend(event.type, event.data)
+	
+	# Wait a tiny bit before processing next event (1 frame)
+	await get_tree().process_frame
+	
+	# Continue processing
+	process_event_queue()
 
 func send_event_to_backend(event_type: String, event_data: Dictionary):
 	# Check if JavaScript singleton exists (only available in web builds)
