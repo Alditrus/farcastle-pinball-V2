@@ -26,19 +26,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid session' }, { status: 404 });
     }
 
-    // Update game state with event
-    const currentState = session.game_state || { events: [] };
-    currentState.events = currentState.events || [];
-    currentState.events.push({
-      type: eventType,
-      data: eventData,
-      timestamp: Date.now()
-    });
+    // Insert event into game_events table (atomic operation - no race condition)
+    const { error: insertError } = await supabase
+      .from('game_events')
+      .insert({
+        session_id: sessionId,
+        event_type: eventType,
+        event_data: eventData,
+        timestamp: Date.now()
+      });
 
-    await supabase
-      .from('game_sessions')
-      .update({ game_state: currentState })
-      .eq('id', sessionId);
+    if (insertError) {
+      console.error('Failed to insert event:', insertError);
+      return NextResponse.json({ error: 'Failed to record event' }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
