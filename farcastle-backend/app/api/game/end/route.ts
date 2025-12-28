@@ -87,7 +87,9 @@ function calculateScore(events: any[]): number {
       case 'multiplier_applied':
         // Apply score multiplier (from minigame)
         const multiplierValue = event.event_data?.multiplier || 1;
+        const scoreBefore = score;
         score *= multiplierValue;
+        console.log(`[Multiplier] Applied ${multiplierValue}x: ${scoreBefore} → ${score}`);
         break;
       default:
         score += 10;
@@ -171,6 +173,20 @@ export async function POST(request: Request) {
     }
 
     console.log('Found', events?.length || 0, 'events for session');
+
+    // Log all events for debugging
+    if (events && events.length > 0) {
+      console.log('Event types:', events.map(e => e.event_type).join(', '));
+      const multiplierEvents = events.filter(e => e.event_type === 'multiplier_applied');
+      if (multiplierEvents.length > 0) {
+        console.log('Multiplier events found:', multiplierEvents.length);
+        multiplierEvents.forEach(e => {
+          console.log('  Multiplier event data:', JSON.stringify(e.event_data));
+        });
+      } else {
+        console.log('⚠️ No multiplier_applied events found in this session');
+      }
+    }
 
     // Validate game session
     const validation = validateGameSession(events || []);
