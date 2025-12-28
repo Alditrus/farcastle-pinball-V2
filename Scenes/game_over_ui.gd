@@ -4,7 +4,7 @@ extends Control
 @onready var game_over_label = $CenterContainer/VBoxContainer/GameOverLabel
 @onready var final_score_label = $CenterContainer/VBoxContainer/HBoxContainer/FinalScoreLabel
 @onready var high_score_title = $CenterContainer/VBoxContainer/HighScoreContainer/HighScoreTitle
-@onready var score_labels = [
+@onready var score_entries = [
 	$CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score1,
 	$CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score2,
 	$CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score3,
@@ -15,8 +15,9 @@ extends Control
 @onready var play_again_button = $CenterContainer/VBoxContainer/ButtonsContainer/PlayAgainButton
 @onready var exit_button = $CenterContainer/VBoxContainer/ButtonsContainer/ExitButton
 
-# High scores array (will be loaded from file later)
+# High scores array (will be loaded from API)
 var high_scores: Array[int] = [0, 0, 0, 0, 0, 0]
+var leaderboard_data: Array = []
 
 var verified_score: int = 0
 var is_waiting_for_verification: bool = false
@@ -31,6 +32,9 @@ func _ready():
 	# Connect button signals (functionality will be added later)
 	play_again_button.pressed.connect(_on_play_again_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
+
+	# Apply circular shader to all profile pictures
+	setup_circular_profile_pics()
 
 # Show the game over UI
 func show_game_over(final_score: int = 0):
@@ -67,6 +71,8 @@ func show_game_over(final_score: int = 0):
 		# Not a web build, use client score directly
 		check_and_update_high_score(final_score)
 	
+	# Fetch leaderboard from API
+	await fetch_leaderboard_data()
 	update_high_scores_display()
 
 	# Create fade-in animation that works when paused
@@ -145,13 +151,172 @@ func format_score_with_commas(number: int) -> String:
 	
 	return formatted_string
 
+# Fetch leaderboard data from API
+func fetch_leaderboard_data():
+	var js = _get_javascript_singleton()
+	if not js:
+		print("❌ No JavaScript singleton available for leaderboard fetch")
+		return
+
+	print("🔄 Fetching leaderboard from API...")
+
+	# Call the JavaScript function to get leaderboard
+	var leaderboard_promise = js.eval("""
+		(async () => {
+			try {
+				if (typeof window.getLeaderboard === 'function') {
+					const result = await window.getLeaderboard(6);
+					return JSON.stringify(result);
+				}
+				return JSON.stringify({ leaderboard: [] });
+			} catch (error) {
+				console.error('Leaderboard fetch error:', error);
+				return JSON.stringify({ leaderboard: [] });
+			}
+		})()
+	""", true)
+
+	# Wait a bit for the promise to resolve
+	await get_tree().create_timer(1.0).timeout
+
+	# Try to get the result
+	var result_json = js.eval("""
+		(window.lastLeaderboardResult || JSON.stringify({ leaderboard: [] }))
+	""", true)
+
+	# Store result for next retrieval
+	js.eval("""
+		(async () => {
+			try {
+				if (typeof window.getLeaderboard === 'function') {
+					const result = await window.getLeaderboard(6);
+					window.lastLeaderboardResult = JSON.stringify(result);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		})()
+	""", true)
+
+	# Wait for result to be stored
+	await get_tree().create_timer(0.5).timeout
+
+	result_json = js.eval("(window.lastLeaderboardResult || JSON.stringify({ leaderboard: [] }))", true)
+
+	if result_json is String and result_json != "":
+		var json = JSON.new()
+		var parse_result = json.parse(result_json)
+
+		if parse_result == OK:
+			var data = json.data
+			if data and data.has("leaderboard"):
+				leaderboard_data = data.leaderboard
+				print("✅ Leaderboard fetched: ", leaderboard_data.size(), " entries")
+			else:
+				print("⚠️ No leaderboard data in response")
+		else:
+			print("⚠️ Failed to parse leaderboard JSON")
+	else:
+		print("⚠️ No leaderboard result received")
+
+# Download profile picture from URL
+func download_profile_picture(url: String) -> Image:
+	if url == null or url == "":
+		return null
+
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+
+	var error = http_request.request(url)
+	if error != OK:
+		print("❌ Failed to request profile picture: ", url)
+		http_request.queue_free()
+		return null
+
+	var response = await http_request.request_completed
+	http_request.queue_free()
+
+	var result = response[0]
+	var response_code = response[1]
+	var body = response[3]
+
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		print("❌ Failed to download profile picture: ", response_code)
+		return null
+
+	var image = Image.new()
+	var image_error
+
+	# Try different image formats
+	if url.to_lower().ends_with(".png") or url.to_lower().contains(".png"):
+		image_error = image.load_png_from_buffer(body)
+	elif url.to_lower().ends_with(".jpg") or url.to_lower().ends_with(".jpeg") or url.to_lower().contains(".jpg"):
+		image_error = image.load_jpg_from_buffer(body)
+	elif url.to_lower().ends_with(".webp") or url.to_lower().contains(".webp"):
+		image_error = image.load_webp_from_buffer(body)
+	else:
+		# Try PNG first, then JPG
+		image_error = image.load_png_from_buffer(body)
+		if image_error != OK:
+			image_error = image.load_jpg_from_buffer(body)
+		if image_error != OK:
+			image_error = image.load_webp_from_buffer(body)
+
+	if image_error != OK:
+		print("❌ Failed to load image from buffer")
+		return null
+
+	return image
+
 # Update the high scores display
 func update_high_scores_display():
-	for i in range(score_labels.size()):
-		if i < high_scores.size():
-			score_labels[i].text = format_score_with_commas(high_scores[i])
+	for i in range(score_entries.size()):
+		var entry = score_entries[i]
+		var profile_pic = entry.get_node("ProfilePic")
+		var username_label = entry.get_node("Username")
+		var score_label = entry.get_node("ScoreValue")
+
+		if i < leaderboard_data.size():
+			var player_data = leaderboard_data[i]
+
+			# Update username
+			var display_name = player_data.get("display_name", player_data.get("username", "Player"))
+			username_label.text = display_name
+
+			# Update score
+			var score = player_data.get("score", 0)
+			score_label.text = format_score_with_commas(score)
+
+			# Update profile picture asynchronously
+			var pfp_url = player_data.get("pfp_url", "")
+			if pfp_url != "" and pfp_url != null:
+				# Start downloading profile picture in background
+				load_profile_picture_async(profile_pic, pfp_url)
+			else:
+				profile_pic.texture = null
 		else:
-			score_labels[i].text = "0"
+			# No data for this position
+			username_label.text = "---"
+			score_label.text = "---"
+			profile_pic.texture = null
+
+# Setup circular shader material for all profile pictures
+func setup_circular_profile_pics():
+	var shader = load("res://Assets/shaders/circular_profile.gdshader")
+	if shader:
+		for entry in score_entries:
+			var profile_pic = entry.get_node("ProfilePic")
+			if profile_pic:
+				var material = ShaderMaterial.new()
+				material.shader = shader
+				profile_pic.material = material
+
+# Load profile picture asynchronously without blocking
+func load_profile_picture_async(texture_rect: TextureRect, url: String):
+	var image = await download_profile_picture(url)
+	if image and texture_rect:
+		var texture = ImageTexture.create_from_image(image)
+		texture_rect.texture = texture
 
 # Check if current score is a high score and update the list
 func check_and_update_high_score(current_score: int) -> bool:

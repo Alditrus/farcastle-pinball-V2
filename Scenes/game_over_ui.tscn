@@ -50,7 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(800, 1200)
+custom_minimum_size = Vector2(669.925, 1200)
 layout_mode = 2
 
 [node name="GameOverLabel" type="Label" parent="CenterContainer/VBoxContainer"]
@@ -66,7 +66,7 @@ custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="CenterContainer/VBoxContainer/Spacer1"]
-position = Vector2(399, 32)
+position = Vector2(335, 32)
 scale = Vector2(1.75, 1.75)
 texture = ExtResource("4_xy24n")
 
@@ -117,65 +117,185 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
 
-[node name="Score1" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Score1" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
+
+[node name="ProfilePic" type="TextureRect" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score1"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score1"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = ExtResource("7_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "Player"
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score1"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
 theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "500,000"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Score2" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Score2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
+
+[node name="ProfilePic" type="TextureRect" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score2"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score2"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = ExtResource("7_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "Player"
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score2"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
 theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "400,000"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Score3" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Score3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
+
+[node name="ProfilePic" type="TextureRect" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score3"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score3"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = ExtResource("7_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "Player"
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score3"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
 theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "300,000"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Score4" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Score4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
+
+[node name="ProfilePic" type="TextureRect" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score4"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score4"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = ExtResource("7_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "Player"
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score4"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
 theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "200,000"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Score5" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Score5" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
+
+[node name="ProfilePic" type="TextureRect" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score5"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score5"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = ExtResource("7_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "Player"
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score5"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
 theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "100,000"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Score6" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
-custom_minimum_size = Vector2(0, 20)
+[node name="Score6" type="HBoxContainer" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
+
+[node name="ProfilePic" type="TextureRect" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score6"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Username" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score6"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
+theme_override_fonts/font = ExtResource("7_xtdma")
+theme_override_font_sizes/font_size = 45
+text = "Player"
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score6"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.564706, 0.286275, 0.807843, 1)
 theme_override_fonts/font = ExtResource("6_qkxqm")
 theme_override_font_sizes/font_size = 45
 text = "90,000"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Spacer2" type="Control" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 60)

@@ -56,6 +56,19 @@ func _process(delta):
 			# Check if we completed a full revolution
 			var current_revolutions = int(revolution_counter)
 			if current_revolutions > last_revolution_reported:
+				# Update local score immediately for UI feedback
+				var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
+				if score_label:
+					score_label.score += 200
+					score_label.update_score_text()
+
+				# Send event to backend for each revolution (200 points per revolution)
+				if GameEventTracker:
+					GameEventTracker.record_event("spinner", {
+						"revolution": current_revolutions,
+						"speed_scale": animated_sprite.speed_scale
+					}, 200)
+
 				# Report each new revolution to missions system
 				var missions_node = get_node("/root/Table/missions")
 				if missions_node:
@@ -152,13 +165,16 @@ func _on_area_2d_body_entered(body):
 		# Calculate velocity speed scale for both animation and scoring
 		var velocity_magnitude = body.linear_velocity.length()
 		var speed_scale = calculate_speed_scale(velocity_magnitude)
-		
+
 		# Store initial position and start checking direction
 		# Increase score with speed scale
 		var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")
 		if score_label:
 			score_label.start_spinner_points(speed_scale)
-		
+
+		# Note: Spinner scoring is now tracked per revolution, not per hit
+		# See revolution tracking logic in _process() function
+
 		last_ball_position = body.global_position
 		checking_ball_direction = true
 		animation_active = true

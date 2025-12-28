@@ -349,7 +349,7 @@ func complete_mission(mission: Mission):
 		"mission_id": mission.id,
 		"mission_name": mission.name,
 		"reward_points": mission.reward_points
-	})
+	}, mission.reward_points)
 	
 	# Add mission reward points to score
 	var score_label = get_node("/root/Table/ScoreboardUI/ScoreLabel")

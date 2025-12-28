@@ -1,6 +1,12 @@
 extends Label
 
+# Backend score - now the authoritative score from backend
 var score = 0
+
+# LOCAL SCORE CALCULATION (PRESERVED FOR REFERENCE - CURRENTLY DISABLED)
+# To re-enable local scoring, uncomment the score calculations in increase_score()
+# and _process() functions, and disconnect from backend score updates
+# var local_score = 0
 
 # Reference to ball count label
 @onready var ball_count_label = get_node("../BallCountLabel")
@@ -33,8 +39,17 @@ var game_over_sound = preload("res://Assets/sounds/game_over.ogg")
 
 # Called when the node enters the scene tree for the first time
 func _ready():
+	# Connect to backend score updates
+	GameEventTracker.score_updated.connect(_on_backend_score_updated)
 	update_score_text()
 	update_ball_count_text()
+
+# Called when backend score is updated
+func _on_backend_score_updated(new_score: int):
+	print("[ScoreLabel] Backend score updated: ", new_score)
+	DebugLog.log("[ScoreLabel] Backend score updated: " + str(new_score))
+	score = new_score
+	update_score_text()
 
 # Spinner accumulation variables
 var time_since_last_point = 0.0
@@ -42,24 +57,28 @@ var point_interval = 0.1  # Base interval between points
 
 # Called every frame
 func _process(delta):
+	# SPINNER LOCAL SCORING - DISABLED (using backend scoring now)
+	# To re-enable: uncomment the score additions below
+
 	# Handle spinner points decay
 	if spinner_active:
 		spinner_timer += delta
 		time_since_last_point += delta
-		
+
 		if spinner_ball_exited:
 			# Calculate decay factor using exponential decay
 			var decay_factor = exp(-SPINNER_SLOWDOWN_RATE * (spinner_timer - spinner_timer_at_exit))
 			spinner_current_speed = spinner_initial_speed * decay_factor
-			
+
 			# Calculate dynamic interval based on current speed
 			# As speed decreases, interval between points increases
 			var dynamic_interval = point_interval / spinner_current_speed
-			
+
 			# Add spinner points based on current speed and time interval
 			if spinner_current_speed > 0.05 and time_since_last_point >= dynamic_interval:
-				score += 200
-				update_score_text()
+				# LOCAL SCORING (DISABLED): score += 200
+				# Backend handles scoring now through GameEventTracker
+				# update_score_text()  # Not needed - backend updates trigger this
 				time_since_last_point = 0.0  # Reset timer after adding points
 			elif spinner_current_speed <= 0.05:
 				# Stop awarding points when spinner slows down enough
@@ -71,10 +90,11 @@ func _process(delta):
 			# While ball is still in contact, add points at regular intervals based on speed
 			var contact_interval = point_interval / spinner_current_speed
 			if time_since_last_point >= contact_interval:
-				score += 200
-				update_score_text()
+				# LOCAL SCORING (DISABLED): score += 200
+				# Backend handles scoring now through GameEventTracker
+				# update_score_text()  # Not needed - backend updates trigger this
 				time_since_last_point = 0.0  # Reset timer after adding points
-		
+
 			# If ball hasn't exited but time limit reached
 			if spinner_timer >= 5.0:
 				spinner_active = false
@@ -86,7 +106,7 @@ func _process(delta):
 func increase_score(element_type: String):
 	var points = 0
 	var event_data = {}
-	
+
 	# Determine points based on element type
 	match element_type:
 		"bumper":
@@ -120,15 +140,15 @@ func increase_score(element_type: String):
 			points = 500
 		_:
 			points = 10
-	
-	# Add points to score (local display)
+
+	# Add points to local score for immediate UI feedback
 	score += points
-	
-	# Record event for backend
-	GameEventTracker.record_event(element_type, event_data)
-	
-	# Update the displayed score
 	update_score_text()
+
+	# Record event for backend verification
+	print("[ScoreLabel] Sending event: ", element_type, " data: ", event_data, " (local: ", points, " pts, total: ", score, ")")
+	DebugLog.log("[ScoreLabel] Event: " + element_type + " (" + str(points) + " pts, total: " + str(score) + ")")
+	GameEventTracker.record_event(element_type, event_data, points)
 
 # Function to upgrade bumper level when candle set is completed
 func upgrade_bumper_level():
@@ -152,10 +172,10 @@ func start_spinner_points(speed_scale):
 	spinner_initial_speed = speed_scale
 	spinner_current_speed = speed_scale
 	time_since_last_point = 0.0  # Reset point timer
-	
-	# Add initial points
-	score += 200
-	update_score_text()
+
+	# LOCAL SCORING DISABLED: score += 200
+	# Backend now handles spinner scoring
+	# LOCAL SCORING DISABLED: update_score_text()
 
 # Function to mark spinner ball has exited
 func spinner_ball_exit():
@@ -186,11 +206,12 @@ func format_score_with_commas(number: int) -> String:
 
 # Function to apply a multiplier to the current score
 func apply_multiplier(multiplier: int):
-	var _previous_score = score
+	var previous_score = score
 	score *= multiplier
-	
-	# Update the displayed score
 	update_score_text()
+
+	print("[ScoreLabel] Applied multiplier: ", multiplier, "x (", previous_score, " → ", score, ")")
+	DebugLog.log("[ScoreLabel] Multiplier: " + str(multiplier) + "x (" + str(previous_score) + " → " + str(score) + ")")
 
 # Function to reset score
 func reset_score():

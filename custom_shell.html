@@ -135,7 +135,7 @@
         await sdk.actions.ready();
         
         const userContext = sdk.context?.user || {};
-        currentUserFid = 13437;
+        currentUserFid = 9055;
         if (userContext.fid && typeof userContext.fid === 'number' && userContext.fid > 0) {
           currentUserFid = userContext.fid;
         }
@@ -203,16 +203,23 @@
     
     // API Functions
     window.sendGameEvent = async function(sessionId, eventType, eventData) {
-      if (!gameInitialized) return;
+      if (!gameInitialized) return { success: false, score: window.verifiedScore || 0 };
       try {
         const parsedData = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
-        await fetch(`${API_URL}/api/game/event`, {
+        const response = await fetch(`${API_URL}/api/game/event`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId, eventType, eventData: parsedData })
         });
+        const result = await response.json();
+        // Update verified score if backend returns it
+        if (result.score !== undefined) {
+          window.verifiedScore = result.score;
+        }
+        return { success: true, score: window.verifiedScore || 0 };
       } catch (error) {
         console.error('[FarCastle] Event error:', error);
+        return { success: false, score: window.verifiedScore || 0 };
       }
     };
     

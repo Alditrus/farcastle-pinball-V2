@@ -84,6 +84,11 @@ function calculateScore(events: any[]): number {
           score += missionRewards[missionId];
         }
         break;
+      case 'multiplier_applied':
+        // Apply score multiplier (from minigame)
+        const multiplierValue = event.event_data?.multiplier || 1;
+        score *= multiplierValue;
+        break;
       default:
         score += 10;
     }
