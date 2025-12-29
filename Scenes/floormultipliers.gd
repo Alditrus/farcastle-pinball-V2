@@ -38,15 +38,13 @@ func _on_plier_body_entered(body, area_name):
 			var score_after = score_label.score
 
 			# Record multiplier event to backend
-			var event_tracker = get_node_or_null("/root/Table/GameEventTracker")
-			if event_tracker:
-				event_tracker.record_event("multiplier_applied", {
-					"multiplier": multiplier,
-					"area": area_name,
-					"score_before": score_before,
-					"score_after": score_after,
-					"score_added": score_after - score_before
-				}, score_after - score_before)
+			GameEventTracker.record_event("multiplier_applied", {
+				"multiplier": multiplier,
+				"area": area_name,
+				"score_before": score_before,
+				"score_after": score_after,
+				"score_added": score_after - score_before
+			}, score_after - score_before)
 
 			# Deactivate minigame and return to main game after a short delay
 			await get_tree().create_timer(0.5).timeout
