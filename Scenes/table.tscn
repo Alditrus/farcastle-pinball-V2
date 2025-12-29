@@ -1,4 +1,4 @@
-[gd_scene load_steps=110 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=109 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -41,7 +41,7 @@
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="35_6umbq"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
-[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
+[ext_resource type="FontFile" uid="uid://w6mftky2vby7" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
 [ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
 [ext_resource type="Script" uid="uid://b0fxxcofry6ws" path="res://Scenes/rollover_1.gd" id="41_bnbux"]
 [ext_resource type="Script" uid="uid://1hv3n66ti5yp" path="res://Scenes/score_label.gd" id="41_ecrf2"]
@@ -64,7 +64,6 @@
 [ext_resource type="Script" uid="uid://bkuos8ff7hwbc" path="res://Scenes/leaderboard_overlay.gd" id="61_leaderboard_overlay"]
 [ext_resource type="Script" uid="uid://b4amj3g885pu2" path="res://Scenes/pause_menu.gd" id="61_pause_menu"]
 [ext_resource type="Script" uid="uid://b51j0sukuyb63" path="res://Scenes/settings_menu.gd" id="61_settings_menu"]
-[ext_resource type="Script" uid="uid://dcgq61ielxhuq" path="res://Scenes/debug_event_ui.gd" id="62_debug_event_ui"]
 [ext_resource type="Texture2D" uid="uid://4w7qxm4g8lva" path="res://Assets/table/hamburger.svg" id="62_hamburger"]
 [ext_resource type="Script" uid="uid://uendwolvueeu" path="res://Scenes/highscores_overlay.gd" id="62_highscores_overlay"]
 [ext_resource type="Texture2D" uid="uid://tja2i0xeiwdp" path="res://Assets/table/divider.svg" id="63_divider"]
@@ -1317,80 +1316,6 @@ theme_override_fonts/font = ExtResource("63_wqavi")
 theme_override_font_sizes/font_size = 50
 text = "Back"
 flat = true
-
-[node name="DebugEventUI" type="Control" parent="UILayer"]
-visible = false
-layout_mode = 3
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -400.0
-offset_top = 120.0
-offset_right = -10.0
-offset_bottom = 400.0
-grow_horizontal = 0
-script = ExtResource("62_debug_event_ui")
-
-[node name="Panel" type="Panel" parent="UILayer/DebugEventUI"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -270.0
-offset_top = 762.0
-offset_right = -270.0
-offset_bottom = 762.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rounded")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/DebugEventUI/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 11.0
-offset_top = 20.0
-offset_right = -9.0
-offset_bottom = -21.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 5
-
-[node name="TitleLabel" type="Label" parent="UILayer/DebugEventUI/Panel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 24
-text = "Debug: Backend Events"
-horizontal_alignment = 1
-
-[node name="EventTypeLabel" type="Label" parent="UILayer/DebugEventUI/Panel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 26
-text = "Event Type: -"
-autowrap_mode = 3
-
-[node name="TimestampLabel" type="Label" parent="UILayer/DebugEventUI/Panel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 26
-text = "Timestamp: -"
-autowrap_mode = 3
-
-[node name="PointsLabel" type="Label" parent="UILayer/DebugEventUI/Panel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 26
-text = "Points Sent: -"
-autowrap_mode = 3
-
-[node name="VerifiedScoreLabel" type="Label" parent="UILayer/DebugEventUI/Panel/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 1, 0.4, 1)
-theme_override_font_sizes/font_size = 26
-text = "Backend Score: -"
-autowrap_mode = 3
 
 [node name="Ball-Saved" type="RichTextLabel" parent="."]
 modulate = Color(1, 1, 1, 0)

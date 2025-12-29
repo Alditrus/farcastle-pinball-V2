@@ -65,7 +65,6 @@ func _setup_score_callback():
 # Called from JavaScript when backend returns a score
 func update_score_from_backend(score: int):
 	print("[EventTracker] update_score_from_backend called: ", score)
-	DebugLog.log("[EventTracker] Backend returned score: " + str(score))
 
 	if score == 0 and backend_score == 0:
 		print("[EventTracker] ⚠️ WARNING: Backend returned score = 0. Check backend scoring logic!")
@@ -88,28 +87,24 @@ func record_event(event_type: String, event_data: Dictionary = {}, points: int =
 	})
 
 	print("[EventTracker] Event: ", event_type, " | Session: ", session_id, " | Web: ", is_web_build)
-	DebugLog.log("[EventTracker] Event: " + event_type + " | SID: " + session_id)
 
 	# Send to backend if web build
 	if is_web_build and session_id != "":
 		send_event_to_backend(event_type, event_data, points)
 	else:
 		print("[EventTracker] NOT sending - Web: ", is_web_build, " SID: ", session_id)
-		DebugLog.log("[EventTracker] NOT sending - Web: " + str(is_web_build) + " SID: " + session_id)
 
 func send_event_to_backend(event_type: String, event_data: Dictionary, points: int = 0):
 	# Check if JavaScript singleton exists (only available in web builds)
 	var js = _get_javascript_singleton()
 	if not js:
 		print("[EventTracker] JS singleton not available")
-		DebugLog.log("[EventTracker] JS singleton NOT available")
 		return
 
 	var event_data_copy = event_data.duplicate()
 	event_data_copy["timestamp"] = Time.get_ticks_msec()
 
 	print("[EventTracker] Sending to backend: ", event_type, " | Data: ", JSON.stringify(event_data_copy), " | Points: ", points)
-	DebugLog.log("[EventTracker] Sending: " + event_type)
 
 	# Emit signal for debug UI
 	event_about_to_send.emit(event_type, event_data_copy, session_id, points)

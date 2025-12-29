@@ -47,7 +47,6 @@ func _ready():
 # Called when backend score is updated
 func _on_backend_score_updated(new_score: int):
 	print("[ScoreLabel] Backend score updated: ", new_score)
-	DebugLog.log("[ScoreLabel] Backend score updated: " + str(new_score))
 	score = new_score
 	update_score_text()
 
@@ -147,7 +146,6 @@ func increase_score(element_type: String):
 
 	# Record event for backend verification
 	print("[ScoreLabel] Sending event: ", element_type, " data: ", event_data, " (local: ", points, " pts, total: ", score, ")")
-	DebugLog.log("[ScoreLabel] Event: " + element_type + " (" + str(points) + " pts, total: " + str(score) + ")")
 	GameEventTracker.record_event(element_type, event_data, points)
 
 # Function to upgrade bumper level when candle set is completed
@@ -211,7 +209,6 @@ func apply_multiplier(multiplier: int):
 	update_score_text()
 
 	print("[ScoreLabel] Applied multiplier: ", multiplier, "x (", previous_score, " → ", score, ")")
-	DebugLog.log("[ScoreLabel] Multiplier: " + str(multiplier) + "x (" + str(previous_score) + " → " + str(score) + ")")
 
 # Function to reset score
 func reset_score():
