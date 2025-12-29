@@ -1346,4 +1346,4 @@ vertical_alignment = 1
 script = ExtResource("81_ball_saved")
 
 [node name="Node2D" parent="." instance=ExtResource("83_7fyop")]
-position = Vector2(840, 1097)
+position = Vector2(1016, 1066)

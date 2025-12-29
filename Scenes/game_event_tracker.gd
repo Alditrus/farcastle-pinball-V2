@@ -32,9 +32,11 @@ func _get_javascript_singleton():
 	return null
 
 func set_session_id(sid: String):
+	var old_session = session_id
 	session_id = sid
 	events.clear()
-	print("GameEventTracker session_id set to: ", session_id)
+	print("🆔 GameEventTracker session_id changed from: ", old_session, " to: ", session_id)
+	print("🆔 Events cleared. Ready for new game.")
 
 func get_session_id() -> String:
 	return session_id
@@ -86,25 +88,29 @@ func record_event(event_type: String, event_data: Dictionary = {}, points: int =
 		"points": points
 	})
 
-	print("[EventTracker] Event: ", event_type, " | Session: ", session_id, " | Web: ", is_web_build)
+	print("📝 [EventTracker] Event: ", event_type, " | Session: ", session_id, " | Web: ", is_web_build, " | Points: ", points)
 
 	# Send to backend if web build
 	if is_web_build and session_id != "":
 		send_event_to_backend(event_type, event_data, points)
 	else:
-		print("[EventTracker] NOT sending - Web: ", is_web_build, " SID: ", session_id)
+		print("⚠️ [EventTracker] NOT sending - Web: ", is_web_build, " | Session ID: '", session_id, "'")
 
 func send_event_to_backend(event_type: String, event_data: Dictionary, points: int = 0):
 	# Check if JavaScript singleton exists (only available in web builds)
 	var js = _get_javascript_singleton()
 	if not js:
-		print("[EventTracker] JS singleton not available")
+		print("❌ [EventTracker] JS singleton not available")
 		return
 
 	var event_data_copy = event_data.duplicate()
 	event_data_copy["timestamp"] = Time.get_ticks_msec()
 
-	print("[EventTracker] Sending to backend: ", event_type, " | Data: ", JSON.stringify(event_data_copy), " | Points: ", points)
+	print("🌐 [EventTracker] Sending to backend:")
+	print("  → Type: ", event_type)
+	print("  → Session: ", session_id)
+	print("  → Points: ", points)
+	print("  → Data: ", JSON.stringify(event_data_copy))
 
 	# Emit signal for debug UI
 	event_about_to_send.emit(event_type, event_data_copy, session_id, points)

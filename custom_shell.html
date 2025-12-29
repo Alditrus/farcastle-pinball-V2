@@ -135,7 +135,7 @@
         await sdk.actions.ready();
         
         const userContext = sdk.context?.user || {};
-        currentUserFid = 9055;
+        currentUserFid = 8451;
         if (userContext.fid && typeof userContext.fid === 'number' && userContext.fid > 0) {
           currentUserFid = userContext.fid;
         }
@@ -157,8 +157,8 @@
         window.currentUserFid = currentUserFid;
         window.currentUsername = username;
         window.verifiedScore = 0;
-        
-        gameInitialized = true;
+
+        window.gameInitialized = true;
         
         updateLoadingStatus('Loading game...');
         
@@ -203,7 +203,7 @@
     
     // API Functions
     window.sendGameEvent = async function(sessionId, eventType, eventData) {
-      if (!gameInitialized) return { success: false, score: window.verifiedScore || 0 };
+      if (!window.gameInitialized) return { success: false, score: window.verifiedScore || 0 };
       try {
         const parsedData = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
         const response = await fetch(`${API_URL}/api/game/event`, {
@@ -224,7 +224,7 @@
     };
     
     window.endGame = async function(sessionId) {
-      if (!gameInitialized || !sessionId) return { success: false };
+      if (!window.gameInitialized || !sessionId) return { success: false };
       try {
         const response = await fetch(`${API_URL}/api/game/end`, {
           method: 'POST',
@@ -240,7 +240,36 @@
         return { success: false };
       }
     };
-    
+
+    window.startNewSession = async function() {
+      if (!window.gameInitialized) return { success: false };
+
+      try {
+        console.log('🔄 Starting new game session...');
+
+        const response = await fetch(`${API_URL}/api/game/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fid: Number(currentUserFid) })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Session start failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        currentSessionId = data.sessionId;
+        window.currentSessionId = currentSessionId;
+        window.verifiedScore = 0;
+
+        console.log('✅ New session created:', currentSessionId);
+        return { success: true, sessionId: currentSessionId };
+      } catch (error) {
+        console.error('Failed to start new session:', error);
+        return { success: false, error: error.message };
+      }
+    };
+
     window.getLeaderboard = async function(limit = 10) {
       try {
         const response = await fetch(`${API_URL}/api/leaderboard?limit=${limit}`);

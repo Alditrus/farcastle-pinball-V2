@@ -49,6 +49,7 @@ func _ready():
 # Play button handler - loads the table scene
 func _on_play_pressed():
 	AudioCollection.play_sfx(coinslot)
+
 	# Load the table scene
 	get_tree().change_scene_to_file("res://Scenes/table.tscn")
 

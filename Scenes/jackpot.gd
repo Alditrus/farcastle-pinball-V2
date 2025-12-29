@@ -32,12 +32,12 @@ func _ready():
 func _process(delta):
 	# Move in the current direction
 	position.x += direction * move_speed * delta
-	
+
 	# Check if reached the right bound
 	if position.x >= end_x:
 		position.x = end_x  # Prevent overshooting
 		direction = -1      # Change direction to left
-	
+
 	# Check if reached the left bound
 	elif position.x <= start_x:
 		position.x = start_x  # Prevent overshooting

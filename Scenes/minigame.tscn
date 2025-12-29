@@ -17,7 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://bgilhpa6v4tn8" path="res://Assets/sounds/cauldron.ogg" id="14_pg0ql"]
 [ext_resource type="Script" uid="uid://b18ho7upki7gc" path="res://Scenes/scythe_sfx.gd" id="15_scythe"]
 [ext_resource type="Script" uid="uid://dy1nod73510te" path="res://Scenes/cauldron_sfx.gd" id="16_cauldron"]
-[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="18_r5mjw"]
+[ext_resource type="FontFile" uid="uid://w6mftky2vby7" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="18_r5mjw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yx24v"]
 size = Vector2(32, 4793)
