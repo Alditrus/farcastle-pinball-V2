@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { calculateScore } from '../scoring';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,7 +42,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to record event' }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true });
+    // Fetch all events for this session to calculate current score
+    const { data: events, error: eventsError } = await supabase
+      .from('game_events')
+      .select('event_type, event_data, timestamp')
+      .eq('session_id', sessionId)
+      .order('timestamp', { ascending: true });
+
+    if (eventsError) {
+      console.error('Failed to fetch events for score calculation:', eventsError);
+      // Still return success for the event insert, but without score
+      return NextResponse.json({ success: true });
+    }
+
+    // Calculate current score based on all events
+    const currentScore = calculateScore(events || []);
+
+    console.log(`[Event] ${eventType} recorded. Current score: ${currentScore}`);
+
+    return NextResponse.json({ success: true, score: currentScore });
   } catch (error) {
     console.error('Game event error:', error);
     return NextResponse.json({ error: 'Failed to record event' }, { status: 500 });
