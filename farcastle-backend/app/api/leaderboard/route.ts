@@ -105,7 +105,7 @@ async function enrichLeaderboardWithPlayers(scores: any[]) {
       // Refresh our players array
       const { data: refreshedPlayers } = await supabase
         .from('players')
-        .select('fid, username, display_name, pfp_url')
+        .select('fid, username, display_name, pfp_url, updated_at')
         .in('fid', fids);
 
       if (refreshedPlayers) {
