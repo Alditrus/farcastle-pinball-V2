@@ -83,11 +83,16 @@ async function enrichLeaderboardWithPlayers(scores: any[]) {
   });
 
   // Refresh stale data from Neynar (if any)
-  if (fidsNeedingRefresh.length > 0 && fidsNeedingRefresh.length <= 10) {
-    // Only refresh if it's a reasonable number (avoid rate limit)
+  // Allow up to 100 refreshes at once for initial backfill, then limit to 10
+  const maxRefresh = (players?.length === 0 || players?.every(p => !p.username)) ? 100 : 10;
+
+  if (fidsNeedingRefresh.length > 0) {
+    // Take only the first maxRefresh FIDs to stay within limits
+    const fidsToRefresh = fidsNeedingRefresh.slice(0, maxRefresh);
+
     try {
-      console.log(`Refreshing ${fidsNeedingRefresh.length} stale player records`);
-      const neynarResponse = await neynarClient.fetchBulkUsers({ fids: fidsNeedingRefresh });
+      console.log(`Refreshing ${fidsToRefresh.length} player records (initial backfill: ${maxRefresh === 100})`);
+      const neynarResponse = await neynarClient.fetchBulkUsers({ fids: fidsToRefresh });
 
       // Update database with fresh data
       for (const user of neynarResponse.users) {
