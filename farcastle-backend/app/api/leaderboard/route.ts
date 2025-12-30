@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // Anon key is fine for reading
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role needed for writing player data
 );
 
 const neynarConfig = new Configuration({
@@ -96,7 +96,7 @@ async function enrichLeaderboardWithPlayers(scores: any[]) {
 
       // Update database with fresh data
       for (const user of neynarResponse.users) {
-        await supabase
+        const { error: upsertError } = await supabase
           .from('players')
           .upsert({
             fid: user.fid,
@@ -105,6 +105,12 @@ async function enrichLeaderboardWithPlayers(scores: any[]) {
             pfp_url: user.pfp_url,
             updated_at: new Date().toISOString()
           }, { onConflict: 'fid' });
+
+        if (upsertError) {
+          console.error(`Failed to upsert player ${user.fid}:`, upsertError);
+        } else {
+          console.log(`✅ Cached player data for FID ${user.fid}: ${user.username}`);
+        }
       }
 
       // Refresh our players array
