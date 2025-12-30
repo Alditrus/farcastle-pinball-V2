@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cp0gjau2fwd22"]
+[gd_scene load_steps=25 format=3 uid="uid://cp0gjau2fwd22"]
 
 [ext_resource type="Texture2D" uid="uid://bdoxd8w36h30n" path="res://Assets/minigame/walltexture.png" id="1_s7wve"]
 [ext_resource type="PackedScene" uid="uid://pkimpgnflfu1" path="res://Scenes/minigameball.tscn" id="2_5bepb"]
@@ -36,9 +36,6 @@ size = Vector2(938, 45)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vnlq7"]
 size = Vector2(106.5, 8)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_r5mjw"]
-size = Vector2(386.495, 6.19775)
 
 [node name="Minigame" type="Node2D"]
 
@@ -369,17 +366,3 @@ theme_override_font_sizes/font_size = 45
 text = "3x"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="testramp" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="testramp"]
-position = Vector2(193.353, 3209.17)
-rotation = 0.15708
-shape = SubResource("RectangleShape2D_r5mjw")
-
-[node name="testramp2" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="testramp2"]
-position = Vector2(705, 3209)
-rotation = -0.15708
-shape = SubResource("RectangleShape2D_r5mjw")

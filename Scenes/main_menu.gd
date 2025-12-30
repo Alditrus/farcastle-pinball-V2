@@ -31,6 +31,9 @@ func _ready():
 	if menu_music:
 		AudioCollection.play_music(menu_music, true)
 
+	# Preload leaderboard data in background
+	LeaderboardCache.preload_leaderboard()
+
 	# Connect button signals
 	play_button.pressed.connect(_on_play_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)

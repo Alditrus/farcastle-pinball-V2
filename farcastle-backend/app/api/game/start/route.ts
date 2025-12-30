@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { NeynarAPIClient, Configuration } from '@neynar/nodejs-sdk';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
@@ -6,6 +7,11 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role for writing
 );
+
+const neynarConfig = new Configuration({
+  apiKey: process.env.NEYNAR_API_KEY!,
+});
+const neynarClient = new NeynarAPIClient(neynarConfig);
 
 export async function POST(request: Request) {
   try {
@@ -22,10 +28,47 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Valid FID required' }, { status: 400 });
     }
 
-    // Create or update player
-    await supabase
+    // Create or update player with cached Neynar data
+    // Check if we have recent cached data (within 24 hours)
+    const { data: existingPlayer } = await supabase
       .from('players')
-      .upsert({ fid }, { onConflict: 'fid' });
+      .select('fid, username, display_name, pfp_url, updated_at')
+      .eq('fid', fid)
+      .single();
+
+    const needsRefresh = !existingPlayer ||
+      !existingPlayer.updated_at ||
+      (Date.now() - new Date(existingPlayer.updated_at).getTime() > 24 * 60 * 60 * 1000);
+
+    if (needsRefresh) {
+      // Fetch fresh data from Neynar
+      try {
+        const neynarResponse = await neynarClient.fetchBulkUsers({ fids: [fid] });
+        const user = neynarResponse.users[0];
+
+        if (user) {
+          await supabase
+            .from('players')
+            .upsert({
+              fid,
+              username: user.username,
+              display_name: user.display_name,
+              pfp_url: user.pfp_url,
+              updated_at: new Date().toISOString()
+            }, { onConflict: 'fid' });
+
+          console.log(`✅ Cached Neynar data for FID ${fid}`);
+        }
+      } catch (neynarError) {
+        console.error('Failed to fetch Neynar data:', neynarError);
+        // Continue with upsert even if Neynar fails
+        await supabase
+          .from('players')
+          .upsert({ fid }, { onConflict: 'fid' });
+      }
+    } else {
+      console.log(`Using cached data for FID ${fid} (age: ${(Date.now() - new Date(existingPlayer.updated_at).getTime()) / 1000 / 60} minutes)`);
+    }
 
     // Generate server seed for verification
     const serverSeed = crypto.randomBytes(32).toString('hex');

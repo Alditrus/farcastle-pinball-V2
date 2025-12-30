@@ -518,6 +518,7 @@ ignore_texture_size = true
 stretch_mode = 0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
+visible = false
 top_level = true
 light_mask = 24
 visibility_layer = 24
@@ -531,7 +532,7 @@ script = ExtResource("43_2rdwm")
 [node name="SubViewport" type="SubViewport" parent="minigamewindow"]
 handle_input_locally = false
 size = Vector2i(700, 1260)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Sprite2D" type="Sprite2D" parent="minigamewindow"]
 position = Vector2(349, 564.5)

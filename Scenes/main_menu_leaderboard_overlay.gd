@@ -12,18 +12,10 @@ var highscores_scroll_container: ScrollContainer = null
 var active_button: Button = null  # Track currently active button
 var showing_global: bool = true  # Track which leaderboard is shown
 
-# Placeholder leaderboard data
-var placeholder_scores = [
-	{"rank": 1, "name": "Wizard", "score": 15000000},
-	{"rank": 2, "name": "Knight", "score": 12500000},
-	{"rank": 3, "name": "Sorcerer", "score": 10000000},
-	{"rank": 4, "name": "Dragon", "score": 8500000},
-	{"rank": 5, "name": "Paladin", "score": 7000000},
-	{"rank": 6, "name": "Rogue", "score": 5500000},
-	{"rank": 7, "name": "Warrior", "score": 4000000},
-	{"rank": 8, "name": "Mark", "score": 3000000},
-	{"rank": 9, "name": "Bob", "score": 2000000},
-]
+# Leaderboard data from API
+var leaderboard_data: Array = []
+var is_loading_more: bool = false
+var has_more_data: bool = true
 
 # Placeholder high scores (individual player scores)
 var placeholder_highscores = [5000000, 3500000, 2800000, 2100000, 1750000, 1200000, 1100000, 1000000, 900000, 800000]
@@ -47,13 +39,19 @@ func _ready():
 	# Set initial active button (global by default)
 	set_active_button(global_button)
 
-	# Populate both leaderboards with placeholder scores
-	populate_leaderboard()
+	# Populate high scores with placeholder
 	populate_highscores()
 
 	# Hide high scores container initially (show global by default)
 	if highscores_container:
 		highscores_container.visible = false
+
+func _get_javascript_singleton():
+	if Engine.has_singleton("JavaScriptBridge"):
+		return Engine.get_singleton("JavaScriptBridge")
+	elif Engine.has_singleton("JavaScript"):
+		return Engine.get_singleton("JavaScript")
+	return null
 
 # Style the global and high score buttons
 func style_buttons():
@@ -148,6 +146,8 @@ func _input(event):
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			if showing_global and scroll_container:
 				scroll_container.scroll_vertical += scroll_speed
+				# Check if near bottom for infinite scroll
+				check_and_load_more()
 			elif not showing_global and highscores_scroll_container:
 				highscores_scroll_container.scroll_vertical += scroll_speed
 			get_viewport().set_input_as_handled()
@@ -186,6 +186,11 @@ func show_leaderboard():
 	# Set initial transparency for fade-in effect
 	modulate = Color(1, 1, 1, 0)
 
+	# Get cached leaderboard data (top 10 initially)
+	leaderboard_data = await LeaderboardCache.get_leaderboard(10)
+	has_more_data = true  # Reset for infinite scroll
+	populate_leaderboard()
+
 	# Create fade-in animation that works when paused
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
@@ -200,10 +205,294 @@ func hide_leaderboard():
 	await tween.finished
 	visible = false
 
-# Populate the leaderboard with placeholder scores
+# Check if user scrolled near bottom and load more entries
+func check_and_load_more():
+	if not showing_global or not scroll_container or is_loading_more or not has_more_data:
+		return
+
+	# Calculate if we're near the bottom (within 200px)
+	var max_scroll = scroll_container.get_v_scroll_bar().max_value
+	var current_scroll = scroll_container.scroll_vertical
+	var threshold = 200
+
+	if max_scroll - current_scroll < threshold:
+		load_more_entries()
+
+# Load more leaderboard entries
+func load_more_entries():
+	if is_loading_more or not has_more_data:
+		return
+
+	is_loading_more = true
+	print("[MainMenuLeaderboard] Loading more entries... (current: ", leaderboard_data.size(), ")")
+
+	var current_count = leaderboard_data.size()
+	var more_data = await LeaderboardCache.fetch_more_entries(current_count, 10)
+
+	if more_data.size() > 0:
+		# Append new entries to existing data
+		leaderboard_data.append_array(more_data)
+		print("[MainMenuLeaderboard] Loaded ", more_data.size(), " more entries (total: ", leaderboard_data.size(), ")")
+
+		# Append new entries to UI
+		append_leaderboard_entries(more_data, current_count)
+	else:
+		print("[MainMenuLeaderboard] No more entries to load")
+		has_more_data = false
+
+	is_loading_more = false
+
+# Append new entries to the existing leaderboard UI
+func append_leaderboard_entries(new_entries: Array, start_index: int):
+	for i in range(new_entries.size()):
+		var player_data = new_entries[i]
+		var entry_rank = start_index + i + 1
+
+		# Add spacing
+		if leaderboard_container.get_child_count() > 0:
+			var spacer = Control.new()
+			spacer.custom_minimum_size = Vector2(0, 20)
+			leaderboard_container.add_child(spacer)
+
+		create_leaderboard_entry(player_data, entry_rank)
+
+# Create a single leaderboard entry
+func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
+	# Format the score with commas for readability
+	var score = player_data.get("score", 0)
+	var formatted_score = format_score(score)
+
+	# Create horizontal container for left/right alignment
+	var entry_container = HBoxContainer.new()
+	entry_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	entry_container.custom_minimum_size = Vector2(0, 120)
+	entry_container.alignment = BoxContainer.ALIGNMENT_CENTER
+
+	# Create left side container for rank/icon, profile pic, and name
+	var left_container = HBoxContainer.new()
+	left_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_container.alignment = BoxContainer.ALIGNMENT_CENTER
+
+	# For ranks 1-4, use graphics instead of numbers
+	if entry_rank <= 4:
+		var rank_icon = TextureRect.new()
+		rank_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+		rank_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		rank_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+		# First place is larger than the others
+		if entry_rank == 1:
+			rank_icon.custom_minimum_size = Vector2(120, 120)
+		else:
+			rank_icon.custom_minimum_size = Vector2(80, 80)
+
+		# Load the appropriate rank graphic
+		var icon_path = ""
+		match entry_rank:
+			1: icon_path = "res://Assets/UI/first_place.png"
+			2: icon_path = "res://Assets/UI/second_place.png"
+			3: icon_path = "res://Assets/UI/third_place.png"
+			4: icon_path = "res://Assets/UI/fourth_place.png"
+
+		rank_icon.texture = load(icon_path)
+		left_container.add_child(rank_icon)
+
+		# Add spacer between icon and profile pic
+		var icon_spacer = Control.new()
+		icon_spacer.custom_minimum_size = Vector2(10, 0)
+		left_container.add_child(icon_spacer)
+
+	# Create profile picture
+	var profile_pic = TextureRect.new()
+	profile_pic.custom_minimum_size = Vector2(60, 60)
+	profile_pic.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	profile_pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
+	# Apply circular shader
+	var shader = load("res://Assets/shaders/circular_profile.gdshader")
+	if shader:
+		var material = ShaderMaterial.new()
+		material.shader = shader
+		profile_pic.material = material
+
+	left_container.add_child(profile_pic)
+
+	# Add spacer between profile pic and name
+	var pfp_spacer = Control.new()
+	pfp_spacer.custom_minimum_size = Vector2(10, 0)
+	left_container.add_child(pfp_spacer)
+
+	# Create name label
+	var name_label = Label.new()
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+
+	var display_name = player_data.get("display_name", player_data.get("username", "Player"))
+	# For ranks 1-4, only show name. For ranks 5+, show rank number and name
+	if entry_rank <= 4:
+		name_label.text = display_name
+	else:
+		name_label.text = "%d.  %s" % [entry_rank, display_name]
+
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	# Set font properties for name label
+	name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	var font1 = SystemFont.new()
+	font1.font_names = ["Almendra SC"]
+	name_label.add_theme_font_override("font", font1)
+	name_label.add_theme_font_size_override("font_size", 40)
+
+	left_container.add_child(name_label)
+
+	# Create score label (right-aligned)
+	var score_label = Label.new()
+	score_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	score_label.text = formatted_score
+	score_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	score_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	# Set font properties for score label
+	score_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	var font2 = SystemFont.new()
+	font2.font_names = ["Almendra SC"]
+	score_label.add_theme_font_override("font", font2)
+	score_label.add_theme_font_size_override("font_size", 40)
+
+	# Add containers to entry container
+	entry_container.add_child(left_container)
+	entry_container.add_child(score_label)
+
+	leaderboard_container.add_child(entry_container)
+
+	# Load profile picture asynchronously
+	var pfp_url = player_data.get("pfp_url", "")
+	if pfp_url != "" and pfp_url != null:
+		load_profile_picture_async(profile_pic, pfp_url)
+
+# NOTE: fetch_leaderboard_data() removed - now using LeaderboardCache singleton
+func old_fetch_leaderboard_data():
+	var js = _get_javascript_singleton()
+	if not js:
+		print("❌ No JavaScript singleton available for leaderboard fetch")
+		return
+
+	print("🔄 Fetching leaderboard from API...")
+
+	# Call the JavaScript function to get leaderboard
+	var leaderboard_promise = js.eval("""
+		(async () => {
+			try {
+				if (typeof window.getLeaderboard === 'function') {
+					const result = await window.getLeaderboard(10);
+					return JSON.stringify(result);
+				}
+				return JSON.stringify({ leaderboard: [] });
+			} catch (error) {
+				console.error('Leaderboard fetch error:', error);
+				return JSON.stringify({ leaderboard: [] });
+			}
+		})()
+	""", true)
+
+	# Wait a bit for the promise to resolve
+	await get_tree().create_timer(1.0).timeout
+
+	# Try to get the result
+	var result_json = js.eval("""
+		(window.lastLeaderboardResult || JSON.stringify({ leaderboard: [] }))
+	""", true)
+
+	# Store result for next retrieval
+	js.eval("""
+		(async () => {
+			try {
+				if (typeof window.getLeaderboard === 'function') {
+					const result = await window.getLeaderboard(10);
+					window.lastLeaderboardResult = JSON.stringify(result);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		})()
+	""", true)
+
+	# Wait for result to be stored
+	await get_tree().create_timer(0.5).timeout
+
+	result_json = js.eval("(window.lastLeaderboardResult || JSON.stringify({ leaderboard: [] }))", true)
+
+	if result_json is String and result_json != "":
+		var json = JSON.new()
+		var parse_result = json.parse(result_json)
+
+		if parse_result == OK:
+			var data = json.data
+			if data and data.has("leaderboard"):
+				leaderboard_data = data.leaderboard
+				print("✅ Leaderboard fetched: ", leaderboard_data.size(), " entries")
+			else:
+				print("⚠️ No leaderboard data in response")
+		else:
+			print("⚠️ Failed to parse leaderboard JSON")
+	else:
+		print("⚠️ No leaderboard result received")
+
+# Download profile picture from URL
+func download_profile_picture(url: String) -> Image:
+	if url == null or url == "":
+		return null
+
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+
+	var error = http_request.request(url)
+	if error != OK:
+		print("❌ Failed to request profile picture: ", url)
+		http_request.queue_free()
+		return null
+
+	var response = await http_request.request_completed
+	http_request.queue_free()
+
+	var result = response[0]
+	var response_code = response[1]
+	var body = response[3]
+
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		print("❌ Failed to download profile picture: ", response_code)
+		return null
+
+	var image = Image.new()
+	var image_error
+
+	# Try formats in order of likelihood for Farcaster profile pics: JPG -> WebP -> PNG
+	# This avoids the "Not a PNG file" error spam
+	image_error = image.load_jpg_from_buffer(body)
+	if image_error != OK:
+		image_error = image.load_webp_from_buffer(body)
+	if image_error != OK:
+		image_error = image.load_png_from_buffer(body)
+
+	if image_error != OK:
+		print("❌ Failed to load image from buffer (tried JPG, WebP, PNG)")
+		return null
+
+	return image
+
+# Load profile picture asynchronously without blocking
+func load_profile_picture_async(texture_rect: TextureRect, url: String):
+	var image = await download_profile_picture(url)
+	if image and texture_rect:
+		var texture = ImageTexture.create_from_image(image)
+		texture_rect.texture = texture
+
+# Populate the leaderboard with real data from API
 func populate_leaderboard():
-	# Check if we need scrolling (more than 9 entries)
-	var needs_scrolling = placeholder_scores.size() > 7
+	# Check if we need scrolling (more than 7 entries)
+	var needs_scrolling = leaderboard_data.size() > 7
 
 	if needs_scrolling and scroll_container == null:
 		# Create scroll container
@@ -239,101 +528,27 @@ func populate_leaderboard():
 	for child in leaderboard_container.get_children():
 		child.queue_free()
 
-	# Create a label for each score entry
-	for entry in placeholder_scores:
-		# Format the score with commas for readability
-		var formatted_score = format_score(entry["score"])
+	if leaderboard_data.size() == 0:
+		# Show "No data" message
+		var no_data_label = Label.new()
+		no_data_label.text = "No leaderboard data available"
+		no_data_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		no_data_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		leaderboard_container.add_child(no_data_label)
+		return
 
-		# Create horizontal container for left/right alignment
-		var entry_container = HBoxContainer.new()
-		entry_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		# Set consistent minimum height for all entries to match first place graphic
-		entry_container.custom_minimum_size = Vector2(0, 120)
-		entry_container.alignment = BoxContainer.ALIGNMENT_CENTER
-
-		# Create left side container for rank/icon and name
-		var left_container = HBoxContainer.new()
-		left_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		left_container.alignment = BoxContainer.ALIGNMENT_CENTER
-
-		# For ranks 1-4, use graphics instead of numbers
-		if entry["rank"] <= 4:
-			var rank_icon = TextureRect.new()
-			rank_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-			rank_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
-			rank_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-
-			# First place is larger than the others
-			if entry["rank"] == 1:
-				rank_icon.custom_minimum_size = Vector2(120, 120)
-			else:
-				rank_icon.custom_minimum_size = Vector2(80, 80)
-
-			# Load the appropriate rank graphic
-			var icon_path = ""
-			match entry["rank"]:
-				1: icon_path = "res://Assets/UI/first_place.png"
-				2: icon_path = "res://Assets/UI/second_place.png"
-				3: icon_path = "res://Assets/UI/third_place.png"
-				4: icon_path = "res://Assets/UI/fourth_place.png"
-
-			rank_icon.texture = load(icon_path)
-			left_container.add_child(rank_icon)
-
-			# Add spacer between icon and name
-			var icon_spacer = Control.new()
-			icon_spacer.custom_minimum_size = Vector2(10, 0)
-			left_container.add_child(icon_spacer)
-
-		# Create name label
-		var name_label = Label.new()
-		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-
-		# For ranks 1-4, only show name. For ranks 5+, show rank number and name
-		if entry["rank"] <= 4:
-			name_label.text = entry["name"]
-		else:
-			name_label.text = "%d.  %s" % [entry["rank"], entry["name"]]
-
-		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		name_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
-		# Set font properties for name label
-		name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		var font1 = SystemFont.new()
-		font1.font_names = ["Almendra SC"]
-		name_label.add_theme_font_override("font", font1)
-		name_label.add_theme_font_size_override("font_size", 40)
-
-		left_container.add_child(name_label)
-
-		# Create score label (right-aligned)
-		var score_label = Label.new()
-		score_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		score_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		score_label.text = formatted_score
-		score_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		score_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
-		# Set font properties for score label
-		score_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		var font2 = SystemFont.new()
-		font2.font_names = ["Almendra SC"]
-		score_label.add_theme_font_override("font", font2)
-		score_label.add_theme_font_size_override("font_size", 40)
-
-		# Add containers to entry container
-		entry_container.add_child(left_container)
-		entry_container.add_child(score_label)
+	# Create entry for each player from API data
+	for i in range(leaderboard_data.size()):
+		var player_data = leaderboard_data[i]
+		var entry_rank = i + 1
 
 		# Add spacing between entries
-		if entry["rank"] > 1:
+		if i > 0:
 			var spacer = Control.new()
 			spacer.custom_minimum_size = Vector2(0, 20)
 			leaderboard_container.add_child(spacer)
 
-		leaderboard_container.add_child(entry_container)
+		create_leaderboard_entry(player_data, entry_rank)
 
 # Format score with commas (e.g., 1000000 -> 1,000,000)
 func format_score(score: int) -> String:
