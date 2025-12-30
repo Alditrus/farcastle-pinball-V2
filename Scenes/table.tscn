@@ -1,4 +1,4 @@
-[gd_scene load_steps=109 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=110 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -40,6 +40,7 @@
 [ext_resource type="PackedScene" uid="uid://mib0yv4sr3h0" path="res://Scenes/pupil.tscn" id="34_r2pup"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="35_6umbq"]
 [ext_resource type="PackedScene" uid="uid://bworr8h1prbs1" path="res://Scenes/candle.tscn" id="36_qrwlr"]
+[ext_resource type="Texture2D" uid="uid://d30afnkas4hvj" path="res://Assets/minigame/minigameframe.png" id="39_gw0vv"]
 [ext_resource type="PackedScene" uid="uid://d3o7qjbdijm76" path="res://Scenes/candleset.tscn" id="39_hotvi"]
 [ext_resource type="FontFile" uid="uid://w6mftky2vby7" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="40_dwwbe"]
 [ext_resource type="PackedScene" uid="uid://u0b1lan2ywym" path="res://Scenes/minigameentrance.tscn" id="41_2rdwm"]
@@ -517,7 +518,6 @@ ignore_texture_size = true
 stretch_mode = 0
 
 [node name="minigamewindow" type="SubViewportContainer" parent="."]
-visible = false
 top_level = true
 light_mask = 24
 visibility_layer = 24
@@ -531,7 +531,12 @@ script = ExtResource("43_2rdwm")
 [node name="SubViewport" type="SubViewport" parent="minigamewindow"]
 handle_input_locally = false
 size = Vector2i(700, 1260)
-render_target_update_mode = 0
+render_target_update_mode = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="minigamewindow"]
+position = Vector2(349, 564.5)
+scale = Vector2(1.14951, 1.13118)
+texture = ExtResource("39_gw0vv")
 
 [node name="Guard" parent="." instance=ExtResource("5_5cpa6")]
 position = Vector2(796, 377)
@@ -1346,4 +1351,4 @@ vertical_alignment = 1
 script = ExtResource("81_ball_saved")
 
 [node name="Node2D" parent="." instance=ExtResource("83_7fyop")]
-position = Vector2(1016, 1066)
+position = Vector2(838, 1064)

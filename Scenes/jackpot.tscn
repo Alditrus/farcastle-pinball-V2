@@ -14,7 +14,7 @@ _data = [Vector2(0, 1), 0.0, -0.0496024, 0, 0, Vector2(1, 0), -4.06742, 0.0, 0, 
 point_count = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_86cfk"]
-radius = 23.0868
+radius = 74.0068
 
 [node name="Node2D" type="StaticBody2D"]
 script = ExtResource("1_j3w0t")
@@ -52,5 +52,5 @@ polygon = PackedVector2Array(-96, -75, -85, -67, -76, -54, -74, -45, -85, -24, -
 [node name="jackpot_area" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="jackpot_area"]
-position = Vector2(0, 54)
+position = Vector2(-2, 4)
 shape = SubResource("CircleShape2D_86cfk")

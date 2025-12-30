@@ -174,6 +174,24 @@ export async function POST(request: Request) {
 
     console.log('Found', events?.length || 0, 'events for session');
 
+    // Safety check: prevent processing excessive event counts that could timeout
+    const MAX_EVENTS = 10000;
+    if (events && events.length > MAX_EVENTS) {
+      console.warn(`⚠️ Session has ${events.length} events, exceeding limit of ${MAX_EVENTS}`);
+
+      // Mark session as ended but don't calculate score
+      await supabase
+        .from('game_sessions')
+        .update({ is_active: false })
+        .eq('id', sessionId);
+
+      return NextResponse.json({
+        error: 'Too many events',
+        reason: `Session exceeded maximum event count (${events.length} > ${MAX_EVENTS})`,
+        sessionEnded: true
+      }, { status: 400 });
+    }
+
     // Log all events for debugging
     if (events && events.length > 0) {
       console.log('Event types:', events.map(e => e.event_type).join(', '));

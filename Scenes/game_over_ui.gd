@@ -97,10 +97,10 @@ func wait_for_server_verification():
 		return
 	
 	print("⏳ Waiting for server to verify score...")
-	
-	var max_attempts = 30
+
+	var max_attempts = 100  # Increased from 30 to 100 (10 seconds total)
 	var attempts = 0
-	
+
 	while attempts < max_attempts:
 		var score_result = js.eval("window.verifiedScore || 0", true)
 		print("Attempt ", attempts + 1, ": verifiedScore = ", score_result)
