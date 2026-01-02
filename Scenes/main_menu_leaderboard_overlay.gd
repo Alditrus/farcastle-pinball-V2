@@ -17,8 +17,8 @@ var leaderboard_data: Array = []
 var is_loading_more: bool = false
 var has_more_data: bool = true
 
-# Placeholder high scores (individual player scores)
-var placeholder_highscores = [5000000, 3500000, 2800000, 2100000, 1750000, 1200000, 1100000, 1000000, 900000, 800000]
+# User's high scores data from API
+var user_scores_data: Array = []
 
 func _ready():
 	# Set process mode to always so UI works when game is paused
@@ -39,8 +39,8 @@ func _ready():
 	# Set initial active button (global by default)
 	set_active_button(global_button)
 
-	# Populate high scores with placeholder
-	populate_highscores()
+	# Fetch and populate high scores from API
+	fetch_user_scores()
 
 	# Hide high scores container initially (show global by default)
 	if highscores_container:
@@ -265,7 +265,9 @@ func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
 	# Create horizontal container for left/right alignment
 	var entry_container = HBoxContainer.new()
 	entry_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	entry_container.custom_minimum_size = Vector2(0, 120)
+	# Make container taller for rank 1 to accommodate larger icon
+	var container_height = 145 if entry_rank == 1 else 110
+	entry_container.custom_minimum_size = Vector2(0, container_height)
 	entry_container.alignment = BoxContainer.ALIGNMENT_CENTER
 
 	# Create left side container for rank/icon, profile pic, and name
@@ -276,15 +278,18 @@ func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
 	# For ranks 1-4, use graphics instead of numbers
 	if entry_rank <= 4:
 		var rank_icon = TextureRect.new()
-		rank_icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		rank_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		rank_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		rank_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		rank_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		rank_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 		# First place is larger than the others
 		if entry_rank == 1:
-			rank_icon.custom_minimum_size = Vector2(120, 120)
+			rank_icon.custom_minimum_size = Vector2(135, 135)
+			rank_icon.size = Vector2(135, 135)  # Also set size explicitly
 		else:
-			rank_icon.custom_minimum_size = Vector2(80, 80)
+			rank_icon.custom_minimum_size = Vector2(90, 90)
+			rank_icon.size = Vector2(90, 90)  # Also set size explicitly
 
 		# Load the appropriate rank graphic
 		var icon_path = ""
@@ -304,9 +309,12 @@ func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
 
 	# Create profile picture
 	var profile_pic = TextureRect.new()
-	profile_pic.custom_minimum_size = Vector2(60, 60)
-	profile_pic.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	profile_pic.custom_minimum_size = Vector2(80, 80)
+	profile_pic.size = Vector2(80, 80)  # Also set size explicitly
+	profile_pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	profile_pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	profile_pic.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	profile_pic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 
 	# Apply circular shader
 	var shader = load("res://Assets/shaders/circular_profile.gdshader")
@@ -339,8 +347,7 @@ func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
 
 	# Set font properties for name label
 	name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-	var font1 = SystemFont.new()
-	font1.font_names = ["Almendra SC"]
+	var font1 = load("res://Assets/fonts/IMFellGreatPrimerSC-Regular.ttf")
 	name_label.add_theme_font_override("font", font1)
 	name_label.add_theme_font_size_override("font_size", 40)
 
@@ -356,8 +363,7 @@ func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
 
 	# Set font properties for score label
 	score_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-	var font2 = SystemFont.new()
-	font2.font_names = ["Almendra SC"]
+	var font2 = load("res://Assets/fonts/AlmendraSC-Regular.ttf")
 	score_label.add_theme_font_override("font", font2)
 	score_label.add_theme_font_size_override("font_size", 40)
 
@@ -371,6 +377,56 @@ func create_leaderboard_entry(player_data: Dictionary, entry_rank: int):
 	var pfp_url = player_data.get("pfp_url", "")
 	if pfp_url != "" and pfp_url != null:
 		load_profile_picture_async(profile_pic, pfp_url)
+
+# Fetch user's high scores from API
+func fetch_user_scores():
+	var js = _get_javascript_singleton()
+	if not js:
+		print("❌ No JavaScript singleton available for user scores fetch")
+		populate_highscores()
+		return
+
+	print("🔄 Fetching user scores from API...")
+
+	# Call the JavaScript function to get user scores
+	js.eval("""
+		(async () => {
+			try {
+				if (typeof window.getUserScores === 'function') {
+					const result = await window.getUserScores(50);
+					window.lastUserScoresResult = JSON.stringify(result);
+				} else {
+					window.lastUserScoresResult = JSON.stringify({ scores: [] });
+				}
+			} catch (error) {
+				console.error('User scores fetch error:', error);
+				window.lastUserScoresResult = JSON.stringify({ scores: [] });
+			}
+		})()
+	""", true)
+
+	# Wait for result to be stored
+	await get_tree().create_timer(1.0).timeout
+
+	var result_json = js.eval("(window.lastUserScoresResult || JSON.stringify({ scores: [] }))", true)
+
+	if result_json is String and result_json != "":
+		var json = JSON.new()
+		var parse_result = json.parse(result_json)
+
+		if parse_result == OK:
+			var data = json.data
+			if data and data.has("scores"):
+				user_scores_data = data.scores
+				print("✅ User scores fetched: ", user_scores_data.size(), " entries")
+			else:
+				print("⚠️ No user scores in response")
+		else:
+			print("⚠️ Failed to parse user scores JSON")
+	else:
+		print("⚠️ No user scores result received")
+
+	populate_highscores()
 
 # NOTE: fetch_leaderboard_data() removed - now using LeaderboardCache singleton
 func old_fetch_leaderboard_data():
@@ -571,8 +627,11 @@ func populate_highscores():
 	if not highscores_container:
 		return
 
-	# Use placeholder scores
-	var scores = placeholder_highscores.duplicate()
+	# Extract score values from API data
+	var scores = []
+	for score_entry in user_scores_data:
+		if score_entry.has("score"):
+			scores.append(score_entry.score)
 
 	# Check if we need scrolling (more than 8 entries)
 	var needs_scrolling = scores.size() > 7
@@ -611,6 +670,18 @@ func populate_highscores():
 	for child in highscores_container.get_children():
 		child.queue_free()
 
+	# Show message if no scores yet
+	if scores.size() == 0:
+		var no_scores_label = Label.new()
+		no_scores_label.text = "No scores yet\nPlay a game to see your high scores!"
+		no_scores_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		no_scores_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		var font = load("res://Assets/fonts/AlmendraSC-Regular.ttf")
+		no_scores_label.add_theme_font_override("font", font)
+		no_scores_label.add_theme_font_size_override("font_size", 30)
+		highscores_container.add_child(no_scores_label)
+		return
+
 	# Create a label for each score entry
 	for i in range(scores.size()):
 		var entry_label = Label.new()
@@ -626,8 +697,7 @@ func populate_highscores():
 		entry_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 
 		# Create and set Almendra SC font
-		var font = SystemFont.new()
-		font.font_names = ["Almendra SC"]
+		var font = load("res://Assets/fonts/AlmendraSC-Regular.ttf")
 		entry_label.add_theme_font_override("font", font)
 		entry_label.add_theme_font_size_override("font_size", 40)
 

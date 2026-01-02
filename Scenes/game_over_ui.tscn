@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://4xui40ddex3" path="res://Scenes/game_over_ui.gd" id="1_game_over_ui"]
 [ext_resource type="FontFile" uid="uid://damv2cppwcqh5" path="res://Assets/fonts/blackwood-castle.regular.ttf" id="3_qqn7r"]
-[ext_resource type="FontFile" uid="uid://bj5eaxw5dwab1" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="4_vec04"]
+[ext_resource type="FontFile" uid="uid://w6mftky2vby7" path="res://Assets/fonts/UnifrakturCook-Bold.ttf" id="4_vec04"]
 [ext_resource type="Texture2D" uid="uid://padekhdc527a" path="res://Assets/table/gameover_divider.svg" id="4_xy24n"]
 [ext_resource type="Texture2D" uid="uid://bwdyfvuaa2rc2" path="res://Assets/table/sharebutton.svg" id="6_1xoaq"]
 [ext_resource type="FontFile" uid="uid://7e16mly8ntec" path="res://Assets/fonts/AlmendraSC-Regular.ttf" id="6_qkxqm"]
@@ -32,7 +32,7 @@ anchor_bottom = 0.5
 offset_left = -450.0
 offset_top = -789.5
 offset_right = 450.0
-offset_bottom = 789.5
+offset_bottom = 867.5
 color = Color(0.0627451, 0, 0.0705882, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]

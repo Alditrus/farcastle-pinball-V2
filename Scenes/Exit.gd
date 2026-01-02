@@ -115,21 +115,21 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 		push_error("Could not find parent table node")
 		is_respawning = false
 		return
-	
+
 	AudioCollection.play_sfx(respawn_sound)
-	
+
 	# 1. Remove the old ball
 	old_ball.queue_free()
-	
+
 	# 2. Remove the old plunger
 	var old_plunger = get_node_or_null("../plunger")
 	if old_plunger:
 		plunger_position = old_plunger.global_position  # Save position before removing
 		old_plunger.queue_free()
-	
+
 	# Wait for a physics frame to ensure clean removal
 	await get_tree().physics_frame
-	
+
 	# 3. Create a new plunger instance
 	if plunger_scene_resource:
 		var new_plunger = plunger_scene_resource.instantiate()
@@ -137,47 +137,47 @@ func replace_ball_and_plunger(old_ball: RigidBody2D):
 			new_plunger.global_position = plunger_position
 			table.add_child(new_plunger)
 			new_plunger.name = "plunger"
-	
+
 	# 4. Create the new ball instance
 	var new_ball = ball_scene_resource.instantiate()
 	if not new_ball:
 		push_error("Failed to instantiate new ball")
 		is_respawning = false
 		return
-	
+
 	# Position the ball just below the plunger
 	spawn_position = Vector2(plunger_position.x, plunger_position.y - 200)
-	
+
 	# Set the position before adding to the scene tree
 	new_ball.global_position = spawn_position
-	
+
 	# With the new structure, the ball is directly a RigidBody2D
 	# Add to group and ensure physics properties are set
 	new_ball.add_to_group("balls")
 	new_ball.linear_velocity = Vector2.ZERO
 	new_ball.angular_velocity = 0.0
 	new_ball.sleeping = false
-	
+
 	# Explicitly set collision properties
 	new_ball.collision_layer = 1
 	new_ball.collision_mask = 1
-	
+
 	# Ensure continuous collision detection is enabled
 	new_ball.continuous_cd = RigidBody2D.CCD_MODE_CAST_RAY
-	
+
 	# Get the ball sprite node
 	var ball_sprite = new_ball.get_node_or_null("BallSprite")
 	if ball_sprite:
 		# Ensure sprite doesn't rotate with the physics body
 		ball_sprite.rotation = 0
-	
+
 	# Add the new ball to the scene after the plunger is ready
 	table.add_child(new_ball)
 	new_ball.name = "ball"
-	
+
 	# Notify any systems that need to know about ball respawn
 	notify_ball_respawn()
-	
+
 	# Reset the flag after a short delay to prevent multiple respawns
 	await get_tree().create_timer(0.5).timeout
 	is_respawning = false

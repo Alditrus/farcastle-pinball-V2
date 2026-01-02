@@ -1,0 +1,33 @@
+{
+  "frame": {
+    "name": "Farcastle Pinball",
+    "version": "1",
+    "iconUrl": "https://voluble-starship-382657.netlify.app/icon.png",
+    "homeUrl": "https://voluble-starship-382657.netlify.app/",
+    "subtitle": "Praise be the Void!",
+    "description": "Play a game of pinball to build up your dreadful army and lead them victorious into battle.",
+    "primaryCategory": "games",
+    "imageUrl": "https://voluble-starship-382657.netlify.app/hero.png",
+    "heroImageUrl": "https://voluble-starship-382657.netlify.app/hero.png",
+    "splashImageUrl": "https://voluble-starship-382657.netlify.app/icon.svg",
+    "splashBackgroundColor": "#1a0022",
+    "tagline": "Praise be the Void!",
+    "buttonTitle": "Onwards to battle! ⚔️",
+    "ogTitle": "Farcastle Pinball - Defi Game",
+    "ogImageUrl": "https://voluble-starship-382657.netlify.app/hero.png",
+    "ogDescription": "The terrible servants of Moloch blight the land! Can you guide your dreadful armies into victory?",
+    "tags": [
+      "games",
+      "pinball",
+      "moloch",
+      "farcastle",
+      "miniapp"
+    ]
+  },
+  "webhookUrl": "https://api.neynar.com/f/app/a91f02de-1641-409d-8d68-e00a8d0bbe60/event",
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEzNDM3LCJ0eXBlIjoiYXV0aCIsImtleSI6IjB4MjA1MDJEYjExZkIwRjc1RjA5QUVEY0RCYjM1OUQxRDI5MjUwYWIwMyJ9",
+    "payload": "eyJkb21haW4iOiJ2b2x1YmxlLXN0YXJzaGlwLTM4MjY1Ny5uZXRsaWZ5LmFwcCJ9",
+    "signature": "5XBi6OI7DwsDT4mDgbL/7YKYF6fcwXoQVldh1KHzNX0gJPaCYD9K3yUEwza8nDdCrXV0yaqXGwL4Na1lNtikOBw="
+  }
+}

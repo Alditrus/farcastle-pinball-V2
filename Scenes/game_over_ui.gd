@@ -12,6 +12,7 @@ extends Control
 	$CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score5,
 	$CenterContainer/VBoxContainer/HighScoreContainer/ScoresList/Score6
 ]
+@onready var share_button = $CenterContainer/VBoxContainer/HBoxContainer/ShareButton
 @onready var play_again_button = $CenterContainer/VBoxContainer/ButtonsContainer/PlayAgainButton
 @onready var exit_button = $CenterContainer/VBoxContainer/ButtonsContainer/ExitButton
 
@@ -19,6 +20,7 @@ extends Control
 var high_scores: Array[int] = [0, 0, 0, 0, 0, 0]
 var leaderboard_data: Array = []
 
+var current_final_score: int = 0
 var verified_score: int = 0
 var is_waiting_for_verification: bool = false
 
@@ -30,6 +32,7 @@ func _ready():
 	visible = false
 
 	# Connect button signals (functionality will be added later)
+	share_button.pressed.connect(_on_share_button_pressed)
 	play_again_button.pressed.connect(_on_play_again_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
 
@@ -39,6 +42,9 @@ func _ready():
 # Show the game over UI
 func show_game_over(final_score: int = 0):
 	visible = true
+
+	# Store the final score for later use (e.g., sharing)
+	current_final_score = final_score
 
 	# Set initial transparency for fade-in effect
 	modulate = Color(1, 1, 1, 0)
@@ -58,6 +64,7 @@ func show_game_over(final_score: int = 0):
 		# Update with verified score
 		if verified_score > 0:
 			print("Displaying verified score: ", verified_score)
+			current_final_score = verified_score  # Update stored score with verified value
 			update_final_score_display(verified_score)
 			# Use verified score for high score check
 			check_and_update_high_score(verified_score)
@@ -71,8 +78,9 @@ func show_game_over(final_score: int = 0):
 		# Not a web build, use client score directly
 		check_and_update_high_score(final_score)
 	
-	# Fetch leaderboard from API
-	await fetch_leaderboard_data()
+	# Fetch leaderboard from cache (already preloaded)
+	leaderboard_data = await LeaderboardCache.get_leaderboard(6)
+	print("✅ Leaderboard fetched: ", leaderboard_data.size(), " entries")
 	update_high_scores_display()
 
 	# Create fade-in animation that works when paused
@@ -83,12 +91,31 @@ func show_game_over(final_score: int = 0):
 	# Pause the game
 	get_tree().paused = true
 
+func _on_share_button_pressed():
+	if OS.has_feature("web"):
+		var js = _get_javascript_singleton()
+		if js:
+			var player_rank = get_player_rank()  # Optional: get from leaderboard
+
+			print("📤 Sharing score: ", current_final_score)
+
+			var js_code = """
+				window.shareScore(%d, %s);
+			""" % [current_final_score, str(player_rank) if player_rank else "null"]
+
+			js.eval(js_code)
+
 func _get_javascript_singleton():
 	if Engine.has_singleton("JavaScriptBridge"):
 		return Engine.get_singleton("JavaScriptBridge")
 	elif Engine.has_singleton("JavaScript"):
 		return Engine.get_singleton("JavaScript")
 	return null
+
+func get_player_rank() -> int:
+	# If you're fetching leaderboard on game over, get the rank
+	# Otherwise return 0 to skip rank in message
+	return 0
 
 func wait_for_server_verification():
 	var js = _get_javascript_singleton()
@@ -123,9 +150,10 @@ func hide_game_over():
 	visible = false
 
 	# Reset verification state
+	current_final_score = 0
 	verified_score = 0
 	is_waiting_for_verification = false
-	
+
 	# Unpause the game
 	get_tree().paused = false
 
@@ -151,73 +179,7 @@ func format_score_with_commas(number: int) -> String:
 	
 	return formatted_string
 
-# Fetch leaderboard data from API
-func fetch_leaderboard_data():
-	var js = _get_javascript_singleton()
-	if not js:
-		print("❌ No JavaScript singleton available for leaderboard fetch")
-		return
-
-	print("🔄 Fetching leaderboard from API...")
-
-	# Call the JavaScript function to get leaderboard
-	var leaderboard_promise = js.eval("""
-		(async () => {
-			try {
-				if (typeof window.getLeaderboard === 'function') {
-					const result = await window.getLeaderboard(6);
-					return JSON.stringify(result);
-				}
-				return JSON.stringify({ leaderboard: [] });
-			} catch (error) {
-				console.error('Leaderboard fetch error:', error);
-				return JSON.stringify({ leaderboard: [] });
-			}
-		})()
-	""", true)
-
-	# Wait a bit for the promise to resolve
-	await get_tree().create_timer(1.0).timeout
-
-	# Try to get the result
-	var result_json = js.eval("""
-		(window.lastLeaderboardResult || JSON.stringify({ leaderboard: [] }))
-	""", true)
-
-	# Store result for next retrieval
-	js.eval("""
-		(async () => {
-			try {
-				if (typeof window.getLeaderboard === 'function') {
-					const result = await window.getLeaderboard(6);
-					window.lastLeaderboardResult = JSON.stringify(result);
-				}
-			} catch (error) {
-				console.error('Error:', error);
-			}
-		})()
-	""", true)
-
-	# Wait for result to be stored
-	await get_tree().create_timer(0.5).timeout
-
-	result_json = js.eval("(window.lastLeaderboardResult || JSON.stringify({ leaderboard: [] }))", true)
-
-	if result_json is String and result_json != "":
-		var json = JSON.new()
-		var parse_result = json.parse(result_json)
-
-		if parse_result == OK:
-			var data = json.data
-			if data and data.has("leaderboard"):
-				leaderboard_data = data.leaderboard
-				print("✅ Leaderboard fetched: ", leaderboard_data.size(), " entries")
-			else:
-				print("⚠️ No leaderboard data in response")
-		else:
-			print("⚠️ Failed to parse leaderboard JSON")
-	else:
-		print("⚠️ No leaderboard result received")
+# NOTE: fetch_leaderboard_data() removed - now using LeaderboardCache singleton
 
 # Download profile picture from URL
 func download_profile_picture(url: String) -> Image:

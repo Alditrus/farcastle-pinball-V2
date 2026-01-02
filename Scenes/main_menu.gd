@@ -49,12 +49,19 @@ func _ready():
 	token_overlay.visible = false
 	credits_overlay.visible = false
 
-# Play button handler - loads the table scene
 func _on_play_pressed():
 	AudioCollection.play_sfx(coinslot)
 
-	# Load the table scene
+	print("🎮 [PROFILE] Play button pressed at: ", Time.get_ticks_msec())
+	
+	var start_time = Time.get_ticks_msec()
+	
+	# Log before scene change
+	print("🎮 [PROFILE] Starting scene change...")
 	get_tree().change_scene_to_file("res://Scenes/table.tscn")
+	
+	var end_time = Time.get_ticks_msec()
+	print("🎮 [PROFILE] Scene changed in: ", end_time - start_time, "ms")
 
 # Settings button handler - shows settings overlay
 func _on_settings_pressed():

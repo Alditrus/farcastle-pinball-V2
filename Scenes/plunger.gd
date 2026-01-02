@@ -56,6 +56,13 @@ func _process(_delta):
 		else:
 			drag_pos = get_global_mouse_position()
 
+		# Check if cursor/finger left the viewport bounds
+		var viewport_rect = get_viewport_rect()
+		if not viewport_rect.has_point(drag_pos):
+			# Cursor/finger left screen - trigger release
+			_handle_release()
+			return
+
 		var local_drag_pos = to_local(drag_pos)
 		var pull_vector = Vector2(0, local_drag_pos.y - original_position.y)
 
@@ -80,6 +87,47 @@ func _physics_process(_delta):
 		# Force X position to stay at original X
 		plunger_body.position.x = original_position.x
 
+# Centralized release handler
+func _handle_release():
+	if not is_dragging:
+		return
+
+	is_dragging = false
+	touch_index = -1
+	var pull_distance = plunger_body.position.y - original_position.y
+
+	# Find the ball in the scene and launch it
+	launch_ball(pull_distance)
+
+	# Ensure we cancel any previous reset sequence
+	if reset_timer.is_stopped() == false:
+		reset_timer.stop()
+
+	# For strong pulls, use direct animation instead of physics
+	if pull_distance > max_pull_distance * 0.1:
+		# Disable physics and use tweening for smoother return
+		plunger_body.freeze = true
+
+		# Create a new tween for smooth animation
+		return_tween = create_tween()
+		return_tween.tween_property(plunger_body, "position", original_position, 0.1)
+		return_tween.tween_callback(reset_plunger)
+	else:
+		# For gentler pulls, use a mild physics-based return
+		var adjusted_pull = min(pull_distance, max_pull_distance * 0.5)
+		var force_percent = adjusted_pull / max_pull_distance
+		var force_multiplier = lerp(0.3, 0.5, force_percent)  # Reduced force multiplier
+		var plunger_force = Vector2(0, -adjusted_pull * launch_force * 0.15 * force_multiplier)
+
+		# Apply very gentle physics return for lower pulls
+		resetting_position = true
+		plunger_body.freeze = false
+		plunger_body.linear_velocity = Vector2.ZERO
+		plunger_body.apply_central_impulse(plunger_force)
+
+		# Start a short timer for the reset sequence
+		reset_timer.start(0.3)
+
 func _input(event):
 	# Handle touch screen input
 	if event is InputEventScreenTouch:
@@ -102,41 +150,7 @@ func _input(event):
 		else:
 			# Touch released - launch the ball if this was the dragging finger
 			if is_dragging and event.index == touch_index:
-				is_dragging = false
-				touch_index = -1
-				var pull_distance = plunger_body.position.y - original_position.y
-
-				# Find the ball in the scene - try different methods
-				launch_ball(pull_distance)
-
-				# Ensure we cancel any previous reset sequence
-				if reset_timer.is_stopped() == false:
-					reset_timer.stop()
-
-				# For strong pulls, use direct animation instead of physics
-				if pull_distance > max_pull_distance * 0.1:
-					# Disable physics and use tweening for smoother return
-					plunger_body.freeze = true
-
-					# Create a new tween for smooth animation
-					return_tween = create_tween()
-					return_tween.tween_property(plunger_body, "position", original_position, 0.1)
-					return_tween.tween_callback(reset_plunger)
-				else:
-					# For gentler pulls, use a mild physics-based return
-					var adjusted_pull = min(pull_distance, max_pull_distance * 0.5)
-					var force_percent = adjusted_pull / max_pull_distance
-					var force_multiplier = lerp(0.3, 0.5, force_percent)  # Reduced force multiplier
-					var plunger_force = Vector2(0, -adjusted_pull * launch_force * 0.15 * force_multiplier)
-
-					# Apply very gentle physics return for lower pulls
-					resetting_position = true
-					plunger_body.freeze = false
-					plunger_body.linear_velocity = Vector2.ZERO
-					plunger_body.apply_central_impulse(plunger_force)
-
-					# Start a short timer for the reset sequence
-					reset_timer.start(0.3)
+				_handle_release()
 
 	elif event is InputEventScreenDrag:
 		# Update touch position during drag
@@ -163,40 +177,7 @@ func _input(event):
 			else:
 				# Release plunger and apply force to the ball based on pull distance
 				if is_dragging and touch_index == -1:
-					is_dragging = false
-					var pull_distance = plunger_body.position.y - original_position.y
-
-					# Find the ball in the scene - try different methods
-					launch_ball(pull_distance)
-
-					# Ensure we cancel any previous reset sequence
-					if reset_timer.is_stopped() == false:
-						reset_timer.stop()
-
-					# For strong pulls, use direct animation instead of physics
-					if pull_distance > max_pull_distance * 0.1:
-						# Disable physics and use tweening for smoother return
-						plunger_body.freeze = true
-
-						# Create a new tween for smooth animation
-						return_tween = create_tween()
-						return_tween.tween_property(plunger_body, "position", original_position, 0.1)
-						return_tween.tween_callback(reset_plunger)
-					else:
-						# For gentler pulls, use a mild physics-based return
-						var adjusted_pull = min(pull_distance, max_pull_distance * 0.5)
-						var force_percent = adjusted_pull / max_pull_distance
-						var force_multiplier = lerp(0.3, 0.5, force_percent)  # Reduced force multiplier
-						var plunger_force = Vector2(0, -adjusted_pull * launch_force * 0.15 * force_multiplier)
-
-						# Apply very gentle physics return for lower pulls
-						resetting_position = true
-						plunger_body.freeze = false
-						plunger_body.linear_velocity = Vector2.ZERO
-						plunger_body.apply_central_impulse(plunger_force)
-
-						# Start a short timer for the reset sequence
-						reset_timer.start(0.3)
+					_handle_release()
 
 # Timer callback to safely reset plunger position
 func _on_reset_timer_timeout():
@@ -288,11 +269,16 @@ func get_plunger_rect() -> Rect2:
 		var size = Vector2(sprite.texture.get_width(), sprite.texture.get_height()) * sprite.scale
 		var global_pos = plunger_body.global_position
 		var local_pos = to_local(global_pos)
-		
+
+		# Expand the touch area for better mobile responsiveness
+		# Add padding: 50px on each side horizontally, 30px top/bottom
+		var padding = Vector2(50, 30)
+		var expanded_size = size + padding * 2
+
 		return Rect2(
-			local_pos - size/2,
-			size
+			local_pos - expanded_size/2,
+			expanded_size
 		)
-	
-	# Fallback rectangle if sprite can't be found
-	return Rect2(plunger_body.position - Vector2(20, 80), Vector2(40, 160))
+
+	# Fallback rectangle if sprite can't be found - also expanded
+	return Rect2(plunger_body.position - Vector2(60, 110), Vector2(120, 220))

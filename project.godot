@@ -31,7 +31,7 @@ LeaderboardCache="*res://Scenes/leaderboard_cache.gd"
 
 window/size/viewport_width=900
 window/size/viewport_height=1579
-window/stretch/mode="viewport"
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
 

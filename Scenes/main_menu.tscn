@@ -303,6 +303,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0627451, 0, 0.0705882, 1)
@@ -384,7 +385,7 @@ script = ExtResource("3_credits_overlay")
 [node name="ColorRect" type="ColorRect" parent="QuestsOverlay"]
 layout_mode = 0
 offset_right = 900.0
-offset_bottom = 1579.0
+offset_bottom = 1626.0
 color = Color(0.0627451, 0, 0.0705882, 1)
 
 [node name="header image" type="Sprite2D" parent="QuestsOverlay"]
@@ -437,7 +438,7 @@ script = ExtResource("3_credits_overlay")
 [node name="ColorRect" type="ColorRect" parent="TokenOverlay"]
 layout_mode = 0
 offset_right = 900.0
-offset_bottom = 1579.0
+offset_bottom = 1626.0
 color = Color(0.0627451, 0, 0.0705882, 1)
 
 [node name="header image" type="Sprite2D" parent="TokenOverlay"]
@@ -510,7 +511,6 @@ custom_minimum_size = Vector2(0, 202.25)
 layout_mode = 2
 
 [node name="CreditsOverlay" type="Control" parent="."]
-visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -519,7 +519,7 @@ script = ExtResource("3_credits_overlay")
 [node name="ColorRect" type="ColorRect" parent="CreditsOverlay"]
 layout_mode = 0
 offset_right = 900.0
-offset_bottom = 1579.0
+offset_bottom = 1627.0
 color = Color(0.0627451, 0, 0.0705882, 1)
 
 [node name="header image" type="Sprite2D" parent="CreditsOverlay"]

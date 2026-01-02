@@ -60,27 +60,8 @@ func _on_drag_area_input_event(_viewport, event, _shape_idx):
 				drag_start_position = get_global_mouse_position()
 				has_been_dragged = true  # User has started dragging
 			else:
-				# Stop dragging
-				is_dragging = false
-				
-				# Only release the ball if the goathead has been dragged at least once
-				if has_been_dragged:
-					# Find the ball
-					var ball = _find_ball()
-					var spawn_area = $SpawnArea
-					
-					if ball and spawn_area:
-
-						AudioCollection.play_sfx(eject_sound)
-						
-						# Make ball visible and position it at spawn point
-						ball.visible = true
-						ball.global_position = spawn_area.global_position
-						
-						# Completely reset physics state
-						ball.freeze = false
-						ball.sleeping = false
-						ball.can_sleep = false
+				# Release button - handle release
+				_handle_release()
 
 # Helper function to find the ball in either context
 func _find_ball():
@@ -116,13 +97,47 @@ func _find_ball():
 func _process(_delta):
 	if is_dragging:
 		var current_mouse_pos = get_global_mouse_position()
+
+		# Check if cursor/finger left the viewport bounds
+		var viewport_rect = get_viewport_rect()
+		if not viewport_rect.has_point(current_mouse_pos):
+			# Cursor/finger left screen - trigger release
+			_handle_release()
+			return
+
 		var new_x = position.x + (current_mouse_pos.x - drag_start_position.x)
-		
+
 		# Clamp the position within bounds
 		new_x = clamp(new_x, min_x_position, max_x_position)
-		
+
 		# Update position (only X axis)
 		position.x = new_x
-		
+
 		# Update drag start for smooth dragging
 		drag_start_position = current_mouse_pos
+
+# Centralized release handler
+func _handle_release():
+	if not is_dragging:
+		return
+
+	# Stop dragging
+	is_dragging = false
+
+	# Only release the ball if the goathead has been dragged at least once
+	if has_been_dragged:
+		# Find the ball
+		var ball = _find_ball()
+		var spawn_area = $SpawnArea
+
+		if ball and spawn_area:
+			AudioCollection.play_sfx(eject_sound)
+
+			# Make ball visible and position it at spawn point
+			ball.visible = true
+			ball.global_position = spawn_area.global_position
+
+			# Completely reset physics state
+			ball.freeze = false
+			ball.sleeping = false
+			ball.can_sleep = false

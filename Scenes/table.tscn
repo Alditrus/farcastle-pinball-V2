@@ -1,4 +1,4 @@
-[gd_scene load_steps=110 format=3 uid="uid://bnrlybnq77oq8"]
+[gd_scene load_steps=109 format=3 uid="uid://bnrlybnq77oq8"]
 
 [ext_resource type="Texture2D" uid="uid://bq05wo7ff0oxu" path="res://Assets/table/wallsprite.png" id="1_ix8et"]
 [ext_resource type="Script" uid="uid://1dtkbudtygs6" path="res://Scenes/nudge.gd" id="1_ktkv2"]
@@ -83,7 +83,6 @@
 [ext_resource type="Texture2D" uid="uid://7lqdhc5q5c7s" path="res://Assets/UI/mobile_ctrl3.svg" id="72_6rfe0"]
 [ext_resource type="FontFile" uid="uid://7e16mly8ntec" path="res://Assets/fonts/AlmendraSC-Regular.ttf" id="80_00dx6"]
 [ext_resource type="Script" uid="uid://bkygxpk3nnhff" path="res://Scenes/ball_saved_label.gd" id="81_ball_saved"]
-[ext_resource type="PackedScene" uid="uid://dphgdaqewm0iq" path="res://Scenes/testball.tscn" id="83_7fyop"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4jc3"]
 size = Vector2(6, 60)
@@ -1324,6 +1323,7 @@ text = "Back"
 flat = true
 
 [node name="Ball-Saved" type="RichTextLabel" parent="."]
+visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = 759.0
 offset_top = 1161.0
@@ -1338,6 +1338,7 @@ vertical_alignment = 1
 script = ExtResource("81_ball_saved")
 
 [node name="Multi-Ball" type="RichTextLabel" parent="."]
+visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = 759.0
 offset_top = 1161.0
@@ -1351,5 +1352,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("81_ball_saved")
 
-[node name="Node2D" parent="." instance=ExtResource("83_7fyop")]
-position = Vector2(838, 1064)
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -9.0
+offset_top = 1578.0
+offset_right = 920.0
+offset_bottom = 1618.0
+color = Color(0, 0, 0, 1)

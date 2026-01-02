@@ -4,8 +4,8 @@ extends Control
 @onready var back_button = $CenterContainer/VBoxContainer/ButtonsContainer/BackButton
 @onready var leaderboard_container = $CenterContainer/VBoxContainer/LeaderboardContainer
 
-# Placeholder high scores
-var placeholder_scores = [5000000, 3500000, 2800000, 2100000, 1750000]
+# User's high scores data from API
+var user_scores_data: Array = []
 
 func _ready():
 	# Set process mode to always so UI works when game is paused
@@ -14,8 +14,15 @@ func _ready():
 	# Connect button signals
 	back_button.pressed.connect(_on_back_pressed)
 
-	# Populate leaderboard with player's high scores
-	populate_highscores()
+	# Fetch and populate high scores from API
+	fetch_user_scores()
+
+func _get_javascript_singleton():
+	if Engine.has_singleton("JavaScriptBridge"):
+		return Engine.get_singleton("JavaScriptBridge")
+	elif Engine.has_singleton("JavaScript"):
+		return Engine.get_singleton("JavaScript")
+	return null
 
 # Show the high scores overlay
 func show_highscores():
@@ -42,46 +49,55 @@ func hide_highscores():
 func _on_back_pressed():
 	hide_highscores()
 
-# Load player's high scores from save file
-func load_highscores() -> Array:
-	var config = ConfigFile.new()
-	var err = config.load("user://highscores.cfg")
+# Fetch user's high scores from API
+func fetch_user_scores():
+	var js = _get_javascript_singleton()
+	if not js:
+		print("❌ No JavaScript singleton available for user scores fetch")
+		populate_highscores()
+		return
 
-	var scores = []
-	if err == OK:
-		# Load all scores from the config file
-		var score_count = config.get_value("scores", "count", 0)
-		for i in range(score_count):
-			var score = config.get_value("scores", "score_" + str(i), 0)
-			if score > 0:
-				scores.append(score)
+	print("🔄 Fetching user scores from API...")
 
-	# Sort scores from highest to lowest
-	scores.sort()
-	scores.reverse()
+	# Call the JavaScript function to get user scores
+	js.eval("""
+		(async () => {
+			try {
+				if (typeof window.getUserScores === 'function') {
+					const result = await window.getUserScores(10);
+					window.lastUserScoresResult = JSON.stringify(result);
+				} else {
+					window.lastUserScoresResult = JSON.stringify({ scores: [] });
+				}
+			} catch (error) {
+				console.error('User scores fetch error:', error);
+				window.lastUserScoresResult = JSON.stringify({ scores: [] });
+			}
+		})()
+	""", true)
 
-	return scores
+	# Wait for result to be stored
+	await get_tree().create_timer(1.0).timeout
 
-# Save a new score to the player's high scores
-func save_score(new_score: int):
-	var scores = load_highscores()
-	scores.append(new_score)
+	var result_json = js.eval("(window.lastUserScoresResult || JSON.stringify({ scores: [] }))", true)
 
-	# Sort from highest to lowest
-	scores.sort()
-	scores.reverse()
+	if result_json is String and result_json != "":
+		var json = JSON.new()
+		var parse_result = json.parse(result_json)
 
-	# Keep only top 10 scores
-	if scores.size() > 10:
-		scores.resize(10)
+		if parse_result == OK:
+			var data = json.data
+			if data and data.has("scores"):
+				user_scores_data = data.scores
+				print("✅ User scores fetched: ", user_scores_data.size(), " entries")
+			else:
+				print("⚠️ No user scores in response")
+		else:
+			print("⚠️ Failed to parse user scores JSON")
+	else:
+		print("⚠️ No user scores result received")
 
-	# Save to config file
-	var config = ConfigFile.new()
-	config.set_value("scores", "count", scores.size())
-	for i in range(scores.size()):
-		config.set_value("scores", "score_" + str(i), scores[i])
-
-	config.save("user://highscores.cfg")
+	populate_highscores()
 
 # Populate the leaderboard with player's high scores
 func populate_highscores():
@@ -89,15 +105,29 @@ func populate_highscores():
 	for child in leaderboard_container.get_children():
 		child.queue_free()
 
-	# Load player's high scores
-	var scores = load_highscores()
+	# Extract score values from API data
+	var scores = []
+	for score_entry in user_scores_data:
+		if score_entry.has("score"):
+			scores.append(score_entry.score)
 
-	# If no saved scores, use placeholders
+	# Show message if no scores yet
 	if scores.size() == 0:
-		scores = placeholder_scores.duplicate()
+		var no_scores_label = Label.new()
+		no_scores_label.text = "No scores yet!\nPlay a game to see your high scores"
+		no_scores_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		no_scores_label.add_theme_color_override("font_color", Color(0.564706, 0.192157, 0.807843, 1))
+		var font = load("res://Assets/fonts/AlmendraSC-Regular.ttf")
+		no_scores_label.add_theme_font_override("font", font)
+		no_scores_label.add_theme_font_size_override("font_size", 30)
+		leaderboard_container.add_child(no_scores_label)
+		return
+
+	# Show top 6 scores only
+	var display_count = min(scores.size(), 6)
 
 	# Create a label for each score entry
-	for i in range(scores.size()):
+	for i in range(display_count):
 		var entry_label = Label.new()
 		entry_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
@@ -111,8 +141,7 @@ func populate_highscores():
 		entry_label.add_theme_color_override("font_color", Color(0.564706, 0.192157, 0.807843, 1))
 
 		# Create and set Almendra SC font
-		var font = SystemFont.new()
-		font.font_names = ["Almendra SC"]
+		var font = load("res://Assets/fonts/AlmendraSC-Regular.ttf")
 		entry_label.add_theme_font_override("font", font)
 		entry_label.add_theme_font_size_override("font_size", 40)
 

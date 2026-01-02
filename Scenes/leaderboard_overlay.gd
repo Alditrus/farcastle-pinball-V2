@@ -152,8 +152,7 @@ func populate_leaderboard():
 		username_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		username_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		username_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		var font1 = SystemFont.new()
-		font1.font_names = ["Almendra SC"]
+		var font1 = load("res://Assets/fonts/IMFellGreatPrimerSC-Regular.ttf")
 		username_label.add_theme_font_override("font", font1)
 		username_label.add_theme_font_size_override("font_size", 30)
 		entry_container.add_child(username_label)
@@ -164,8 +163,7 @@ func populate_leaderboard():
 		score_label.text = format_score(score)
 		score_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		score_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		var font2 = SystemFont.new()
-		font2.font_names = ["Almendra SC"]
+		var font2 = load("res://Assets/fonts/AlmendraSC-Regular.ttf")
 		score_label.add_theme_font_override("font", font2)
 		score_label.add_theme_font_size_override("font_size", 30)
 		entry_container.add_child(score_label)

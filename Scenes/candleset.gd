@@ -10,6 +10,7 @@ signal all_candles_activated
 var complete_flame_duration = 1.0
 var timer = null
 var fireball_sound = preload("res://Assets/sounds/fireball.wav")
+var is_completing = false  # Guard flag to prevent multiple completions
 
 func _ready():
 	# Connect signals from each candle
@@ -28,16 +29,21 @@ func _on_candle_state_changed(_candle_node, _is_active):
 
 # Check if all candles are active
 func check_all_active():
+	# Prevent multiple completions during cooldown period
+	if is_completing:
+		return
+
 	var all_active = true
-	
+
 	# Check if all candles are active
 	for candle in candles:
 		if not candle.is_candle_active():
 			all_active = false
 			break
-	
+
 	# If all candles are active, trigger the complete state
 	if all_active:
+		is_completing = true  # Set guard flag to prevent re-triggering
 		emit_signal("all_candles_activated")
 		trigger_complete_flame()
 		# Increase score - the bumper level upgrade is now handled in the score_label script
@@ -48,7 +54,7 @@ func check_all_active():
 		var missions_node = get_node("../missions")
 		if missions_node:
 			missions_node.record_collision(missions_node.CollisionType.CANDLESET)
-			
+
 			# Check if more CANDLESET completions are needed and reset lights if so
 			reset_lights_if_more_completions_needed(missions_node, missions_node.CollisionType.CANDLESET)
 
@@ -69,10 +75,16 @@ func _on_complete_flame_timeout():
 		candle.set_active(false)
 		candle.set_complete(false)
 
+	# Clear the completion flag to allow future completions
+	is_completing = false
+
 # Public method to reset all candles
 func reset():
 	for candle in candles:
 		candle.reset()
+
+	# Clear the completion flag to allow future completions
+	is_completing = false
 
 # Reset target lights if more completions are needed for current mission phase
 func reset_lights_if_more_completions_needed(missions_node, collision_type):
