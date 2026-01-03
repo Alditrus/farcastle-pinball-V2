@@ -1,33 +1,57 @@
 import { NextResponse } from 'next/server';
+import { NeynarAPIClient } from '@neynar/nodejs-sdk';
 
-const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY!;
+const client = new NeynarAPIClient({
+  apiKey: process.env.NEYNAR_API_KEY!
+});
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { message, signature, nonce } = body;
+    const { message, signature } = body;
     
-    // Verify the signature with Neynar
-    const response = await fetch('https://api.neynar.com/v2/farcaster/auth/verify', {
-      method: 'POST',
-      headers: {
-        'api_key': NEYNAR_API_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message,
-        signature,
-        nonce
-      })
+    console.log('[Backend] Verifying signature...');
+    console.log('[Backend] Message:', message);
+    console.log('[Backend] Signature:', signature);
+    
+    // Verify using Neynar SDK
+    const data = await client.fetchSigners({ 
+      message, 
+      signature 
     });
     
-    const data = await response.json();
+    console.log('[Backend] Verification response:', data);
     
-    // data will contain: { fid, username, custody_address, verified_addresses, etc }
-    return NextResponse.json(data);
+    // Extract FID from signers response
+    if (!data.signers || data.signers.length === 0) {
+      throw new Error('No signers found');
+    }
     
-  } catch (error) {
-    console.error('Error verifying auth:', error);
-    return NextResponse.json({ error: 'Failed to verify authentication' }, { status: 500 });
+    const fid = data.signers[0].fid;
+    
+    if (!fid) {
+      throw new Error('No FID in signer data');
+    }
+    
+    // Fetch user details
+    const { users } = await client.fetchBulkUsers({ fids: [fid] });
+    const user = users[0];
+    
+    return NextResponse.json({
+      success: true,
+      fid: fid,
+      username: user?.username || 'Player',
+      display_name: user?.display_name || 'Player',
+      pfp_url: user?.pfp_url || '',
+      custody_address: user?.custody_address || '',
+      verified_addresses: user?.verified_addresses || {}
+    });
+    
+  } catch (error: any) {
+    console.error('[Backend] Error verifying auth:', error);
+    return NextResponse.json({ 
+      error: 'Failed to verify authentication',
+      details: error.message 
+    }, { status: 500 });
   }
 }
